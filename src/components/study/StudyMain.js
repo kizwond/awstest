@@ -13,5 +13,4 @@ class StudyMain extends Component {
           );
     }
 }
- 
 export default StudyMain;
