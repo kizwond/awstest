@@ -40,7 +40,7 @@ const Login = (props) => {
           <Input prefix={<LockOutlined />} type="password" placeholder="비밀번호"/>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">Log In</Button>
+          <Button type="primary" htmlType="submit" className="login-form-button">로그인</Button>
         </Form.Item>
         <div>
             <a href="/">아이디 찾기 / </a>

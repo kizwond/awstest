@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Modal} from 'antd';
 import axios from 'axios'
-import Login from './Login'
 import Button from '../styledComponents/defaultButton'
 
 const Register = (props) => {
@@ -30,9 +29,14 @@ const Register = (props) => {
     
   };
 
+  const register_form_container = {
+    width:"300px",
+    margin:"auto",
+    textAlign:"center"
+}
 
   return (
-    <div className="register_form_container">
+    <div style={register_form_container}>
       <div id='register_title' className="register_title"><img src="img/logo.png" alt="logo"/></div>
       <Form
         form={form}
@@ -96,8 +100,8 @@ const Register = (props) => {
           <Input.Password />
         </Form.Item>
         <Form.Item>
-          <Button size="small" width="60px" type="primary" htmlType="submit">
-            Register
+          <Button type="primary" htmlType="submit">
+            회원가입
           </Button>
         </Form.Item>
       </Form>
