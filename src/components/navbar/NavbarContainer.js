@@ -76,7 +76,7 @@ const navbar_account_menus = {
 const navbar_main_menus = {
     display : "flex",
     justifyContent : "space-between",
-    fontSize:"13px",
+    fontSize:"12px",
     fontWeight: "500",
     width:"360px"
 }

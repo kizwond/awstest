@@ -11,3 +11,41 @@
   margin-left:-25px;
   border: 1px solid lightgrey;
 }
+
+.study_mode_class .ant-tabs-tab-btn {
+  writing-mode: vertical-rl;
+  vertical-align: middle;
+}
+
+.ant-tabs-card.ant-tabs-small > .ant-tabs-nav .ant-tabs-tab{
+  padding:10px 0px;
+  width:25px;
+  margin-left:25px;
+}
+.ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane, .ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane{
+  padding:0px;
+}
+
+.ant-tabs-left > .ant-tabs-content-holder, .ant-tabs-left > div > .ant-tabs-content-holder{
+  border-left:1px solid #d9d9d9;
+}
+.page_setting_container{
+  display:flex;
+  flex-direction:column;
+  font-size:12px;
+}
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab{
+  background:white;
+}
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active{
+  background:#efefef;
+}
+.ant-tabs-tabpane-active{
+  background:#efefef;
+}
+.ant-tabs-card.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card.ant-tabs-left > div > .ant-tabs-nav .ant-tabs-tab-active{
+  border-right-color: #efefef;
+}
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab{
+  border:1px solid lightgrey;
+}

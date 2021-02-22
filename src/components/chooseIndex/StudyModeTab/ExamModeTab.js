@@ -163,15 +163,15 @@ class ExamModeTab extends Component {
             </Form.Item>
           </div>
           <div style={{fontSize:"13px", fontWeight:"700"}}>카드타입설정</div>
-          <div style={{border:"1px solid lightgrey", background:"white", borderRadius:"5px", padding:"5px", textAlign:"left", marginBottom:"10px"}}>
+          <div style={{height:"60px",border:"1px solid lightgrey", background:"white", borderRadius:"5px", padding:"5px", textAlign:"left", marginBottom:"10px"}}>
             <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span  style={{fontSize:"11px", marginLeft:"20px"}}>읽기카드 </span> 
-              {/* <Form.Item
+            <span style={{fontSize:"11px", marginLeft:"20px"}}>읽기카드 </span> 
+              <Form.Item
                 name="read_card"
                 valuePropName="checked"
               >
-                <Switch size="small" />
-              </Form.Item> */}
+                <Switch size="small" disabled/>
+              </Form.Item>
             </div>
             <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
             <span  style={{fontSize:"11px", marginLeft:"20px"}}>뒤집기카드 </span> 

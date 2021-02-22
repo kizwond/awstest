@@ -102,20 +102,6 @@ class ChooseIndex extends Component {
       })
     })
   }
-
-  startStudy = () => {
-    console.log("startStudy Clicked!!!!")
-    // axios.post('api/studysetup/start-study',{
-    //   session_id: value,
-    //   study_mode:this.state.mode, 
-    //   card_order: order_by,
-    //   re_card_collect_criteria: reviewMode,
-    //   on_off: {yet: newToggle, re:reviewToggle, hold:hold, completed:completed},
-    //   num_cards:{yet:this.state.newCardNum, re:this.state.reviewCardNum, hold:this.state.holdCardNum, completed:this.state.completedCardNum},
-    //   num_request_cards:2
-    // }).then(window.location.href="/start-study")
-
-  }
   
   onChangeNewCardNum = (e) =>{
     console.log(e.target.value)
@@ -485,27 +471,18 @@ class ChooseIndex extends Component {
   }
   render() { 
     return (
-      <div style={{fontSize:"12px",width:"100%", margin:"auto", height:"100%"}}>
-        <Row style={{margin:"10px 0", height:"100%"}} justify="center">
-          <Col className="gutter-row" style={{height:"100%", backgroundColor:"#b1c6ec"}} span={18}>
+      <>      
+        <div style={{display:"flex", flexDirection:"row"}}>
+          <div>
             <div style={{height:"26px", lineHeight:"26px", backgroundColor:"#b1c6ec", textAlign:"left", paddingLeft:"10px", fontWeight:"700"}}>책이름 및 목차선택</div>
             <BookTitleList onClickUp={this.onClickUp} 
-                           onClickDown={this.onClickDown} 
-                          //  onSelect={this.onSelect} 
-                           books={this.state.books}
-                           expand={this.state.expand}
-                          //  getSelected={this.getSelected}
-                           updateExpandState={this.updateExpandState}/>
-            {/* <div style={{background:"#5c89cf", padding:"0 10px 10px 10px", borderTop:"10px solid white"}}>
-              <div style={{color:"white", height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"700"}}>선택된 영역에 포함된 카드의 학습 정보</div>
-              <SelectedIndexTotal />
-            </div> */}
-          </Col>
-          <Col style={{height:"100%", backgroundColor:"whitesmoke", marginLeft:"5px", display:"flex", flexDirection:"column", justifyContent:"space-between"}} span={5}>
+                            onClickDown={this.onClickDown} 
+                            books={this.state.books}
+                            expand={this.state.expand}
+                            updateExpandState={this.updateExpandState}/>
+          </div>
+          <div>
             <Tabs className="study_mode_class" defaultActiveKey={this.state.key} onChange={this.handleTabChange} type="card" size='small' tabPosition={this.state.tab_mode} >
-              {/* <TabPane tab="필터설정" key="main" className="mainkey" style={{textAlign:"left", padding:"10px"}}>
-                main
-              </TabPane> */}
               <TabPane tab="책모드" key="read" style={{textAlign:"left", padding:"10px"}}>
                 <ReadModeTab applyAdvancedFilter={this.applyAdvancedFilter} study_config={this.state.study_config} advanced_filter={this.state.advanced_filter} onFinish={this.onFinish}/>
               </TabPane>
@@ -516,10 +493,9 @@ class ChooseIndex extends Component {
                 <ExamModeTab applyAdvancedFilter={this.applyAdvancedFilter} study_config={this.state.study_config} advanced_filter={this.state.advanced_filter} onFinish={this.onFinish}/>
               </TabPane>
             </Tabs>
-            
-          </Col>
-        </Row>
-      </div>
+          </div>
+        </div>
+      </>
     );
   }
 }
