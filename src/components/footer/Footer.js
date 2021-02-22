@@ -6,20 +6,8 @@ class Footer extends Component {
         this.state = {  }
     }
     render() { 
-        const footer_container = {
-            background:"white"
-        }
-        const footer_detail = {
-            width:"1440px",
-            margin:"auto",
-            textAlign:"center",
-            fontWeight: "400",
-            fontSize:"11px",
-            fontFamily:`"Noto Sans KR", sans-serif`,
-        }
-
         return ( 
-            <footer style={footer_container}>
+            <footer>
                 <div style={footer_detail}>
                     Copyright © OpenSKY Corp. All Rights Reserved.
                 </div>
@@ -29,3 +17,12 @@ class Footer extends Component {
 }
  
 export default Footer;
+
+const footer_detail = {
+    width:"1440px",
+    margin:"auto",
+    textAlign:"center",
+    fontWeight: "400",
+    fontSize:"11px",
+    fontFamily:`"Noto Sans KR", sans-serif`,
+}

@@ -1,0 +1,48 @@
+.study_next_page_tabs .ant-tabs-tab-btn {
+  writing-mode: horizontal-tb;
+  vertical-align: middle;
+}
+
+.study_next_page_tabs .ant-tabs-nav-wrap{
+  width:250px;
+}
+
+
+.study_next_page_tabs > .ant-tabs-nav .ant-tabs-tab{
+  margin: 0;
+  padding: 8px 24px;
+  font-size:12px;
+  text-align: center;
+  background: white;
+}
+
+
+.study_next_page_tabs > .ant-tabs-nav .ant-tabs-tab-active{
+  background:#dfecf6;
+}
+.ant-tabs-ink-bar{
+  background:transparent
+}
+.study_next_page_tabs > .ant-tabs-nav .ant-tabs-tab:nth-child(odd):not(.ant-tabs-tab-active){
+  margin: 0;
+  padding: 8px 24px;
+  text-align: center;
+  background:#fbfbfb;
+}
+
+
+.ant-table.ant-table-small .ant-table-thead > tr > th{
+  vertical-align: middle;
+}
+
+.choose_index_top_table .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+  font-size: 11px;
+}
+
+.choose_index_top_table .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small .ant-table-thead > tr > th{
+  padding:3px 3px;
+}
+
+.study_next_page_tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+  border-right:10px solid white;
+}

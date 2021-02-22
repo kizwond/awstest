@@ -1,0 +1,33 @@
+.ant-tree-title{
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  justify-content: space-between;
+}
+
+.ant-tree-node-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  justify-content: space-between;
+}
+
+.ant-tree-treenode{
+  width:100%
+}
+
+.study_next_page_tabs > .ant-tabs-nav .ant-tabs-tab-active{
+  border-left:5px solid #6da1ff;
+  height:50px;
+}
+.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected,
+.ant-tree .ant-tree-node-content-wrapper:hover{
+  background-color: transparent;
+}
+
+.detail_hide{
+  display:none;
+}
+.detail_show{
+  display:block;
+}

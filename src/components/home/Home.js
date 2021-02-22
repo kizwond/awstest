@@ -11,7 +11,6 @@ class Home extends Component {
     componentDidMount() {
         axios.get('api/user/user-auth')
         .then(res => {
-          console.log(res.data)
           this.props.updatedLoginState(res.data.isLoggedIn)
         })
         .catch(function (error) {
@@ -20,7 +19,6 @@ class Home extends Component {
       }
     
     render() { 
-        console.log('home에서 다시 받은',this.props.isLoggedIn)
         if(this.props.isLoggedIn === true){
             var loggedin = "로그인상태입니다"
         } else {

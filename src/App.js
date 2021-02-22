@@ -11,6 +11,7 @@ import MyInfoMain from './components/account/myInfo/MyInfoMain';
 import WritingMain from './components/bookWriting/WritingMain';
 import BookStoreMain from './components/bookStore/BookStoreMain';
 import MentoringMain from './components/mentoring/MentoringMain';
+import ChooseIndex from './components/chooseIndex/ChooseIndex';
 
 class App extends Component {
   constructor(props) {
@@ -40,11 +41,10 @@ class App extends Component {
             <Route exact path="/write" component={WritingMain} />
             <Route exact path="/store" component={BookStoreMain} />
             <Route exact path="/mentoring" component={MentoringMain} />
+            <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
           </Switch>
         </div>
-        <Affix offsetBottom={0}>
           <Footer/>
-        </Affix>
       </div>
      );
   }
@@ -56,7 +56,7 @@ export default App;
 const main_container ={
   width:"1440px",
   margin:"auto",
-  padding:"10px",
+  padding:"10px 0 20px 0",
   fontSize:"12px",
   fontWeight:"400",
   fontFamily:`"Noto Sans KR", sans-serif`,

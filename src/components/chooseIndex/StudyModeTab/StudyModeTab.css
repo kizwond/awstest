@@ -1,0 +1,15 @@
+.read_setting .ant-row.ant-form-item{
+    margin-bottom:-1px;
+}
+.advanced_filter_modal .ant-modal-header,
+.advanced_filter_modal .ant-modal-body,
+.advanced_filter_modal .ant-modal-footer{
+    background-color: #ececec;
+}
+.advanced_filter_modal .ant-modal-body{
+    padding-top:10px;
+}
+.advanced_filter_modal .ant-modal-header{
+    padding:10px;
+    border-bottom: 1px solid grey;
+}

@@ -1,0 +1,7 @@
+.study_table_list .ant-table-thead > tr > th {
+    font-weight: 400;
+    font-size: 12px;
+}
+.study_table_list .ant-table.ant-table-small {
+    font-size: 12px;
+}

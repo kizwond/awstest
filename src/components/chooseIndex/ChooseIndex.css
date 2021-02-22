@@ -1,0 +1,13 @@
+.study_mode_class .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list .ant-tabs-tab{
+  margin-left:1px;
+  border-right:1px solid lightgrey;
+}
+
+.study_mode_class .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list .ant-tabs-tab-active{
+  margin-left:1px;
+  border-right:1px solid #efefef;
+}
+.study_mode_class .ant-tabs-content-holder{
+  margin-left:-25px;
+  border: 1px solid lightgrey;
+}

@@ -76,9 +76,9 @@ const navbar_account_menus = {
 const navbar_main_menus = {
     display : "flex",
     justifyContent : "space-between",
-    fontSize:"12px",
+    fontSize:"13px",
     fontWeight: "500",
-    width:"300px"
+    width:"360px"
 }
 const logo_container ={
     width:"50%"

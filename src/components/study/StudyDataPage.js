@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { Layout } from 'antd';
 import axios from 'axios'
 import Button from '../styledComponents/defaultButton'
+import StudyDataDefaultList from './StudyDataDefaultList'
 
 const { Sider, Content } = Layout;
 
 class StudyDataPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {  }
+        this.state = { 
+            book_list:[]
+         }
     }
     componentDidMount() {    
         this.showTitle()
@@ -19,19 +22,47 @@ class StudyDataPage extends Component {
         .then(res => {
             console.log("get-booklist:",res.data)
             this.setState({
-                category:res.data.categorybooklist
+                book_list:res.data.categorybooklist
             })
         })
     }
 
+    sessionSaveBookIds = () => {
+        sessionStorage.setItem("book_ids", JSON.stringify(this.state.selected_book));
+        window.location.href ="/session-setting"    
+    }
+
+    renameKey ( obj, oldKey, newKey ) {
+        obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+    }
+
+    selectBook = (value)=> {
+        const json = value.book_info
+        json.forEach( obj => this.renameKey( obj, 'book_title', 'title' ) );
+        this.setState({
+            selected_book:json
+        })
+    }
+
+
     render() { 
         return (
-            <div className="study_data_list_container">
-
-            </div>
+            <>
+                <div style={book_select_page_top}>
+                    <h1>학습할 책을 선택후 다음을 눌러주세요!!!</h1>
+                    <Button size="small" width="100px" fontSize="14px" style={{marginBottom:"5px"}} onClick={this.sessionSaveBookIds}>다음</Button>
+                </div>
+                <StudyDataDefaultList selectBook={this.selectBook} book_list={this.state.book_list}/>
+            </>
           );
     }
 }
  
 export default StudyDataPage;
 
+const book_select_page_top = {
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"space-between"
+}
