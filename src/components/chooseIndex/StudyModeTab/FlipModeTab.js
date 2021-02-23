@@ -164,8 +164,8 @@ class FlipModeTab extends Component {
           </div>
           <div style={{fontSize:"13px", fontWeight:"700"}}>카드타입설정</div>
           <div style={{height:"60px",border:"1px solid lightgrey", background:"white", borderRadius:"5px", padding:"5px", textAlign:"left", marginBottom:"10px"}}>
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span  style={{fontSize:"11px", marginLeft:"20px"}}>읽기카드 </span> 
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span  style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>읽기카드 </span> 
               <Form.Item
                 name="read_card"
                 valuePropName="checked"
@@ -173,8 +173,8 @@ class FlipModeTab extends Component {
                 <Switch size="small" />
               </Form.Item>
             </div>
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span  style={{fontSize:"11px", marginLeft:"20px"}}>뒤집기카드 </span> 
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span  style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>뒤집기카드 </span> 
               <Form.Item
                 name="flip_card"
                 valuePropName="checked"
@@ -186,8 +186,8 @@ class FlipModeTab extends Component {
           <div style={{fontSize:"13px", fontWeight:"700"}}>필터 설정</div>
           <div style={{border:"1px solid lightgrey", background:"white", borderRadius:"5px", padding:"5px", textAlign:"left"}}>
             <div style={{fontSize:"13px", fontWeight:"700"}}>학습상태</div>
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span style={{fontSize:"11px", marginLeft:"20px"}}>미학습카드 </span>
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>미학습카드 </span>
               <Form.Item
                 name="yet"
                 valuePropName="checked"
@@ -196,8 +196,8 @@ class FlipModeTab extends Component {
               </Form.Item>
             </div>
 
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span style={{fontSize:"11px", marginLeft:"20px"}}>학습중카드 </span> 
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>학습중카드 </span> 
               <Form.Item
                 name="ing"
                 valuePropName="checked"
@@ -220,19 +220,19 @@ class FlipModeTab extends Component {
                   <Radio value="by_today" style={{fontSize:"11px"}}>
                     현재시간이전 복습필요 카드만
                   </Radio>
-                  <Radio value="custom" style={{fontSize:"11px"}}>
+                  <Radio value="custom" style={{fontSize:"11px", marginBottom:"5px"}}>
                     복습시점 직접설정
                   </Radio>
                 </Radio.Group>
                 
               </Form.Item>
-              <Form.Item name="ing_card_self_setting" >
+              <Form.Item name="ing_card_self_setting" style={{marginLeft:"50px"}}>
                 <RangePicker format={dateFormat}/>
               </Form.Item>
             </div>
 
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span style={{fontSize:"11px", marginLeft:"20px"}}>학습완료카드 </span>
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>학습완료카드 </span>
               <Form.Item
                 name="completed"
                 valuePropName="checked"
@@ -241,8 +241,8 @@ class FlipModeTab extends Component {
               </Form.Item>
             </div>
 
-            <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-            <span style={{fontSize:"11px", marginLeft:"20px"}}>학습보류카드 </span>
+            <div style={{display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+            <span style={{fontSize:"11px", marginLeft:"20px", marginRight:"5px"}}>학습보류카드 </span>
               <Form.Item
                 name="hold"
                 valuePropName="checked"
@@ -250,8 +250,8 @@ class FlipModeTab extends Component {
                  <Switch size="small" />
               </Form.Item>
             </div>
-            <div style={{marginTop:"10px", display:"flex", flexDirection:"row", alignItems:"center", fontSize:"11px"}}>
-              <span style={{fontSize:"13px", fontWeight:"700"}}>학습량 설정 </span> 
+            <div style={{marginTop:"10px", display:"flex", flexDirection:"row", alignItems:"baseline"}}>
+              <span style={{fontSize:"13px", fontWeight:"700", marginRight:"5px"}}>학습량 설정 </span> 
                 <Form.Item
                     name="study_quantity_use_switch"
                     valuePropName="checked"
@@ -303,8 +303,8 @@ class FlipModeTab extends Component {
             <AdvancedFilterModal applyAdvancedFilter={this.props.applyAdvancedFilter} advanced_filter={this.props.advanced_filter} modalVisible={this.state.modalVisible} handleOk={this.handleOk} handleCancel={this.handleCancel}/>
           </div>
           <Form.Item>
-          <div style={{height:"100px", backgroundColor:"#dfecf6", lineHeight:"100px", marginTop:"10px", textAlign:"center"}}>
-            <Button htmlType="submit" onClick={this.startStudy} width="200px" style={{color:"white", fontWeight:"700", background:"#69d316", height:"50px"}}>세션 시작하기</Button>
+          <div style={{height:"100px", lineHeight:"100px", marginTop:"10px", textAlign:"center"}}>
+            <Button htmlType="submit" onClick={this.startStudy} width="200px" fontSize="13px" style={{color:"white", background:"#69d316", height:"50px"}}>세션 시작하기</Button>
           </div>
         </Form.Item>
       </Form>

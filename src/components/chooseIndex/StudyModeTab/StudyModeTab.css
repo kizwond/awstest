@@ -13,3 +13,6 @@
     padding:10px;
     border-bottom: 1px solid grey;
 }
+.ant-picker-input > input{
+    font-size: 11px;
+}

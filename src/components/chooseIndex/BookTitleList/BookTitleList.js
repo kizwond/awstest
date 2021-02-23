@@ -13,7 +13,8 @@ class BookTitleList extends Component {
     super(props);
     this.state = { 
       toggle:false,
-      checkedIndex:[]
+      checkedIndex:[],
+      activeKey:''
      };
   }
   onClickDetailHide = () => {
@@ -31,6 +32,12 @@ class BookTitleList extends Component {
     console.log('get_value---------------------------', value)
     this.setState({
       checkedIndex:value
+    })
+  }
+  onClickBook=(activeKey)=>{
+    console.log('here-------------------',activeKey)
+    this.setState({
+      activeKey:activeKey
     })
   }
   render() {
@@ -52,7 +59,7 @@ class BookTitleList extends Component {
             <div style={{float:"right", marginBottom:"10px"}}>
               {this.state.toggle === true ? <Button size="small" onClick={this.onClickDetailHide}>간략보기</Button>: <Button size="small" onClick={this.onClickDetailHide}>상세보기</Button>}
             </div>
-            <SelectedIndexCardCount checkedIndex={this.state.checkedIndex} books={this.props.books} />
+            <SelectedIndexCardCount bookTabSelected={this.state.activeKey} checkedIndex={this.state.checkedIndex} books={this.props.books} />
           </div>
           <IndexTree book_id={book.book_id} 
                      book={book.index_info}
@@ -64,7 +71,9 @@ class BookTitleList extends Component {
     return (
       <>
         {/* <SelectedIndexCardCount checkedIndex={this.state.checkedIndex} books={this.props.books} /> */}
-        <Tabs className="study_next_page_tabs" tabPosition="left">
+        <Tabs onChange={this.onClickBook}
+              className="study_next_page_tabs" 
+              tabPosition="left">
           {bookList}
         </Tabs>
       </>

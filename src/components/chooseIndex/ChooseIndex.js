@@ -450,16 +450,16 @@ class ChooseIndex extends Component {
   render() { 
     return (
       <>      
-        <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"400"}}>> 세션설정</div>
-        <div style={{display:"flex", flexDirection:"row"}}>
-          <div style={{width:"1085px", marginRight:"10px"}}>
+        <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"400"}}> >> 세션설정</div>
+        <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
+          <div style={{marginRight:"10px"}}>
             <BookTitleList onClickUp={this.onClickUp} 
                             onClickDown={this.onClickDown} 
                             books={this.state.books}
                             expand={this.state.expand}
                             updateExpandState={this.updateExpandState}/>
           </div>
-          <div>
+          <div style={{width:"300px"}}>
             <Tabs className="study_mode_class" defaultActiveKey={this.state.key} onChange={this.handleTabChange} type="card" size='small' tabPosition={this.state.tab_mode} >
               <TabPane tab="책모드" key="read" style={{textAlign:"left", padding:"10px"}}>
                 <ReadModeTab applyAdvancedFilter={this.applyAdvancedFilter} study_config={this.state.study_config} advanced_filter={this.state.advanced_filter} onFinish={this.onFinish}/>
