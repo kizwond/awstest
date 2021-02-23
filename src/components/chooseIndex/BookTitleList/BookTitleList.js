@@ -12,7 +12,8 @@ class BookTitleList extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      toggle:false
+      toggle:false,
+      checkedIndex:[]
      };
   }
   onClickDetailHide = () => {
@@ -25,7 +26,12 @@ class BookTitleList extends Component {
       }
     }
     this.setState({toggle:!this.state.toggle})
-
+  }
+  onCheckIndex = (value) =>{
+    console.log('get_value---------------------------', value)
+    this.setState({
+      checkedIndex:value
+    })
   }
   render() {
     const bookList = this.props.books.map((book)=> 
@@ -38,26 +44,30 @@ class BookTitleList extends Component {
           </Space>
         </span>
         } key={book.book_id}>
-          <div style={{padding:'10px', fontSize:"11px", backgroundColor:"#5c89cf", borderBottom:"10px solid #b1c6ec"}}>
-            <div style={{display:"flex", justifyContent:"space-between", color:"white"}}>
+          <div style={{padding:'10px', fontSize:"11px", }}>
+            <div style={{display:"flex", justifyContent:"space-between", color:"black"}}>
               <span>선택 영역에 포함된 카드의 학습정보</span>
               <span>※ 괄호안 숫자는 현재시각 기준으로 산출한 복습 필요 카드 수량입니다.</span>
             </div>
             <div style={{float:"right", marginBottom:"10px"}}>
               {this.state.toggle === true ? <Button size="small" onClick={this.onClickDetailHide}>간략보기</Button>: <Button size="small" onClick={this.onClickDetailHide}>상세보기</Button>}
             </div>
-            <SelectedIndexCardCount books={this.props.books} />
+            <SelectedIndexCardCount checkedIndex={this.state.checkedIndex} books={this.props.books} />
           </div>
           <IndexTree book_id={book.book_id} 
                      book={book.index_info}
                      expand={this.props.expand}
-                     updateExpandState={this.props.updateExpandState}/>
+                     updateExpandState={this.props.updateExpandState}
+                     onCheckIndex={this.onCheckIndex}/>
       </TabPane>
       )
     return (
-        <Tabs style={{height:"100%",paddingLeft:"10px"}} className="study_next_page_tabs" tabPosition="left">
+      <>
+        {/* <SelectedIndexCardCount checkedIndex={this.state.checkedIndex} books={this.props.books} /> */}
+        <Tabs className="study_next_page_tabs" tabPosition="left">
           {bookList}
         </Tabs>
+      </>
     );
   }
 }

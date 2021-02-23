@@ -14,13 +14,13 @@ class IndexComponent extends Component {
     return ( 
       <div style={{width:"100%"}}>
         <div style={{display:"flex", flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
-          <div style={{width:"15%", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", marginRight:"20px"}}><span>{table.name}</span><SearchOutlined onClick={()=>this.onClickHideDetail(table._id)}/></div> 
+          <div style={{width:"15%", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", marginRight:"20px"}}><span>{table.name}</span><SearchOutlined onClick={()=>this.props.onClickHideDetail(table._id)}/></div> 
           <div style={{fontSize:"10px",width:"80%", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
             <span style={{width:"79px", textAlign:"center"}}><Progress size="large" style={{fontSize:"10px"}} percent={table.num_cards.total.completed} /></span> 
             <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.total.total}</span> 
             <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.total.yet}</span> 
             <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.total.ing.total}</span>
-            <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.total.ing.until_now + table.num_cards.total.ing.until_today}({table.num_cards.total.ing.until_today})</span>
+            <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.total.ing.until_now + table.num_cards.total.ing.until_today}({table.num_cards.total.ing.until_now})</span>
             <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.total.ing.after_tomorrow}</span>
             <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.total.completed}</span>
             <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.total.hold}</span>
@@ -34,7 +34,7 @@ class IndexComponent extends Component {
               <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.read.total}</span> 
               <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.read.yet}</span> 
               <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.read.ing.total}</span>
-              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.read.ing.until_now + table.num_cards.read.ing.until_today}({table.num_cards.read.ing.until_today})</span>
+              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.read.ing.until_now + table.num_cards.read.ing.until_today}({table.num_cards.read.ing.until_now})</span>
               <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.read.ing.after_tomorrow}</span>
               <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.read.completed}</span>
               <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.read.hold}</span>
@@ -47,7 +47,7 @@ class IndexComponent extends Component {
               <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.flip.total}</span> 
               <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.flip.yet}</span> 
               <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.flip.ing.total}</span>
-              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.flip.ing.until_now + table.num_cards.flip.ing.until_today}({table.num_cards.flip.ing.until_today})</span>
+              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.flip.ing.until_now + table.num_cards.flip.ing.until_today}({table.num_cards.flip.ing.until_now})</span>
               <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.flip.ing.after_tomorrow}</span>
               <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.flip.completed}</span>
               <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.flip.hold}</span>
@@ -106,8 +106,12 @@ class IndexTree extends Component {
         const removeDuplicate = JSON.parse(sessionStorage.getItem("selectedIndex"))
         const removed = [...new Set(removeDuplicate)]
         sessionStorage.setItem("selectedIndex", JSON.stringify(removed));
+        console.log("here fired1111111111111111111111111111111111")
+        this.props.onCheckIndex(removed)
       } else {
         sessionStorage.setItem("selectedIndex", JSON.stringify(filtered));
+        console.log("here fired2222222222222222222222222222222222")
+        this.props.onCheckIndex(filtered)
       }
     } else {
       console.log("unckeck",info.node)
@@ -133,13 +137,15 @@ class IndexTree extends Component {
       const finalArray = sessionData.filter(val => !deleteThis.includes(val));
 
       sessionStorage.setItem("selectedIndex", JSON.stringify(finalArray));
+      console.log("here fired33333333333333333333333333333333333")
+      this.props.onCheckIndex(finalArray)
     }
     console.log('get item : ',JSON.parse(sessionStorage.getItem("selectedIndex")))
   };
 
   tableLevelInfoHandler1 = (level, table) => {
     return ({
-      title: (<><IndexComponent table={table}/></>),
+      title: (<><IndexComponent onClickHideDetail={this.onClickHideDetail} table={table}/></>),
       index_id:table._id,
       book_id:this.props.book_id,
       key: table.seq,
@@ -150,7 +156,7 @@ class IndexTree extends Component {
 
   tableLevelInfoHandler2 = (level, table) => {
     return ({
-      title: (<><IndexComponent table={table}/></>),
+      title: (<><IndexComponent onClickHideDetail={this.onClickHideDetail} table={table}/></>),
       index_id:table._id,
       parent:table.parent,
       book_id:this.props.book_id,
@@ -472,7 +478,7 @@ class IndexTree extends Component {
           onCheck={this.onCheck}
           treeData={treeData}
           defaultCheckedKeys={this.state.ckeckedKeys}
-          style={{width:"100%", height:"73.5vh", fontSize:"11px", backgroundColor:"#dfecf6"}}
+          style={{width:"100%", fontSize:"11px", backgroundColor:"#f5f5f5"}}
         />
       </>
     );

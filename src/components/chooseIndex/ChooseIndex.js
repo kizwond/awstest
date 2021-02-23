@@ -132,33 +132,9 @@ class ChooseIndex extends Component {
 
   onClickUp = (value) => {
     console.log(value)
-    const session_id = sessionStorage.getItem("session_id")
-    axios.post('api/studysetup/click-up',{
-      book_id: value,
-      session_id: session_id,
-      status: 'up'
-    }).then(res=>{
-      console.log(res)
-      this.setState( {
-        books:res.data.booksnindexes
-        }
-      )
-    })
   }
   onClickDown = (value) => {
     console.log(value)
-    const session_id = sessionStorage.getItem("session_id")
-    axios.post('api/studysetup/click-down',{
-      book_id: value,
-      session_id: session_id,
-      status: 'down'
-    }).then(res=>{
-      console.log(res)
-      this.setState( {
-        books:res.data.booksnindexes
-        }
-      )
-    })
   }
   
   onChangeNew = (checked) => {
@@ -215,6 +191,7 @@ class ChooseIndex extends Component {
     })
   }
 
+  //학습모드탭에서 설정값 저장 및 적용
   onFinish = (values) => {
     sessionStorage.setItem('current_seq',0);
     sessionStorage.removeItem('cardlist_studying');
@@ -361,6 +338,7 @@ class ChooseIndex extends Component {
 
   };
 
+  //고급설정 모달에서 설정 저장 및 적용
   applyAdvancedFilter = () => {
     const filter = JSON.parse(sessionStorage.getItem("advanced_filter"))
     // const rangeValueAdvanced = filter['recent_study_time'];
@@ -472,9 +450,9 @@ class ChooseIndex extends Component {
   render() { 
     return (
       <>      
+        <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"400"}}>> 세션설정</div>
         <div style={{display:"flex", flexDirection:"row"}}>
-          <div>
-            <div style={{height:"26px", lineHeight:"26px", backgroundColor:"#b1c6ec", textAlign:"left", paddingLeft:"10px", fontWeight:"700"}}>책이름 및 목차선택</div>
+          <div style={{width:"1085px", marginRight:"10px"}}>
             <BookTitleList onClickUp={this.onClickUp} 
                             onClickDown={this.onClickDown} 
                             books={this.state.books}

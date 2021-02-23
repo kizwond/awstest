@@ -11,14 +11,12 @@
   width:100%;
   justify-content: space-between;
 }
-
-.ant-tree-treenode{
-  width:100%
+.ant-tree-treenode {
+  width:835px;
 }
 
 .study_next_page_tabs > .ant-tabs-nav .ant-tabs-tab-active{
-  border-left:5px solid #6da1ff;
-  height:50px;
+  border-left:5px solid #696969;
 }
 .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected,
 .ant-tree .ant-tree-node-content-wrapper:hover{

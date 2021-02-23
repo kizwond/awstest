@@ -5,7 +5,7 @@
 
 .study_mode_class .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list .ant-tabs-tab-active{
   margin-left:1px;
-  border-right:1px solid #efefef;
+  border-right:1px solid #f5f5f5;
 }
 .study_mode_class .ant-tabs-content-holder{
   margin-left:-25px;
@@ -38,13 +38,13 @@
   background:white;
 }
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active{
-  background:#efefef;
+  background:#f5f5f5;
 }
 .ant-tabs-tabpane-active{
-  background:#efefef;
+  background:#f5f5f5;
 }
 .ant-tabs-card.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card.ant-tabs-left > div > .ant-tabs-nav .ant-tabs-tab-active{
-  border-right-color: #efefef;
+  border-right-color: #f5f5f5;
 }
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab{
   border:1px solid lightgrey;
