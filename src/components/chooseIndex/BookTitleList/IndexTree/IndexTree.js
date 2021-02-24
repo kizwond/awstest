@@ -10,47 +10,73 @@ class IndexComponent extends Component {
     this.state = {  }
   }
   render() { 
+    if(this.props.level){
+      const level = this.props.level
+      if(level === 5){
+        var ellipsisWidth = "110px"
+      } else {
+        ellipsisWidth = "100%"
+      }
+
+      if(level===5){
+        var ellipsisStyleWidth = "90px"
+      } else if(level === 4){
+        ellipsisStyleWidth = "100px"
+      } else if(level === 3){
+        ellipsisStyleWidth = "110px"
+      } else if(level === 2){
+        ellipsisStyleWidth = "120px"
+      } else if(level === 1){
+        ellipsisStyleWidth = "130px"
+      }
+      var ellipsisStyle = {
+          width:ellipsisStyleWidth,
+          overflow:"hidden",
+          textOverflow:"ellipsis",
+          whiteSpace:"nowrap"
+      }
+    }
     const table = this.props.table
     return ( 
       <div style={{width:"100%"}}>
         <div style={{display:"flex", flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
-          <div style={{width:"15%", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", marginRight:"20px"}}><span>{table.name}</span><SearchOutlined onClick={()=>this.props.onClickHideDetail(table._id)}/></div> 
-          <div style={{fontSize:"10px",width:"80%", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
-            <span style={{width:"79px", textAlign:"center"}}><Progress size="large" style={{fontSize:"10px"}} percent={table.num_cards.total.completed} /></span> 
-            <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.total.total}</span> 
-            <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.total.yet}</span> 
-            <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.total.ing.total}</span>
-            <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.total.ing.until_now + table.num_cards.total.ing.until_today}({table.num_cards.total.ing.until_now})</span>
-            <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.total.ing.after_tomorrow}</span>
-            <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.total.completed}</span>
-            <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.total.hold}</span>
+          <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", marginRight:"5px", width:ellipsisWidth}}><span style={ellipsisStyle}>{table.name}</span><SearchOutlined onClick={()=>this.props.onClickHideDetail(table._id)}/></div> 
+          <div style={{flexShrink:0,fontSize:"10px", width:"635px", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
+            <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.total.completed}%</span> 
+            <span style={{width:"53px", textAlign:"center"}}>{table.num_cards.total.total}</span> 
+            <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.total.yet}</span> 
+            <span style={{width:"86px", textAlign:"center"}}>{table.num_cards.total.ing.total}</span>
+            <span style={{width:"107px", textAlign:"center"}}>{table.num_cards.total.ing.until_now + table.num_cards.total.ing.until_today}({table.num_cards.total.ing.until_now})</span>
+            <span style={{width:"102px", textAlign:"center"}}>{table.num_cards.total.ing.after_tomorrow}</span>
+            <span style={{width:"76px", textAlign:"center"}}>{table.num_cards.total.completed}</span>
+            <span style={{width:"76px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.total.hold}</span>
           </div>
         </div>
         <div id={table._id} className="detail_info" style={{display:"none"}}>
           <div style={{display:"flex", flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
             <div>읽기카드</div> 
-            <div style={{fontSize:"10px",width:"80%", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
-              <span style={{width:"79px", textAlign:"center"}}><Progress size="large" style={{fontSize:"10px"}} percent={table.num_cards.read.completed} /></span> 
-              <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.read.total}</span> 
-              <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.read.yet}</span> 
-              <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.read.ing.total}</span>
-              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.read.ing.until_now + table.num_cards.read.ing.until_today}({table.num_cards.read.ing.until_now})</span>
-              <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.read.ing.after_tomorrow}</span>
-              <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.read.completed}</span>
-              <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.read.hold}</span>
+            <div style={{fontSize:"10px",width:"635px", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
+              <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.read.completed}%</span> 
+              <span style={{width:"53px", textAlign:"center"}}>{table.num_cards.read.total}</span> 
+              <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.read.yet}</span> 
+              <span style={{width:"86px", textAlign:"center"}}>{table.num_cards.read.ing.total}</span>
+              <span style={{width:"107px", textAlign:"center"}}>{table.num_cards.read.ing.until_now + table.num_cards.read.ing.until_today}({table.num_cards.read.ing.until_now})</span>
+              <span style={{width:"102px", textAlign:"center"}}>{table.num_cards.read.ing.after_tomorrow}</span>
+              <span style={{width:"76px", textAlign:"center"}}>{table.num_cards.read.completed}</span>
+              <span style={{width:"76px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.read.hold}</span>
             </div>
           </div>
           <div style={{display:"flex", flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
             <div>뒤집기카드</div> 
-            <div style={{fontSize:"10px",width:"80%", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
-              <span style={{width:"79px", textAlign:"center"}}><Progress size="large" style={{fontSize:"10px"}} percent={table.num_cards.flip.completed} /></span> 
-              <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.flip.total}</span> 
-              <span style={{width:"80px", textAlign:"center"}}>{table.num_cards.flip.yet}</span> 
-              <span style={{width:"37px", textAlign:"center"}}>{table.num_cards.flip.ing.total}</span>
-              <span style={{width:"134px", textAlign:"center"}}>{table.num_cards.flip.ing.until_now + table.num_cards.flip.ing.until_today}({table.num_cards.flip.ing.until_now})</span>
-              <span style={{width:"125px", textAlign:"center"}}>{table.num_cards.flip.ing.after_tomorrow}</span>
-              <span style={{width:"95px", textAlign:"center"}}>{table.num_cards.flip.completed}</span>
-              <span style={{width:"95px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.flip.hold}</span>
+            <div style={{fontSize:"10px",width:"635px", display:"flex", flexDirection:"row",justifyContent:"space-between"}}>
+              <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.flip.completed}%</span> 
+              <span style={{width:"53px", textAlign:"center"}}>{table.num_cards.flip.total}</span> 
+              <span style={{width:"64px", textAlign:"center"}}>{table.num_cards.flip.yet}</span> 
+              <span style={{width:"86px", textAlign:"center"}}>{table.num_cards.flip.ing.total}</span>
+              <span style={{width:"107px", textAlign:"center"}}>{table.num_cards.flip.ing.until_now + table.num_cards.flip.ing.until_today}({table.num_cards.flip.ing.until_now})</span>
+              <span style={{width:"102px", textAlign:"center"}}>{table.num_cards.flip.ing.after_tomorrow}</span>
+              <span style={{width:"76px", textAlign:"center"}}>{table.num_cards.flip.completed}</span>
+              <span style={{width:"76px", textAlign:"center", marginRight:"8px"}}>{table.num_cards.flip.hold}</span>
             </div>
           </div>
         </div>
@@ -130,7 +156,7 @@ class IndexTree extends Component {
       info.node.children.map((item)=> item.children.map(item => children.push(item.index_id)))
       info.node.children.map((item)=> item.children.map(item => item.children.map(item=>children.push(item.index_id))))
       info.node.children.map((item)=> item.children.map(item => item.children.map(item=>item.children.map(item=>children.push(item.index_id)))))
-      info.node.children.map((item)=> item.children.map(item => item.children.map(item=>item.children.map(item=>item.children.map(children.push(item.index))))))
+      // info.node.children.map((item)=> item.children.map(item => item.children.map(item=>item.children.map(item=>item.children.map(children.push(item.index))))))
 
       const deleteThis = temp.concat(children)
       const sessionData = JSON.parse(sessionStorage.getItem("selectedIndex"))
@@ -145,7 +171,7 @@ class IndexTree extends Component {
 
   tableLevelInfoHandler1 = (level, table) => {
     return ({
-      title: (<><IndexComponent onClickHideDetail={this.onClickHideDetail} table={table}/></>),
+      title: (<><IndexComponent level={level} onClickHideDetail={this.onClickHideDetail} table={table}/></>),
       index_id:table._id,
       book_id:this.props.book_id,
       key: table.seq,
@@ -156,7 +182,7 @@ class IndexTree extends Component {
 
   tableLevelInfoHandler2 = (level, table) => {
     return ({
-      title: (<><IndexComponent onClickHideDetail={this.onClickHideDetail} table={table}/></>),
+      title: (<><IndexComponent level={level} onClickHideDetail={this.onClickHideDetail} table={table}/></>),
       index_id:table._id,
       parent:table.parent,
       book_id:this.props.book_id,

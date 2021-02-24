@@ -29,3 +29,11 @@
 .detail_show{
   display:block;
 }
+
+.ant-tree-indent-unit{
+  width:10px;
+}
+.ant-tree-show-line .ant-tree-switcher{
+  background:#f5f5f5;
+}
+
