@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { NavLink} from 'react-router-dom';
-import { Layout, Menu, Dropdown, Space, Button } from 'antd';
+import { Layout, Menu, Dropdown, Space } from 'antd';
 import { AppstoreOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import './Study.css'
 import FlipMode from './FlipMode';
-import DefaultButton from '../../../styledComponents/defaultButton'
+import Button from '../styledComponents/defaultButton'
 
 const { Header, Content } = Layout;
 const { SubMenu } = Menu;
@@ -19,8 +19,7 @@ class StudyFlip extends Component {
     document.getElementById("nav_bar").classList.add('nav_bar_hidden');
   }
   onMenuClick = () => {
-    document.getElementById("nav_bar").classList.remove('nav_bar_hidden');
-    document.getElementById("nav_bar").classList.add('nav_bar');
+    
 
     const cardlist_to_send = JSON.parse(sessionStorage.getItem('cardlist_to_send'))
     console.log('cardlist_to_send',cardlist_to_send)
@@ -40,7 +39,9 @@ class StudyFlip extends Component {
     } else {
       window.location.href = '/study-result'
     }
-
+    
+    document.getElementById("nav_bar").classList.remove('nav_bar_hidden');
+    document.getElementById("nav_bar").classList.add('nav_bar');
   }
   onClick = () => {
     axios('api/user/logout')
@@ -94,16 +95,15 @@ class StudyFlip extends Component {
       </Menu>
     );
     return (
-      <div className="study_page_container">
-        <Layout className="layout">
-          <Header style={{background:'white', paddingLeft:10, borderBottom:"1px solid #d3d3d3"}}>
+      <div className="study_page_container" style={{height:"800px"}}>
+          <header style={{background:'white', borderBottom:"1px solid #d3d3d3"}}>
             <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
               <Dropdown overlay={menu_0} >
                 <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                 <AppstoreOutlined style={{marginRight:'100px'}}/>
                 </a>
               </Dropdown>
-              <div style={{display:'flex', width:'90%', flexDirection:'row', justifyContent:'space-between'}}>
+              <div style={{display:'flex', width:'90%', flexDirection:'row', justifyContent:'space-between', lineHeight:"45px", alignItems:"center"}}>
                 <Space size='large'>
                   <Dropdown overlay={menu_1} >
                     <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -121,16 +121,13 @@ class StudyFlip extends Component {
                     </a>
                   </Dropdown>
                 </Space>
-                <Menu style={{height:'90%'}}>
-                  <Menu.Item><DefaultButton onClick={this.onMenuClick}>세션종료</DefaultButton></Menu.Item>
-                </Menu>
+                <Button size="small" width="100px" onClick={this.onMenuClick}>세션종료</Button>
               </div>
             </div>
-          </Header>
-          <Content style={{ padding: '10px' }}>
+          </header>
+          <div style={{ paddingTop:"10px", background:"white" }}>
             <FlipMode/>
-          </Content>
-        </Layout>
+          </div>
       </div>
     );
   }

@@ -58,5 +58,6 @@ export default StudyDataPage;
 const book_select_page_top = {
     display:"flex",
     flexDirection:"row",
-    justifyContent:"space-between"
+    justifyContent:"space-between",
+    marginTop:"10px"
 }

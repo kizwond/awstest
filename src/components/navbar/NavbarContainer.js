@@ -18,7 +18,7 @@ class NavbarContainer extends Component {
     }
     render() { 
         return (
-            <header style={header_style}>
+            <header id="nav_bar" className="" style={header_style}>
                 <div style={navbar_container}>
                     <h1 style={logo_container}><NavLink to="/" exact><img src="img/logo.png" width="90px" alt="logo"/></NavLink></h1>
                     <h2 style={navbar_total}>

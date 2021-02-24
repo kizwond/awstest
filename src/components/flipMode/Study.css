@@ -11,6 +11,7 @@
   font-weight: 700;
   font-size: 12px;
   width:100px;
+  line-height: 45px;
 }
 
 .ant-dropdown-menu-item, .ant-dropdown-menu-submenu-title{
@@ -18,4 +19,8 @@
 }
 .nav_bar_hidden{
   display: none;
+}
+.ant-layout-header{
+  padding:0;
+  height: 45px;
 }

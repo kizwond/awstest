@@ -6,7 +6,7 @@ import axios from 'axios'
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import Timer from './Timer'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import DefaultButton from '../../../styledComponents/defaultButton'
+import Button from '../styledComponents/defaultButton'
 
 const { confirm } = Modal;
 
@@ -922,59 +922,21 @@ class FlipMode extends Component {
 
 
   render() {
-    const style_study_layout_container ={
-      display:"flex",
-      flexDirection:"column",
-      height:"45px",
-    }
-    const style_study_layout_top ={
-      display:"flex",
-      flexDirection:"row",
-      width:"1000px",
-      margin:"auto",
-    }
-    const style_study_layout_top_left ={
-      display:"flex",
-      flexDirection:"row",
-      width:"50%",
-      alignItems:"center",
-      justifyContent:"space-between",
-      marginRight:"15px"
-    }
-    const style_study_layout_top_right ={
-      display:"flex",
-      flexDirection:"row",
-      width:"40%",
-      justifyContent:"space-between",
-      border:"1px solid lightgrey",
-      borderRadius:"10px",
-      backgroundColor:"white",
-      padding:5,
-      paddingBottom:0,
-      fontSize:"12px"
-    }
-    const style_study_layout_bottom ={
-      display:"flex",
-      flexDirection:"row",
-      justifyContent:"space-between",
-      width:"1410px",
-      margin:"auto",
-      marginTop:"10px"
-    }
+    
     const menu = (
       <Menu>
         <Menu.Item key="0">
-          <DefaultButton size="small" onClick={this.onClickBack} width="200px"><span style={{fontWeight:"bold"}}>이전</span><span style={{fontSize:"9px"}}>(이전학습카드로 이동)</span></DefaultButton>
+          <Button size="small" onClick={this.onClickBack} width="200px"><span style={{fontWeight:"bold"}}>이전</span><span style={{fontSize:"9px"}}>(이전학습카드로 이동)</span></Button>
         </Menu.Item>
         <Menu.Item key="1">
-        <DefaultButton size="small" onClick={this.onClickNext} width="200px"><span style={{fontWeight:"bold"}}>통과</span><span style={{fontSize:"9px"}}>(이번세션에서 제외)</span></DefaultButton>
+        <Button size="small" onClick={this.onClickNext} width="200px"><span style={{fontWeight:"bold"}}>통과</span><span style={{fontSize:"9px"}}>(이번세션에서 제외)</span></Button>
         </Menu.Item>
         {/* <Menu.Divider /> */}
         <Menu.Item key="3">
-        <DefaultButton size="small" onClick={this.onClickHold} width="200px"><span style={{fontWeight:"bold"}}>보류</span><span style={{fontSize:"9px"}}>(복구 시까지 학습보류)</span></DefaultButton>
+        <Button size="small" onClick={this.onClickHold} width="200px"><span style={{fontWeight:"bold"}}>보류</span><span style={{fontSize:"9px"}}>(복구 시까지 학습보류)</span></Button>
         </Menu.Item>
         <Menu.Item key="4">
-        <DefaultButton size="small" onClick={this.onClickCompleted} width="200px"><span style={{fontWeight:"bold"}}>졸업</span><span style={{fontSize:"9px"}}>(만렙찍고 향후 학습제외)</span></DefaultButton>
+        <Button size="small" onClick={this.onClickCompleted} width="200px"><span style={{fontWeight:"bold"}}>졸업</span><span style={{fontSize:"9px"}}>(만렙찍고 향후 학습제외)</span></Button>
         </Menu.Item>
       </Menu>
     );
@@ -1208,7 +1170,7 @@ class FlipMode extends Component {
                 <li style={{display:"flex",alignItems:"center"}}><span style={{marginRight:"10px", width:"40px", fontSize:"11px"}}>학습율</span><ProgressBar bgcolor={"#a1bbe9"} completed={this.state.study_ratio} /></li>
               </ul>
             </li>
-            <li><DefaultButton style={{height:"45px", borderRadius:"10px"}}>학습카드추가</DefaultButton></li>
+            <li><Button style={{height:"45px", borderRadius:"10px"}}>학습카드추가</Button></li>
           </ul>
           <div style={{flex:1, border:"1px solid lightgrey", marginRight:"10px", borderRadius:"10px",lineHeight:"45px", textAlign:'center', fontSize:"30px", backgroundColor:"white"}}>{this.state.clickCount}</div>
           <div style={style_study_layout_top_right} className="study_layout_top_right">
@@ -1262,20 +1224,20 @@ class FlipMode extends Component {
               </div>
             </div>
             <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", height:"70px", alignItems:"center", backgroundColor:"#e9e9e9", padding:"10px 90px", borderRadius:"0 0 10px 10px"}}>
-              {card_status === "hold" && <DefaultButton size="large" onClick={()=>this.reStateHold(id_of_content)} style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", flex:1, marginRight:"20px"}}>학습중카드로 복구하기</DefaultButton>}
-              {card_status === "completed" && <DefaultButton size="large" onClick={()=>this.reStateCompleted(id_of_content)} style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", flex:1, marginRight:"20px"}}>학습중카드로 복구하기</DefaultButton>}
+              {card_status === "hold" && <Button size="large" onClick={()=>this.reStateHold(id_of_content)} style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", flex:1, marginRight:"20px"}}>학습중카드로 복구하기</Button>}
+              {card_status === "completed" && <Button size="large" onClick={()=>this.reStateCompleted(id_of_content)} style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", flex:1, marginRight:"20px"}}>학습중카드로 복구하기</Button>}
               {card_status === "hold" ? '' : card_status === "completed" ? '' : <>
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi1", id_of_content,book_id, interval[0], time_unit[0], level_revealed)}>{nicks[0]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[0]}{time_unit[0]})</div></DefaultButton>
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi2", id_of_content,book_id, interval[1], time_unit[1], level_revealed)}>{nicks[1]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[1]}{time_unit[1]})</div></DefaultButton>
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi3", id_of_content,book_id, interval[2], time_unit[2], level_revealed)}>{nicks[2]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[2]}{time_unit[2]})</div></DefaultButton>
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi4", id_of_content,book_id, interval[3], time_unit[3], level_revealed)}>{nicks[3]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[3]}{time_unit[3]})</div></DefaultButton>
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi5", id_of_content,book_id, interval[4], time_unit[4], level_revealed)}>{nicks[4]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[4]}{time_unit[4]})</div></DefaultButton>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi1", id_of_content,book_id, interval[0], time_unit[0], level_revealed)}>{nicks[0]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[0]}{time_unit[0]})</div></Button>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi2", id_of_content,book_id, interval[1], time_unit[1], level_revealed)}>{nicks[1]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[1]}{time_unit[1]})</div></Button>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi3", id_of_content,book_id, interval[2], time_unit[2], level_revealed)}>{nicks[2]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[2]}{time_unit[2]})</div></Button>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi4", id_of_content,book_id, interval[3], time_unit[3], level_revealed)}>{nicks[3]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[3]}{time_unit[3]})</div></Button>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px"}} onClick={()=>this.onClickDifficulty("diffi5", id_of_content,book_id, interval[4], time_unit[4], level_revealed)}>{nicks[4]}<div style={{marginTop:"-5px", fontSize:"9px"}}>({interval[4]}{time_unit[4]})</div></Button>
               </>} 
-              <DefaultButton size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px", backgroundColor:"#7dbde1"}}>
+              <Button size="large" style={{fontSize:"13px", fontWeight:"500", border:"1px solid #bababa",borderRadius:"7px", width:"120px", backgroundColor:"#7dbde1"}}>
                 <Dropdown overlay={menu} trigger={['click']}>
                   <span className="ant-dropdown-link" onClick={e => e.preventDefault()}>패스 <DownOutlined /></span>
                 </Dropdown>
-              </DefaultButton>
+              </Button>
             </div>
           </div>
           <div style={{width:"200px", border:"1px solid lightgrey", borderRadius:"10px"}}>side 영역</div>
@@ -1286,3 +1248,43 @@ class FlipMode extends Component {
 }
 
 export default FlipMode;
+
+const style_study_layout_container ={
+  display:"flex",
+  flexDirection:"column",
+  height:"45px",
+}
+const style_study_layout_top ={
+  display:"flex",
+  flexDirection:"row",
+  width:"1000px",
+  margin:"auto",
+}
+const style_study_layout_top_left ={
+  display:"flex",
+  flexDirection:"row",
+  width:"50%",
+  alignItems:"center",
+  justifyContent:"space-between",
+  marginRight:"15px"
+}
+const style_study_layout_top_right ={
+  display:"flex",
+  flexDirection:"row",
+  width:"40%",
+  justifyContent:"space-between",
+  border:"1px solid lightgrey",
+  borderRadius:"10px",
+  backgroundColor:"white",
+  padding:5,
+  paddingBottom:0,
+  fontSize:"12px"
+}
+const style_study_layout_bottom ={
+  display:"flex",
+  flexDirection:"row",
+  justifyContent:"space-between",
+  width:"1410px",
+  margin:"auto",
+  marginTop:"10px"
+}

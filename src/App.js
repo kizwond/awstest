@@ -12,7 +12,7 @@ import WritingMain from './components/bookWriting/WritingMain';
 import BookStoreMain from './components/bookStore/BookStoreMain';
 import MentoringMain from './components/mentoring/MentoringMain';
 import ChooseIndex from './components/chooseIndex/ChooseIndex';
-import StudyFlip from './components/flipMode/StudyFlip';
+import StudyFlip from './components/flipMode/StudyFlip'
 
 class App extends Component {
   constructor(props) {
@@ -58,7 +58,6 @@ export default App;
 const main_container ={
   width:"1440px",
   margin:"auto",
-  padding:"10px 0 20px 0",
   fontSize:"12px",
   fontWeight:"400",
   fontFamily:`"Noto Sans KR", sans-serif`,
