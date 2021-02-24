@@ -7,13 +7,13 @@ import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 import Timer from './Timer'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Button from '../styledComponents/defaultButton'
-
+import FlipSide from './FlipSide'
 const { confirm } = Modal;
 
 const session_id = sessionStorage.getItem('sessionId')
 
 
-class FlipMode extends Component {
+class  FlipMode extends Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -963,7 +963,7 @@ class FlipMode extends Component {
       
       const card_ids_session = JSON.parse(sessionStorage.getItem('cardlist_studying'))
      
-      const selected_content = card_ids_session.find(item => {
+      var selected_content = card_ids_session.find(item => {
         if(item._id === id_of_content){
           return item
         }
@@ -1240,7 +1240,9 @@ class FlipMode extends Component {
               </Button>
             </div>
           </div>
-          <div style={{width:"200px", border:"1px solid lightgrey", borderRadius:"10px"}}>side 영역</div>
+          <div style={{width:"200px"}}>
+            <FlipSide card_status={selected_content}/>
+          </div>
         </div>
       </div>
     );

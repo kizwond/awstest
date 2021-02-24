@@ -9,7 +9,7 @@ class WritingMain extends Component {
     }
     render() { 
         return (
-            <div>WritingMain</div>
+            <div style={{marginTop:"10px"}}>WritingMain</div>
           );
     }
 }

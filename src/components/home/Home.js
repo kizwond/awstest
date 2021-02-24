@@ -25,7 +25,7 @@ class Home extends Component {
             loggedin = "로그아웃상태입니다."
         }
         return (
-            <div>HomePage {loggedin} </div>
+            <div style={{width:"1440px", margin:"auto",marginTop:"10px"}} >HomePage {loggedin} </div>
           );
     }
 }

@@ -449,7 +449,7 @@ class ChooseIndex extends Component {
   }
   render() { 
     return (
-      <>      
+      <div style={{width:"1440px", margin:"auto"}}>      
         <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"400"}}> >> 세션설정</div>
         <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
           <div style={{marginRight:"10px"}}>
@@ -473,7 +473,7 @@ class ChooseIndex extends Component {
             </Tabs>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

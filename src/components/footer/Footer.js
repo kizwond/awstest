@@ -21,6 +21,7 @@ export default Footer;
 const footer_detail = {
     width:"1440px",
     margin:"auto",
+    marginTop:"10px",
     textAlign:"center",
     fontWeight: "400",
     fontSize:"11px",

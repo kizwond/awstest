@@ -39,7 +39,7 @@ class StudyFlip extends Component {
     } else {
       window.location.href = '/study-result'
     }
-    
+
     document.getElementById("nav_bar").classList.remove('nav_bar_hidden');
     document.getElementById("nav_bar").classList.add('nav_bar');
   }
@@ -96,14 +96,14 @@ class StudyFlip extends Component {
     );
     return (
       <div className="study_page_container" style={{height:"800px"}}>
-          <header style={{background:'white', borderBottom:"1px solid #d3d3d3"}}>
-            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+          <header style={{background:'#ececec', borderBottom:"1px solid #d3d3d3"}}>
+            <div style={{display:'flex', width:"1440px", margin:"auto", flexDirection:'row', justifyContent:'space-between'}}>
               <Dropdown overlay={menu_0} >
                 <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                 <AppstoreOutlined style={{marginRight:'100px'}}/>
                 </a>
               </Dropdown>
-              <div style={{display:'flex', width:'90%', flexDirection:'row', justifyContent:'space-between', lineHeight:"45px", alignItems:"center"}}>
+              <div style={{display:'flex', width:'90%', flexDirection:'row', justifyContent:'space-between', alignItems:"center"}}>
                 <Space size='large'>
                   <Dropdown overlay={menu_1} >
                     <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -121,7 +121,7 @@ class StudyFlip extends Component {
                     </a>
                   </Dropdown>
                 </Space>
-                <Button size="small" width="100px" onClick={this.onMenuClick}>세션종료</Button>
+                <Button size="small" width="90px" onClick={this.onMenuClick}>세션종료</Button>
               </div>
             </div>
           </header>

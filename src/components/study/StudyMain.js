@@ -8,7 +8,7 @@ class StudyMain extends Component {
   }
   render() {
     return (
-      <div className="study_main_container">
+      <div style={{width:"1440px", margin:"auto"}} className="study_main_container">
         <StudyDataPage/>
       </div>
     );

@@ -59,5 +59,6 @@ const book_select_page_top = {
     display:"flex",
     flexDirection:"row",
     justifyContent:"space-between",
-    marginTop:"10px"
+    marginTop:"10px",
+    alignItems:"center"
 }

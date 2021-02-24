@@ -13,6 +13,7 @@ import BookStoreMain from './components/bookStore/BookStoreMain';
 import MentoringMain from './components/mentoring/MentoringMain';
 import ChooseIndex from './components/chooseIndex/ChooseIndex';
 import StudyFlip from './components/flipMode/StudyFlip'
+import FinishStudy from './components/studyResult/FinishStudy'
 
 class App extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class App extends Component {
             <Route exact path="/store" component={BookStoreMain} />
             <Route exact path="/mentoring" component={MentoringMain} />
             <Route exact path="/start-study" component={StudyFlip} />
+            <Route exact path="/study-result" component={FinishStudy} />
             <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
           </Switch>
         </div>
@@ -56,8 +58,6 @@ export default App;
 
 
 const main_container ={
-  width:"1440px",
-  margin:"auto",
   fontSize:"12px",
   fontWeight:"400",
   fontFamily:`"Noto Sans KR", sans-serif`,
