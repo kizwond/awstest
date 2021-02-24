@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink} from 'react-router-dom';
 import { Layout, Menu, Dropdown, Space } from 'antd';
-import { AppstoreOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import './Study.css'
 import FlipMode from './FlipMode';
@@ -51,6 +51,7 @@ class StudyFlip extends Component {
         document.getElementById("nav_bar").classList.add('nav_bar');
         
        });
+       window.location.href = '/'
   }
   render() {
     const menu_0 = (
@@ -59,7 +60,7 @@ class StudyFlip extends Component {
           <Menu.Item><NavLink to="/" exact onClick={this.onMenuClick}>메인</NavLink></Menu.Item>
           <Menu.Item><NavLink to="/write" exact onClick={this.onMenuClick}>만들기</NavLink></Menu.Item>
           <Menu.Item><NavLink to="/store" exact onClick={this.onMenuClick}>서점</NavLink></Menu.Item>
-          <Menu.Item><NavLink to="#" onClick={this.onClick}>로그아웃</NavLink></Menu.Item>
+          <Button onClick={this.onClick}>로그아웃</Button>
         </Menu.ItemGroup>
       </Menu>
     );
@@ -96,27 +97,27 @@ class StudyFlip extends Component {
     );
     return (
       <div className="study_page_container" style={{height:"800px"}}>
-          <header style={{background:'#ececec', borderBottom:"1px solid #d3d3d3"}}>
+          <header style={{background:'#4e4e4e', borderBottom:"1px solid #d3d3d3"}}>
             <div style={{display:'flex', width:"1440px", margin:"auto", flexDirection:'row', justifyContent:'space-between'}}>
               <Dropdown overlay={menu_0} >
                 <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                <AppstoreOutlined style={{marginRight:'100px'}}/>
+                <MenuOutlined style={{marginRight:'100px', color:"white"}}/>
                 </a>
               </Dropdown>
               <div style={{display:'flex', width:'90%', flexDirection:'row', justifyContent:'space-between', alignItems:"center"}}>
                 <Space size='large'>
                   <Dropdown overlay={menu_1} >
-                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{color:"white", fontSize:"11px", fontWeight:"700"}}>
                       보기
                     </a>
                   </Dropdown>
                   <Dropdown overlay={menu_2} >
-                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{color:"white", fontSize:"11px", fontWeight:"700"}}>
                       서식
                     </a>
                   </Dropdown>
                   <Dropdown overlay={menu_3} >
-                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <a href="/" className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{color:"white", fontSize:"11px", fontWeight:"700"}}>
                       학습
                     </a>
                   </Dropdown>
