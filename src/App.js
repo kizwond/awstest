@@ -12,6 +12,7 @@ import WritingMain from './components/bookWriting/WritingMain';
 import BookStoreMain from './components/bookStore/BookStoreMain';
 import MentoringMain from './components/mentoring/MentoringMain';
 import ChooseIndex from './components/chooseIndex/ChooseIndex';
+import StudyFlip from './components/flipMode/StudyFlip';
 
 class App extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class App extends Component {
             <Route exact path="/write" component={WritingMain} />
             <Route exact path="/store" component={BookStoreMain} />
             <Route exact path="/mentoring" component={MentoringMain} />
+            <Route exact path="/start-study" component={StudyFlip} />
             <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
           </Switch>
         </div>

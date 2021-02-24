@@ -107,7 +107,7 @@ class StudyDataDefaultList extends Component {
             },
             {
               title: '책이름',
-              dataIndex: 'book_title',
+              dataIndex: 'title',
             },
             {
               title: '학습완료율',
@@ -219,7 +219,7 @@ class StudyDataDefaultList extends Component {
               key: book._id,
               book_id: book._id,
               category: book.category_id.name,
-              book_title : book.title,
+              title : book.title,
               progress:'00%',
               remain_new:'00장',
               today_review:'00장',

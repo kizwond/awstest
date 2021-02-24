@@ -427,7 +427,6 @@ class SelectedIndexCardCount extends Component {
                 size='small'
                 className="choose_index_top_table"
                 bordered
-                // expandable={{ expandedRowRender }}
                 />
       );
   }
@@ -437,101 +436,3 @@ export default SelectedIndexCardCount;
 
 
 
-
-
-
-// const expandedRowRender = () => {
-//   const columns = [
-//     { title: '목차', dataIndex: 'indexSelected', key: 'date' },
-//     { title: '학습완료율', dataIndex: 'completedRatio', key: 'name' },
-//     { title: '전체카드', dataIndex: 'total', key: 'name' },
-//     { title: '미학습카드', dataIndex: 'yet', key: 'name' },
-//     { title: '전체학습중카드', dataIndex: 'ingTotal', key: 'name' },
-//     { title: '금일이전 복습필요', dataIndex: 'ingByToday', key: 'name' },
-//     { title: '금일이전 복습필요', dataIndex: 'ingAfterTomorrow', key: 'name' },
-//     { title: '학습완료카드', dataIndex: 'completed', key: 'name' },
-//     { title: '복습보류카드', dataIndex: 'suspend', key: 'name' },
-//   ];
-
-//   const data = [
-//     {
-//       key: '1',
-//       indexSelected:'------------>읽기카드',
-//       completedRatio: '31%',
-//       total:flip_card_num_total_sum+read_card_num_total_sum,
-//       yet:flip_card_num_yet_sum+read_card_num_yet_sum,
-//       ingTotal:flip_card_num_ing_total_sum+read_card_num_ing_total_sum,
-//       ingByNow:flip_card_num_ing_until_now_sum+read_card_num_ing_until_now_sum,
-//       ingByToday:flip_card_num_ing_until_today_sum+read_card_num_ing_until_today_sum+flip_card_num_ing_until_now_sum+read_card_num_ing_until_now_sum,
-//       ingAfterTomorrow:flip_card_num_ing_after_tomorrow_sum+read_card_num_ing_after_tomorrow_sum,
-//       completed:hold_card_num_total_sum,
-//       suspend:completed_card_num_total_sum,
-//     },
-//   ]
-
-
-//   const flip_card_num_total =[]
-//   const flip_card_num_yet =[]
-//   const flip_card_num_ing_after_tomorrow =[]
-//   const flip_card_num_ing_not_studying =[]
-//   const flip_card_num_ing_total =[]
-//   const flip_card_num_ing_until_now =[]
-//   const flip_card_num_ing_until_today =[]
-
-//   const read_card_num_total =[]
-//   const read_card_num_yet =[]
-//   const read_card_num_ing_after_tomorrow =[]
-//   const read_card_num_ing_not_studying =[]
-//   const read_card_num_ing_total =[]
-//   const read_card_num_ing_until_now =[]
-//   const read_card_num_ing_until_today =[]
-
-//   const selectedIndex_session = JSON.parse(sessionStorage.getItem("selectedIndex"))
-//   console.log(selectedIndex_session)
-//   if(selectedIndex_session){
-//     console.log('this.props.book_list : ', this.props.books)
-//     selectedIndex_session.map(selectedIndex => {
-//       this.props.books.map(book =>{
-//         console.log(book.index_info)
-//         book.index_info.map(index=>{
-//           console.log(index)
-//           if(index._id === selectedIndex ){
-//             flip_card_num_total.push(index.num_cards.flip.total)
-//             flip_card_num_yet.push(index.num_cards.flip.yet)
-//             flip_card_num_ing_after_tomorrow.push(index.num_cards.flip.ing.after_tomorrow)
-//             flip_card_num_ing_not_studying.push(index.num_cards.flip.ing.not_studying)
-//             flip_card_num_ing_total.push(index.num_cards.flip.ing.total)
-//             flip_card_num_ing_until_now.push(index.num_cards.flip.ing.until_now)
-//             flip_card_num_ing_until_today.push(index.num_cards.flip.ing.until_today)
-
-//             read_card_num_total.push(index.num_cards.read.total)
-//             read_card_num_yet.push(index.num_cards.read.yet)
-//             read_card_num_ing_after_tomorrow.push(index.num_cards.read.ing.after_tomorrow)
-//             read_card_num_ing_not_studying.push(index.num_cards.read.ing.not_studying)
-//             read_card_num_ing_total.push(index.num_cards.read.ing.total)
-//             read_card_num_ing_until_now.push(index.num_cards.read.ing.until_now)
-//             read_card_num_ing_until_today.push(index.num_cards.read.ing.until_today)
-//           }
-//         })
-//       })
-//     })
-
-//     const flip_card_num_total_sum = flip_card_num_total.reduce((a, b) => a + b, 0)
-//     const flip_card_num_yet_sum = flip_card_num_yet.reduce((a, b) => a + b, 0)
-//     const flip_card_num_ing_after_tomorrow_sum = flip_card_num_ing_after_tomorrow.reduce((a, b) => a + b, 0)
-//     const flip_card_num_ing_not_studying_sum = flip_card_num_ing_not_studying.reduce((a, b) => a + b, 0)
-//     const flip_card_num_ing_total_sum = flip_card_num_ing_total.reduce((a, b) => a + b, 0)
-//     const flip_card_num_ing_until_now_sum = flip_card_num_ing_until_now.reduce((a, b) => a + b, 0)
-//     const flip_card_num_ing_until_today_sum = flip_card_num_ing_until_today.reduce((a, b) => a + b, 0)
-
-//     const read_card_num_total_sum = read_card_num_total.reduce((a, b) => a + b, 0)
-//     const read_card_num_yet_sum = read_card_num_yet.reduce((a, b) => a + b, 0)
-//     const read_card_num_ing_after_tomorrow_sum = read_card_num_ing_after_tomorrow.reduce((a, b) => a + b, 0)
-//     const read_card_num_ing_not_studying_sum = read_card_num_ing_not_studying.reduce((a, b) => a + b, 0)
-//     const read_card_num_ing_total_sum = read_card_num_ing_total.reduce((a, b) => a + b, 0)
-//     const read_card_num_ing_until_now_sum = read_card_num_ing_until_now.reduce((a, b) => a + b, 0)
-//     const read_card_num_ing_until_today_sum = read_card_num_ing_until_today.reduce((a, b) => a + b, 0)
-              
-//   }
-//   return <Table indentSize={30} bordered columns={columns} dataSource={data} pagination={false} />;
-// };

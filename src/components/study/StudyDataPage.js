@@ -32,14 +32,8 @@ class StudyDataPage extends Component {
         window.location.href ="/session-setting"    
     }
 
-    renameKey ( obj, oldKey, newKey ) {
-        obj[newKey] = obj[oldKey];
-        delete obj[oldKey];
-    }
-
     selectBook = (value)=> {
         const json = value.book_info
-        json.forEach( obj => this.renameKey( obj, 'book_title', 'title' ) );
         this.setState({
             selected_book:json
         })
