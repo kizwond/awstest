@@ -7,13 +7,14 @@ import Home from './components/home/Home'
 import Login from './components/account/Login'
 import Register from './components/account/Register'
 import StudyMain from './components/study/StudyMain'
-import MyInfoMain from './components/account/myInfo/MyInfoMain';
-import WritingMain from './components/bookWriting/WritingMain';
-import BookStoreMain from './components/bookStore/BookStoreMain';
-import MentoringMain from './components/mentoring/MentoringMain';
-import ChooseIndex from './components/chooseIndex/ChooseIndex';
+import MyInfoMain from './components/account/myInfo/MyInfoMain'
+import WritingMain from './components/Write/Write'
+import BookStoreMain from './components/bookStore/BookStoreMain'
+import MentoringMain from './components/mentoring/MentoringMain'
+import ChooseIndex from './components/chooseIndex/ChooseIndex'
 import StudyFlip from './components/flipMode/StudyFlip'
 import FinishStudy from './components/studyResult/FinishStudy'
+import BookEditing from './components/Write/BookEditing/BookEditing'
 
 class App extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class App extends Component {
             <Route exact path="/start-study" component={StudyFlip} />
             <Route exact path="/study-result" component={FinishStudy} />
             <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
+            <Route exact path="/editing" component={BookEditing} />
           </Switch>
         </div>
           <Footer/>

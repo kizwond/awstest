@@ -1,0 +1,31 @@
+.category_move_modal .ant-modal-title{
+ font-size:12px; 
+ font-weight:700;
+ color: white;
+}
+.category_move_modal .ant-modal-body{
+  font-size:12px; 
+ }
+.category_move_modal .ant-modal-close-x{
+  width:30px;
+  line-height: 30px;
+  font-size:12px;
+ }
+ .category_move_modal .ant-modal-header{
+  padding:3px 24px;
+  height: 25px;
+  background:linear-gradient(#3390ff, #4e5dff);
+  border-bottom:1px solid #adadad;
+
+ }
+ .category_move_modal .ant-select-selection-item{
+   font-size:12px;
+ }
+ .ant-btn-primary{
+    background:#3b76ff;
+    color:white;
+    font-weight:700;
+ }
+ .category_move_modal .selected_book{
+   font-weight:700;
+ }
