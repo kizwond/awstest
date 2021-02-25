@@ -26,7 +26,11 @@ class WriteMain extends Component {
   componentDidMount() {
     this.getOnlyShowTitle()
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.category !== this.state.category) {
+      console.log('something changed!!!')
+    }
+  }
   getOnlyShowTitle() {
     axios.get('api/book/get-booklist')
     .then(res => {

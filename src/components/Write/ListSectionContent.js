@@ -29,24 +29,26 @@ class ListColumns extends Component {
   render() { 
     console.log('checked:',this.props.hideOrShowToggleState)
     return ( 
-      <ul className="like_list_columns">
-        <li>카테고리 <CategorySettingModal updateState={this.props.updateState}
-                                           category={this.props.category}/>
+      <ul className="like_list_columns" style={{border:"1px solid #e4e4e4"}}>
+        <li style={{width:"100px", textAlign:"left"}}>
+          카테고리 <CategorySettingModal updateState={this.props.updateState}
+                                        category={this.props.category}
+                  />
         </li>
-        <li>책제목</li>
-        <li>제목변경</li>
-        <li>구분</li>
-        <li>저자</li>
-        <li>총페이지</li>
-        <li>최근30일작성카드</li>
-        <li>카드종류</li>
-        <li>생성일</li>
-        <li>최근작성일</li>
-        <li>카테고리이동</li>
-        <li>즐겨찾기</li>
-        <li>순서이동</li>
-        <li>숨긴책보기{this.props.hideOrShowToggleState === false ? <><Switch size="small" onChange={this.onChange} />{this.props.hideOrShowToggleState}</> : <><Switch size="small" defaultChecked onChange={this.onChange} />{this.props.hideOrShowToggleState}</>}</li>
-        <li>삭제</li>
+        <li style={{width:"200px", textAlign:"left", cursor:"pointer"}}>책제목</li>
+        <li style={{width:"50px"}}>제목변경</li>
+        <li style={{width:"50px"}}>구분</li>
+        <li style={{width:"50px"}}>저자</li>
+        <li style={{width:"50px"}}>총페이지</li>
+        <li style={{width:"90px"}}>최근30일작성카드</li>
+        <li style={{width:"50px"}}>카드종류</li>
+        <li style={{width:"70px"}}>생성일</li>
+        <li style={{width:"70px"}}>최근작성일</li>
+        <li style={{width:"70px"}}>카테고리이동</li>
+        <li style={{width:"70px"}}>즐겨찾기</li>
+        <li style={{width:"70px"}}>순서이동</li>
+        <li style={{width:"80px"}}>숨긴책보기{this.props.hideOrShowToggleState === false ? <><Switch size="small" onChange={this.onChange} />{this.props.hideOrShowToggleState}</> : <><Switch size="small" checked onChange={this.onChange} />{this.props.hideOrShowToggleState}</>}</li>
+        <li style={{width:"30px"}}>삭제</li>
       </ul> 
     );
   }
@@ -74,13 +76,6 @@ class ListContent extends Component {
   saveBookIdSession = (value)=> {
     sessionStorage.setItem('book_id',value.book_id);
     window.location.href ="/editing"
-    // console.log(value)
-    // axios.post('api/book/start-write',{
-    //   book_id:value.book_id
-    // }).then(res => {
-    //   console.log(res)
-    //   window.location.href ="/editing"
-    // })
   }
 
   eyeClickHandler = (value) =>{
@@ -140,6 +135,7 @@ class ListContent extends Component {
   
   render() { 
     const info = this.props.bookInfo;
+    console.log(info)
     const toggleProps = this.props.hideOrShowToggleState;
     const date = info.time_created.slice(0,10)
     const update_date = info.time_created.slice(0,10)
@@ -154,64 +150,51 @@ class ListContent extends Component {
           return 
         }
       }
+
+    const elements = () =>{
+      return (
+            <div className='like_list_contents'>
+              <ul>
+                <li style={{width:"100px", textAlign:"left"}}>{this.props.currentCategory}</li>
+                <li style={{width:"200px", textAlign:"left", cursor:"pointer"}}>
+                    {this.state.editBookTitle ? <ChangeBookTitle updateState={this.props.updateState}
+                                                                  bookTitle={info} 
+                                                                  category={this.props.category} 
+                                                                  onClick={this.titleChangeHandleClick}/> : 
+                                                <>
+                                                  <span onClick={()=>this.saveBookIdSession({book_id:info._id})}>
+                                                    {info.title}/순서 : {info.seq_in_category}
+                                                  </span>
+                                                </>}
+                </li>
+                <li style={{width:"50px"}}><EditOutlined onClick={this.editBookTitleHandler} style={{fontSize:'14px'}}/></li>
+                <li style={{width:"50px"}}>{info.type}</li>
+                <li style={{width:"50px"}}>{info.author}</li>
+                <li style={{width:"50px"}}>{info.num_pages}</li>
+                <li style={{width:"90px"}}>{info.num_cards.read.total}</li>
+                <li style={{width:"50px"}}>read {info.num_cards.read.total}장<br/>flip {info.num_cards.flip.total}장</li>
+                <li style={{width:"70px"}}>{date}</li>
+                <li style={{width:"70px"}}>{update_date}</li>
+                <li style={{width:"70px"}}><CategoryMoveModal updateState={this.props.updateState} category={this.props.categoryTotal} bookTitle={info} /></li>
+                <li style={{width:"70px"}}>
+                  {renderLike()}
+                </li>
+                <li style={{width:"70px"}}>{info.hide_or_show === true ? <><ArrowUpOutlined onClick={()=>this.listOrderHandler({action: 'up', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/>
+                                                    <ArrowDownOutlined onClick={()=>this.listOrderHandler({action: 'down', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/></> : ''}
+                </li>
+                <li style={{width:"80px"}}>{info.hide_or_show === false ? <EyeInvisibleOutlined onClick={()=>this.eyeClickHandler({value:true,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>:
+                                                  <EyeOutlined onClick={()=>this.eyeClickHandler({value:false,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>}</li>
+                <li style={{width:"30px"}}><DeleteBook bookTitle={info} updateState={this.props.updateState}  /></li>
+              </ul>
+            </div>
+      )
+    }
     return ( 
       <>
       {toggleProps === true ?
-        <div className='like_list_contents'>
-          <ul>
-            <li>{this.props.currentCategory}</li>
-            <li>{this.state.editBookTitle ? <ChangeBookTitle updateState={this.props.updateState}
-                                                            bookTitle={info} 
-                                                            category={this.props.category} 
-                                                            onClick={this.titleChangeHandleClick}/> : <><span onClick={()=>this.saveBookIdSession({book_id:info._id})} >{info.title}/순서 : {info.seq_in_category}</span></>}</li>
-            <li><EditOutlined onClick={this.editBookTitleHandler} style={{fontSize:'14px'}}/></li>
-            <li>{info.type}</li>
-            <li>{info.author}</li>
-            <li>{info.num_pages}</li>
-            <li>{info.num_cards.read.total}</li>
-            <li>read {info.num_cards.read.total}장<br/>flip {info.num_cards.flip.total}장</li>
-            <li>{date}</li>
-            <li>{update_date}</li>
-            <li><CategoryMoveModal updateState={this.props.updateState} category={this.props.categoryTotal} bookTitle={info} /></li>
-            <li>
-              {renderLike()}
-            </li>
-            <li>{info.hide_or_show === true ? <><ArrowUpOutlined onClick={()=>this.listOrderHandler({action: 'up', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/>
-                                                 <ArrowDownOutlined onClick={()=>this.listOrderHandler({action: 'down', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/></> : ''}
-            </li>
-            <li>{info.hide_or_show === false ? <EyeInvisibleOutlined onClick={()=>this.eyeClickHandler({value:true,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>:
-                                               <EyeOutlined onClick={()=>this.eyeClickHandler({value:false,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>}</li>
-            <li><DeleteBook bookTitle={info} updateState={this.props.updateState}  /></li>
-          </ul>
-        </div> : 
+            elements() : 
         <>{info.hide_or_show === true  ? 
-            <div className='like_list_contents'>
-                <ul>
-                  <li>{this.props.currentCategory}</li>
-                  <li>{this.state.editBookTitle ? <ChangeBookTitle updateState={this.props.updateState}
-                                                                   bookTitle={info} 
-                                                                   category={this.props.category} 
-                                                                   onClick={this.titleChangeHandleClick}/> : <><span onClick={()=>this.saveBookIdSession({book_id:info._id})} >{info.title}/순서 : {info.seq_in_category}</span></>}</li>
-                  <li><EditOutlined onClick={this.editBookTitleHandler} style={{fontSize:'14px'}}/></li>
-                  <li>{info.type}</li>
-                  <li>{info.author}</li>
-                  <li>{info.num_pages}</li>
-                  <li>{info.num_cards.read.total}</li>
-                  <li>read {info.num_cards.read.total}장<br/>flip {info.num_cards.flip.total}장</li>
-                  <li>{date}</li>
-                  <li>{update_date}</li>
-                  <li><CategoryMoveModal updateState={this.props.updateState} category={this.props.categoryTotal} bookTitle={info} /></li>
-                  <li>
-                    {renderLike()}
-                  </li>
-                  <li>{info.hide_or_show === true ? <><ArrowUpOutlined onClick={()=>this.listOrderHandler({action: 'up', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/>
-                                                      <ArrowDownOutlined onClick={()=>this.listOrderHandler({action: 'down', from:'list',category_id: this.props.bookInfo.category_id._id, bookId: this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category})} style={{fontSize:'14px'}}/></> : ''}
-                  </li>
-                  <li>{info.hide_or_show === false ? <EyeInvisibleOutlined onClick={()=>this.eyeClickHandler({value:true,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>:
-                                                    <EyeOutlined onClick={()=>this.eyeClickHandler({value:false,bookId:this.props.bookInfo._id, seq_in_category:this.props.bookInfo.seq_in_category,seq_in_like:this.props.bookInfo.seq_in_like, category_id:this.props.bookInfo.category_id._id})} style={{fontSize:'14px'}}/>}</li>
-                  <li><DeleteBook bookTitle={info} updateState={this.props.updateState}  /></li>
-                </ul>
-              </div> 
+            elements()
           : ''} 
         </>
       }
