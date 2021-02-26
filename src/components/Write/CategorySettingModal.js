@@ -68,7 +68,7 @@ class CategoryList extends Component {
   }
   render() {
     
-    const text = <span>새로운 카테고리 이름을 입력해 주세요.</span>;
+    const text = <span style={{fontSize:"11px"}}>새로운 카테고리 이름을 입력해 주세요.</span>;
     const content = (
       <Form
           layout={'inline'}
@@ -173,6 +173,7 @@ class CategoryModal extends Component {
           width={1000}
           footer={null}
           style={{ top: 70 }}
+          maskClosable={false}
         >
           <div style={{fontSize:"11px", border:"1px solid lightgrey"}}>
             <ul style={category_columns}>

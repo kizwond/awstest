@@ -48,7 +48,7 @@ class App extends Component {
             <Route exact path="/start-study" component={StudyFlip} />
             <Route exact path="/study-result" component={FinishStudy} />
             <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
-            <Route exact path="/editing" component={BookEditing} />
+            <Route exact path="/editing" render={() => <BookEditing updatedLoginState={this.updatedLoginState}/>}/>
             <Route exact path="/naming" component={BookNaming} />
           </Switch>
         </div>

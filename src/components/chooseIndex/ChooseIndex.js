@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios"
-import {Row, Col, Tabs } from 'antd';
+import {Tabs, message } from 'antd';
 import BookTitleList from './BookTitleList/BookTitleList'
 import "./ChooseIndex.css"
 import ReadModeTab from './StudyModeTab/ReadModeTab';
@@ -191,6 +191,15 @@ class ChooseIndex extends Component {
     })
   }
 
+  warning = () => {
+    message.warning({
+        content: '학습할 목차를 선택해 주세요!!!',
+        duration: 1,
+        style: {
+          marginTop: '10vh',
+        },
+    });
+  };
   //학습모드탭에서 설정값 저장 및 적용
   onFinish = (values) => {
     sessionStorage.setItem('current_seq',0);
@@ -284,10 +293,10 @@ class ChooseIndex extends Component {
     console.log('indexes',indexes)
     console.log('booksSlice',booksSlice)
     if(indexes === null){
-      return alert("목차를 선택하여 주십시오.")
+      return this.warning()
     }
     if(indexes.length === 0){
-      return alert("목차를 선택하여 주십시오.")
+      return this.warning()
     }
     indexes.forEach(index => {
       booksSlice.forEach(book => {
@@ -450,7 +459,7 @@ class ChooseIndex extends Component {
   render() { 
     return (
       <div style={{width:"1440px", margin:"auto"}}>      
-        <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px", fontWeight:"400"}}> >> 세션설정</div>
+        <div style={{height:"26px", lineHeight:"26px", textAlign:"left", paddingLeft:"10px",color:"#565656", fontWeight:"400",fontFamily: `'Jua', sans-serif`, fontSize:"14px"}}> >> 세션설정</div>
         <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
           <div style={{marginRight:"10px"}}>
             <BookTitleList onClickUp={this.onClickUp} 

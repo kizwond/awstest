@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './Write.css'
 import LikeSectionContent from './LikeSectionContent'
 import ListSectionContent from './ListSectionContent'
 import {NavLink} from 'react-router-dom'
@@ -68,7 +67,7 @@ class WriteMain extends Component {
   render() { 
 
     return ( 
-      <div className="write_container" style={{marginTop:"10px"}}>
+      <div className="write_container" style={{marginTop:"10px", width:"1440px", margin:"auto", fontSize:"11px", paddingTop:"10px"}}>
         <div>즐겨찾기</div>
         <br/>
         {this.state.isToggleOn ? <LikeSectionContent updateState={this.updateState}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
+import { Layout,message } from 'antd';
 import axios from 'axios'
 import Button from '../styledComponents/defaultButton'
 import StudyDataDefaultList from './StudyDataDefaultList'
@@ -28,11 +28,24 @@ class StudyDataPage extends Component {
     }
 
     sessionSaveBookIds = () => {
+        if(this.state.selected_book === undefined){
+            return this.warning()
+        }
         sessionStorage.setItem("book_ids", JSON.stringify(this.state.selected_book));
         window.location.href ="/session-setting"    
     }
+    warning = () => {
+        message.warning({
+            content: '학습할 책을 선택해 주세요!!!',
+            duration: 1,
+            style: {
+              marginTop: '10vh',
+            },
+        });
+      };
 
     selectBook = (value)=> {
+        console.log(value)
         const json = value.book_info
         this.setState({
             selected_book:json
@@ -44,7 +57,7 @@ class StudyDataPage extends Component {
         return (
             <>
                 <div style={book_select_page_top}>
-                    <h1>학습할 책을 선택후 다음을 눌러주세요!!!</h1>
+                    <h1 style={{fontFamily: `'Jua', sans-serif`,color:"#565656", fontSize:"14px"}}>학습할 책을 선택후 다음을 눌러주세요!!!</h1>
                     <Button size="small" width="100px" fontSize="14px" style={{marginBottom:"5px"}} onClick={this.sessionSaveBookIds}>다음</Button>
                 </div>
                 <StudyDataDefaultList selectBook={this.selectBook} book_list={this.state.book_list}/>

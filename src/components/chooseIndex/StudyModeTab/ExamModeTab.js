@@ -303,8 +303,8 @@ class ExamModeTab extends Component {
             <AdvancedFilterModal applyAdvancedFilter={this.props.applyAdvancedFilter} advanced_filter={this.props.advanced_filter} modalVisible={this.state.modalVisible} handleOk={this.handleOk} handleCancel={this.handleCancel}/>
           </div>
           <Form.Item>
-          <div style={{height:"100px", lineHeight:"100px", marginTop:"10px", textAlign:"center"}}>
-            <Button htmlType="submit" onClick={this.startStudy} width="200px" fontSize="13px" style={{color:"white", background:"#69d316", height:"50px"}}>세션 시작하기</Button>
+          <div style={{height:"100px", lineHeight:"100px", marginTop:"10px", textAlign:"center", width:"253px"}}>
+            <Button htmlType="submit" width="200px" fontSize="13px" style={{color:"white", background:"#69d316", height:"50px"}}>세션 시작하기</Button>
           </div>
         </Form.Item>
       </Form>

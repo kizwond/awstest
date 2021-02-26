@@ -97,6 +97,7 @@ export class BookWriting extends Component {
         const getfirstIndex = sessionStorage.getItem('firstIndex')
         const value = {node:{index_id :getfirstIndex}}
         this.onSelect([0], value)
+        this.props.updatedLoginState(res.data.isloggedIn)
       })
   }
   getCardTypeList = () => {

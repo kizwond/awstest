@@ -66,6 +66,9 @@ const HorizontalLoginForm = () => {
     padding: "20px 20px 0 20px",
     margin: "auto",
     border: "1px solid #d8d8d8",
+    borderRadius:"5px",
+    background:"#f7f7f7",
+    boxShadow: "0px 0px 12px -3px rgba(153,153,153,1)"
   }
 
   return (
@@ -78,28 +81,24 @@ const HorizontalLoginForm = () => {
                           name="book_naming" 
                           layout="block" 
                           onFinish={onFinish}>
-          <div style={{display:"flex", justifyContent:"space-between",  lineHeight:"32px"}}>
-            <div>카테고리</div>
+            <div style={{fontSize:"25px",fontFamily: `'Jua', sans-serif`, color:"#565656"}}>내 책 만들기</div>
+            <div style={{fontSize:"11px"}}>카테고리 선택</div>
             <Form.Item
               className="category_select_naming"
               name='category_id'
-              style={{width:"200px"}}
               rules={[{ required: false, message: '카테고리를 선택해 주세요' }]}
               
             >
-              <Select style={{ width: 200 }} placeholder="카테고리를 선택해 주세요." >
+              <Select style={{ width: "100%" }} placeholder="카테고리를 선택해 주세요." >
                 {data.map((category)=>(
                                       <Option key={category._id} value={category._id}>{category.name}</Option>
                                     )) }
               </Select>
             </Form.Item>
-          </div>
-          <div style={{display:"flex", justifyContent:"space-between",  lineHeight:"32px"}}>
-            <div>첵제목</div>
+            <div style={{fontSize:"11px"}}>첵제목 입력</div>
             <Form.Item
               className="naming_input"
               name="book_title"
-              // style={{width:"255px"}}
               rules={[
                 {
                   required: true,
@@ -107,22 +106,11 @@ const HorizontalLoginForm = () => {
                 },
               ]}
             >
-              <Input style={{width:"200px"}} prefix={<BookOutlined className="site-form-item-icon" />} placeholder="책제목을 입력해 주세요" />
+              <Input style={{width:"100%"}} prefix={<BookOutlined className="site-form-item-icon" />} placeholder="책제목을 입력해 주세요" />
             </Form.Item>
-          </div>
-          <div style={{textAlign:"center"}}>
-            <Space>
-              <Form.Item>
-                  <Button
-                    className="naming_submit_button"
-                    type="primary"
-                    htmlType="submit"
-                  >
-                    취소
-                  </Button>
-              </Form.Item>
+              
             
-              <Form.Item>
+              <Form.Item style={{marginBottom:"10px"}}>
                   <Button
                     className="naming_submit_button"
                     type="primary"
@@ -131,8 +119,17 @@ const HorizontalLoginForm = () => {
                     시작
                   </Button>
               </Form.Item>
-            </Space>
-          </div>
+
+              <Form.Item>
+                  <Button
+                    className="naming_submit_button"
+                    size="samll"
+                    htmlType="submit"
+                    style={{}}
+                  >
+                    취소
+                  </Button>
+              </Form.Item>
         </Form>
         { message && <div style={{fontSize:"10px",color:"red"}}>※ {message}</div> }
       </div>

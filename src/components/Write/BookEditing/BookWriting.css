@@ -7,9 +7,6 @@
   overflow-x: hidden;
 }
 
-footer{
-  display:none;
-}
 .ant-drawer-left, .ant-drawer-right{
   margin-top:54px;
 }
