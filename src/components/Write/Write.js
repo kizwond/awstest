@@ -19,18 +19,14 @@ class WriteMain extends Component {
       hideOrShowClass : false,
       category : [],
       hide_or_show: false,
-      hide_or_show_like :false
+      hide_or_show_like :false,
      }
   }
 
   componentDidMount() {
     this.getOnlyShowTitle()
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.category !== this.state.category) {
-      console.log('something changed!!!')
-    }
-  }
+  
   getOnlyShowTitle() {
     axios.get('api/book/get-booklist')
     .then(res => {
@@ -47,8 +43,10 @@ class WriteMain extends Component {
   updateState = (data) => {
     this.setState({
       category:data.value1,
-      likeTitle:data.value2
+      likeTitle:data.value2,
+      justChanged:data.value3
     })
+   
   }
   updateHideOrShowState = (data) => {
     this.setState({
