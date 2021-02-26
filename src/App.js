@@ -15,6 +15,7 @@ import ChooseIndex from './components/chooseIndex/ChooseIndex'
 import StudyFlip from './components/flipMode/StudyFlip'
 import FinishStudy from './components/studyResult/FinishStudy'
 import BookEditing from './components/Write/BookEditing/BookEditing'
+import BookNaming from './components/Write/BookEditing/BookNaming'
 
 class App extends Component {
   constructor(props) {
@@ -41,13 +42,14 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/study" component={StudyMain} />
             <Route exact path="/myinfo" component={MyInfoMain} />
-            <Route exact path="/write" component={WritingMain} />
+            <Route exact path="/write" render={() => <WritingMain updatedLoginState={this.updatedLoginState}/>} />
             <Route exact path="/store" component={BookStoreMain} />
             <Route exact path="/mentoring" component={MentoringMain} />
             <Route exact path="/start-study" component={StudyFlip} />
             <Route exact path="/study-result" component={FinishStudy} />
             <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState}/>} />
             <Route exact path="/editing" component={BookEditing} />
+            <Route exact path="/naming" component={BookNaming} />
           </Switch>
         </div>
           <Footer/>

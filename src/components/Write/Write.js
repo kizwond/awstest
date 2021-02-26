@@ -37,14 +37,15 @@ class WriteMain extends Component {
         isToggleOn:res.data.write_config[0].write_config.likebook,
         hide_or_show:res.data.write_config[0].write_config.hide_or_show
       })
+      this.props.updatedLoginState(res.data.isloggedIn)
     })
+    
   }
 
   updateState = (data) => {
     this.setState({
       category:data.value1,
       likeTitle:data.value2,
-      justChanged:data.value3
     })
    
   }

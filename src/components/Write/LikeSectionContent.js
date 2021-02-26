@@ -201,13 +201,17 @@ class LikeListContent extends Component {
 
 class LikeSectionContent extends Component {
   render() { 
-    if(this.props.bookTitle.length > 0){
-      var bookList = this.props.bookTitle.map((book_title)=>(
-        <LikeListContent key={book_title._id} 
-                        updateState={this.props.updateState}
-                        category={this.props.category}
-                        bookInfo={book_title}/>
-      ))
+    if(this.props.bookTitle){
+      if(this.props.bookTitle.length > 0){
+        var bookList = this.props.bookTitle.map((book_title)=>(
+          <LikeListContent key={book_title._id} 
+                          updateState={this.props.updateState}
+                          category={this.props.category}
+                          bookInfo={book_title}/>
+        ))
+      } else {
+        bookList = <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      }
     } else {
       bookList = <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }

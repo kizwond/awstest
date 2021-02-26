@@ -35,6 +35,7 @@ class CategoryList extends Component {
         })
         alert(this.state.message)
       } else {
+        console.log(res)
         this.props.updateState({value1: res.data.categorybooklist, value2: res.data.likebooklist})
       }
     })
@@ -91,28 +92,38 @@ class CategoryList extends Component {
       <span>{book.title}, </span>
     ))
     console.log('hello there :',this.props.category)
+    const category_contents = {
+      display:"flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      height:"30px",
+      lineHeight: "13px",
+      padding:"5px",
+      textAlign:"center"
+    }
     return(
-        <div className="category_setting_content">
-          <ul>
-            <li>
+        <div className="category_setting_content" style={{fontSize:"11px"}}>
+          <ul style={category_contents}>
+            <li style={{width:"40px", textAlign:"left"}}>
               <Popover placement="rightTop" title={text} visible={this.state.newInput} content={content} trigger="click">
                 <PlusOutlined onClick={this.newInputVisible} style={{fontSize:'14px'}} />
               </Popover>
             </li>
-            <li>{this.state.inputArea ? <ChangeCategoryName updateState={this.props.updateState} 
+            <li style={{width:"150px", textAlign:"left"}}>{this.state.inputArea ? <ChangeCategoryName updateState={this.props.updateState} 
                                                             vi={this.state.inputArea} 
                                                             inputAreaVisible={this.inputAreaVisible} 
                                                             category={this.props.category} /> : <>{this.props.category.name}/순서:{this.props.category.seq} </>}</li>
-            <li>
+            <li style={{width:"50px"}}>
               {this.props.category.name === '(미지정)' ? '' :<EditOutlined onClick={this.inputAreaVisible} style={{fontSize:'14px'}}/>}
             </li>
-            <li>
+            <li style={{width:"90px"}}>
               {this.props.category.name === '(미지정)' ? '' : <><ArrowUpOutlined onClick={()=>this.categoryListOrder({action: 'up', categoryId: this.props.category._id, categorySeq: this.props.category.seq})} style={{fontSize:'14px'}}/>
                                                                <ArrowDownOutlined onClick={()=>this.categoryListOrder({action: 'down', categoryId: this.props.category._id, categorySeq: this.props.category.seq})} style={{fontSize:'14px'}}/></>}
             </li>
-            <li>{this.props.category.name === '(미지정)' ? '' :<DeleteCategory updateState={this.props.updateState} categoryTotal={this.props.categoryTotal} category={this.props.category} />}</li>
-            <li>{bookList.length}</li>
-            <li>{bookList}</li>
+            <li style={{width:"40px"}}>{this.props.category.name === '(미지정)' ? '' :<DeleteCategory updateState={this.props.updateState} categoryTotal={this.props.categoryTotal} category={this.props.category} />}</li>
+            <li style={{width:"70px"}}>{bookList.length}</li>
+            <li style={{width:"400px", textAlign:"left"}}>{bookList}</li>
           </ul>
         </div>
     )
@@ -141,7 +152,17 @@ class CategoryModal extends Component {
       categoryList = 'none'
     }
     
-    
+    const category_columns = {
+      display:"flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      height:"30px",
+      lineHeight: "13px",
+      padding:"5px",
+      backgroundColor:"#efefef",
+      textAlign:"center"
+    }
     return (
       <>
         <SettingOutlined  onClick={() => this.setState({visible:true})} style={{fontSize:'14px'}}/>
@@ -153,15 +174,15 @@ class CategoryModal extends Component {
           footer={null}
           style={{ top: 70 }}
         >
-          <div className="category_setting_columns">
-            <ul>
-              <li>추가</li>
-              <li>카테고리 명</li>
-              <li>이름변경</li>
-              <li>표시순서<br/>변경</li>
-              <li>삭제</li>
-              <li>총 책권수</li>
-              <li>책 제목모음</li>
+          <div style={{fontSize:"11px", border:"1px solid lightgrey"}}>
+            <ul style={category_columns}>
+              <li style={{width:"40px", textAlign:"left"}}>추가</li>
+              <li style={{width:"150px", textAlign:"left"}}>카테고리 명</li>
+              <li style={{width:"50px"}}>이름변경</li>
+              <li style={{width:"90px"}}>표시순서 변경</li>
+              <li style={{width:"40px"}}>삭제</li>
+              <li style={{width:"70px"}}>총 책권수</li>
+              <li style={{width:"400px", textAlign:"left"}}>책 제목모음</li>
             </ul>
           </div>
           {categoryList}
