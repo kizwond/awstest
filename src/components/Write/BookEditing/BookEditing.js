@@ -774,7 +774,7 @@ export class BookWriting extends Component {
                         onMouseLeave={() => this.onLeaveCardHandler(content[0].card_id)} >
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
-                    <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={face1Style}>{content[0].face1}</div>
                       <div style={face2Style}>{content[0].face2}</div>
                       <div>{content[0].annotation_contents}</div>
@@ -840,7 +840,7 @@ export class BookWriting extends Component {
                         onMouseLeave={() => this.onLeaveCardHandler(content[0].card_id)} >
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
-                    <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}> 
                         <div>{content[0].face1}</div>
                         <div>{content[0].selection_contents}</div>
@@ -910,10 +910,10 @@ export class BookWriting extends Component {
                         onMouseLeave={() => this.onLeaveCardHandler(content[0].card_id)} >
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
-                    <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div style={{marginBottom:'5px', display:'flex', flexDirection:'column'}}>
-                        <div>{content[0].face1}</div>
-                        <div>{content[0].face2}</div>
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                      <div style={{display:'flex', flexDirection:'column', width:"100%"}}>
+                        <div style={face1Style}>{content[0].face1}</div>
+                        <div style={face2Style}>{content[0].face2}</div>
                       </div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
