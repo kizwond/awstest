@@ -64,7 +64,8 @@ export class BookWriting extends Component {
        scrollTop: 0,
        child_card_add:false,
        current_card_name:'',
-       parent_card_id:''
+       parent_card_id:'',
+       card_selected_props:'',
     }
     this.onSelect = this.onSelect.bind(this)
   }
@@ -501,6 +502,12 @@ export class BookWriting extends Component {
     })
   }
 
+  onCardChangeHandler = (e) => {
+    console.log('onCardChangeHandler : ',e.target.value)
+    this.setState({
+      card_selected_props:e.target.value
+    })
+  }
   render() {
     if (this.state.hide_show_toggle === false){
       var toggle = '-308px' 
@@ -651,6 +658,35 @@ export class BookWriting extends Component {
         const cardInnerPaddingBottom = content[0].cardTypeDetail.card_style.inner_padding.bottom
         const cardInnerPaddingLeft = content[0].cardTypeDetail.card_style.inner_padding.left
 
+        if(content[0].cardTypeDetail.face_style.length>0){
+          var face1borderTopType = content[0].cardTypeDetail.face_style[0].border.package.type
+          var face1borderTopThickness = content[0].cardTypeDetail.face_style[0].border.package.thickness
+          var face1borderTopColor = content[0].cardTypeDetail.face_style[0].border.package.color
+          var face1BackgroundColor = content[0].cardTypeDetail.face_style[0].background_color
+          var face1InnerMarginTop = content[0].cardTypeDetail.face_style[0].outer_margin.top
+          var face1InnerMarginRight = content[0].cardTypeDetail.face_style[0].outer_margin.right
+          var face1InnerMarginBottom = content[0].cardTypeDetail.face_style[0].outer_margin.bottom
+          var face1InnerMarginLeft = content[0].cardTypeDetail.face_style[0].outer_margin.left
+          var face1InnerPaddingTop = content[0].cardTypeDetail.face_style[0].inner_padding.top
+          var face1InnerPaddingRight = content[0].cardTypeDetail.face_style[0].inner_padding.right
+          var face1InnerPaddingBottom = content[0].cardTypeDetail.face_style[0].inner_padding.bottom
+          var face1InnerPaddingLeft = content[0].cardTypeDetail.face_style[0].inner_padding.left
+
+          var face2borderTopType = content[0].cardTypeDetail.face_style[1].border.package.type
+          var face2borderTopThickness = content[0].cardTypeDetail.face_style[1].border.package.thickness
+          var face2borderTopColor = content[0].cardTypeDetail.face_style[1].border.package.color
+          var face2BackgroundColor = content[0].cardTypeDetail.face_style[1].background_color
+          var face2InnerMarginTop = content[0].cardTypeDetail.face_style[1].outer_margin.top
+          var face2InnerMarginRight = content[0].cardTypeDetail.face_style[1].outer_margin.right
+          var face2InnerMarginBottom = content[0].cardTypeDetail.face_style[1].outer_margin.bottom
+          var face2InnerMarginLeft = content[0].cardTypeDetail.face_style[1].outer_margin.left
+          var face2InnerPaddingTop = content[0].cardTypeDetail.face_style[1].inner_padding.top
+          var face2InnerPaddingRight = content[0].cardTypeDetail.face_style[1].inner_padding.right
+          var face2InnerPaddingBottom = content[0].cardTypeDetail.face_style[1].inner_padding.bottom
+          var face2InnerPaddingLeft = content[0].cardTypeDetail.face_style[1].inner_padding.left
+        }
+        
+
           if(content[0].flag == "1"){
             var star = <StarTwoTone />
           } else if(content[0].flag == "2"){
@@ -669,6 +705,20 @@ export class BookWriting extends Component {
             margin:`${cardInnerMarginTop}px ${cardInnerMarginRight}px ${cardInnerMarginBottom}px ${cardInnerMarginLeft}px`, 
             padding:`${cardInnerPaddingTop}px ${cardInnerPaddingLeft}px ${cardInnerPaddingRight}px ${cardInnerPaddingBottom}px`, 
             border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
+          }
+          const face1Style = {
+            width:"100%",
+            backgroundColor:`${face1BackgroundColor}`, 
+            margin:`${face1InnerMarginTop}px ${face1InnerMarginRight}px ${face1InnerMarginBottom}px ${face1InnerMarginLeft}px`, 
+            padding:`${face1InnerPaddingTop}px ${face1InnerPaddingLeft}px ${face1InnerPaddingRight}px ${face1InnerPaddingBottom}px`, 
+            border:`${face1borderTopType} ${face1borderTopThickness}px ${face1borderTopColor}`
+          }
+          const face2Style = {
+            width:"100%",
+            backgroundColor:`${face2BackgroundColor}`, 
+            margin:`${face2InnerMarginTop}px ${face2InnerMarginRight}px ${face2InnerMarginBottom}px ${face2InnerMarginLeft}px`, 
+            padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
+            border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
           }
           if(content[0].type === 'read'){
             return <> <div style={cardStyle} 
@@ -725,8 +775,8 @@ export class BookWriting extends Component {
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div>{content[0].face1}</div>
-                      <div>{content[0].face2}</div>
+                      <div style={face1Style}>{content[0].face1}</div>
+                      <div style={face2Style}>{content[0].face2}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -1178,7 +1228,7 @@ export class BookWriting extends Component {
           </div>
         </div>
         <div className="right_side_container" style={{marginRight:toggle}}>
-          <SettingTabs getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
+          <SettingTabs onCardChangeHandler={this.onCardChangeHandler} cardSetting_selected={this.state.card_selected_props} getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
         </div>
       </div>
       </>

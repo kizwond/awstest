@@ -188,6 +188,7 @@ class CardSetting extends Component {
     this.setState({
       card_selected:e.target.value
     })
+    this.props.onCardChangeHandler(e)
     this.getInitialValues(e.target.value)
   }
 
@@ -358,7 +359,7 @@ class CardSetting extends Component {
       var cardFaceListOption = this.props.cardType.map((card_type)=>{
         if(card_type._id === this.state.card_selected){
           if(card_type.type === 'read'){
-            return <><option value='1면'>1면</option></>
+            return 
           } else if(card_type.type === 'flip-normal'){
             return <><option value='1면'>1면</option><option value='2면'>2면</option></>
           } 
@@ -381,23 +382,23 @@ class CardSetting extends Component {
                       </select>
                     </div>
                 </div>
-                <div className='select_page_size_div'>
+                {/* <div className='select_page_size_div'>
                     <div>면</div>
                     <div>
-                      <select defaultValue="면선택" size='small' style={{ width: 195 }}>
+                      <select defaultValue="면선택" onChange={this.onFaceChangeHandler} value={this.state.card_selected} size='small' style={{ width: 195 }}>
                         <option key="default2" value="면선택">면선택</option>
                         {cardFaceListOption}
                       </select>
                     </div>
-                </div>
-                <div className='select_page_size_div'>
+                </div> */}
+                {/* <div className='select_page_size_div'>
                     <div>행</div>
                     <div>
                       <Select defaultValue="행선택" size='small' style={{ width: 195 }}>
                         <Option key="default3" value="행선택">행선택</Option>
                       </Select>
                     </div>
-                </div>
+                </div> */}
               </div>
             </Panel>
             <Panel header="레이아웃" key="2" className="data_collapse_panel">
