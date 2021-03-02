@@ -40,7 +40,7 @@ class SettingTabs extends Component {
             <PageSetting addCardType={this.props.addCardType}/>
           </TabPane>
           <TabPane tab="카드설정" key="2">
-            <CardSetting initialValues={this.props.initialValues} card_selected={this.props.card_selected} onCardChangeHandler={this.props.onCardChangeHandler} cardType={this.props.cardType} addCardType={this.props.addCardType}/>
+            <CardSetting getCardTypeList={this.props.getCardTypeList} card_selected={this.props.card_selected} cardType={this.props.cardType}/>
           </TabPane>
           <TabPane tab="면설정" key="3">
             <FaceSetting addCardType={this.props.addCardType}/>

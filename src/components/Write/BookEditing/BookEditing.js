@@ -389,105 +389,6 @@ export class BookWriting extends Component {
       })
   }
   
-  onCardChangeHandler = (value) => {
-    console.log('onCardChangeHandler : ',value)
-    this.setState({
-      card_selected_detailsetting:value
-    })
-    this.getInitialValues(value)
-  }
-  getInitialValues = (id) => {
-    console.log('11111111111111111111111111',id)
-      const direction = []
-      const margin = []
-      const padding = []
-      const background_color = []
-      const left_right_ratio = []
-        console.log('22222222222222222222222222222')
-        this.state.card_type.map((value)=>{
-          if(value._id === id){
-            direction.push(value.card_style.card_direction)
-            margin.push(value.card_style.outer_margin)
-            padding.push(value.card_style.inner_padding)
-            background_color.push(value.card_style.background_color)
-            left_right_ratio.push(value.card_style.left_right_ratio)
-          }
-        })
-  
-        if(margin.length > 0){
-          var top = margin[0].top
-          var bottom = margin[0].bottom
-          var left = margin[0].left
-          var right = margin[0].right
-        } else {
-          top = ''
-          bottom = ''
-          left = ''
-          right = ''
-        }
-  
-        if(padding.length > 0){
-          var innerPaddingTop = padding[0].top
-          var innerPaddingBottom = padding[0].bottom
-          var innerPaddingLeft = padding[0].left
-          var innerPaddingRight = padding[0].right
-        } else {
-          innerPaddingTop = ''
-          innerPaddingBottom = ''
-          innerPaddingLeft = ''
-          innerPaddingRight = ''
-        }
-  
-        if(background_color.length > 0){
-          var backgroundColor = background_color[0]
-        } else {
-          backgroundColor = background_color[0]
-        }
-  
-        if(backgroundColor === null){
-          backgroundColor = "#ffffff"
-        } else {
-          backgroundColor = background_color[0]
-        }
-  
-        if(left_right_ratio.length > 0){
-          var face1_ratio = left_right_ratio[0].face1
-          var face2_ratio = left_right_ratio[0].face2
-        } else {
-          face1_ratio = left_right_ratio[0].face1
-          face2_ratio = left_right_ratio[0].face2
-        }
-  
-  
-        const initialValues = {
-          card_direction: direction[0],
-          outer_margin:{
-            top,
-            right,
-            left,
-            bottom,
-          },
-          inner_padding:{
-            top:innerPaddingTop,
-            bottom:innerPaddingBottom,
-            left:innerPaddingLeft,
-            right:innerPaddingRight
-          },
-          background_color:backgroundColor,
-          left_right_ratio:{
-            face1:face1_ratio,
-            face2:face2_ratio,
-          }
-        }
-        
-  
-      
-      console.log('선택한 카드타입의 기본값 :',initialValues)
-      this.setState({
-        initialValues:initialValues
-      })
-    
-  }
   async onSelect(selectedKeys, info){
     this.setState({
       index_id: info.node.index_id,
@@ -507,33 +408,33 @@ export class BookWriting extends Component {
   };
   
   onClickCardHandler = (value, seq) => {
-    var elemClass = document.getElementsByClassName("card_class");
-    var elemBtnsClass = document.getElementsByClassName("card_edit_btns");
+    // var elemClass = document.getElementsByClassName("card_class");
+    // var elemBtnsClass = document.getElementsByClassName("card_edit_btns");
     
-    for(var i = 0; i<elemClass.length; i++){
-      elemClass[i].style.transform = "none";
-      elemClass[i].style.transition = "all ease 0.7s";
-      elemClass[i].style.border = "none";
-      elemClass[i].style.borderRadius = "0px";
-      elemClass[i].style.boxShadow ="none";
-    }
+    // for(var i = 0; i<elemClass.length; i++){
+    //   elemClass[i].style.transform = "none";
+    //   elemClass[i].style.transition = "all ease 0.7s";
+    //   elemClass[i].style.border = "none";
+    //   elemClass[i].style.borderRadius = "0px";
+    //   elemClass[i].style.boxShadow ="none";
+    // }
 
-    for( i = 0; i<elemClass.length; i++){
-      elemBtnsClass[i].style.display = "none";
-    }
+    // for( i = 0; i<elemClass.length; i++){
+    //   elemBtnsClass[i].style.display = "none";
+    // }
 
 
     var elem = document.getElementById(value);
-    var elem_btn = document.getElementById(value+"_btn");
-    elem.style.transform = "scale( 1.01 )";
-    elem.style.transition = "all ease 0.7s";
-    elem.style.border = "1px solid lightgrey";
-    elem.style.borderRadius = "10px";
-    elem.style.boxShadow = "5px 5px 5px -3px rgba(112,112,112,1)";
+    // var elem_btn = document.getElementById(value+"_btn");
+    // elem.style.transform = "scale( 1.01 )";
+    // elem.style.transition = "all ease 0.7s";
+    // elem.style.border = "1px solid lightgrey";
+    // elem.style.borderRadius = "10px";
+    // elem.style.boxShadow = "5px 5px 5px -3px rgba(112,112,112,1)";
 
-    elem_btn.style.display = "flex";
-    elem_btn.style.flexDirection = "row";
-    elem_btn.style.justifyContent = "space-between";
+    // elem_btn.style.display = "flex";
+    // elem_btn.style.flexDirection = "row";
+    // elem_btn.style.justifyContent = "space-between";
 
 
     let offsetTop  = elem.getBoundingClientRect().top;
@@ -736,9 +637,19 @@ export class BookWriting extends Component {
 
     if(contentsList){
       var list = contentsList.map((content)=>{
+        console.log(content)
         const borderTopType = content[0].cardTypeDetail.card_style.border.package.type
         const borderTopThickness = content[0].cardTypeDetail.card_style.border.package.thickness
         const borderTopColor = content[0].cardTypeDetail.card_style.border.package.color
+        const cardBackgroundColor = content[0].cardTypeDetail.card_style.background_color
+        const cardInnerMarginTop = content[0].cardTypeDetail.card_style.outer_margin.top
+        const cardInnerMarginRight = content[0].cardTypeDetail.card_style.outer_margin.right
+        const cardInnerMarginBottom = content[0].cardTypeDetail.card_style.outer_margin.bottom
+        const cardInnerMarginLeft = content[0].cardTypeDetail.card_style.outer_margin.left
+        const cardInnerPaddingTop = content[0].cardTypeDetail.card_style.inner_padding.top
+        const cardInnerPaddingRight = content[0].cardTypeDetail.card_style.inner_padding.right
+        const cardInnerPaddingBottom = content[0].cardTypeDetail.card_style.inner_padding.bottom
+        const cardInnerPaddingLeft = content[0].cardTypeDetail.card_style.inner_padding.left
 
           if(content[0].flag == "1"){
             var star = <StarTwoTone />
@@ -753,13 +664,14 @@ export class BookWriting extends Component {
           } else {
             star = ''
           }
-          if(content[0].content.parent_card_id) {
-            var childStyle = {cursor:"pointer", backgroundColor:"white", padding:"5px", border:"1px dashed green"}
-          } else {
-            childStyle = {cursor:"pointer", backgroundColor:"white", padding:"5px"}
+          const cardStyle = {
+            cursor:"pointer", backgroundColor:`${cardBackgroundColor}`, 
+            margin:`${cardInnerMarginTop}px ${cardInnerMarginRight}px ${cardInnerMarginBottom}px ${cardInnerMarginLeft}px`, 
+            padding:`${cardInnerPaddingTop}px ${cardInnerPaddingLeft}px ${cardInnerPaddingRight}px ${cardInnerPaddingBottom}px`, 
+            border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
           }
           if(content[0].type === 'read'){
-            return <> <div style={{cursor:"pointer", backgroundColor:"white", padding:"5px", border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`}} 
+            return <> <div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -804,7 +716,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}</>
           } else if(content[0].type === 'flip-normal'&& !content[0].selection_contents && content[0].direction === "left-right"){
-            return <><div style={childStyle} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -870,7 +782,7 @@ export class BookWriting extends Component {
                    parent_card_id={this.state.parent_card_id}
                    /> : ''}</>
           } else if(content[0].type === 'flip-normal' && content[0].selection_contents && content[0].direction === "left-right"){
-            return <><div style={childStyle} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -940,7 +852,7 @@ export class BookWriting extends Component {
                    parent_card_id={this.state.parent_card_id}
                    /> : ''}</>
           } else if(content[0].type === 'flip-normal' && !content[0].selection_contents && content[0].direction === "top-bottom"){
-            return <><div style={childStyle} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -1009,7 +921,7 @@ export class BookWriting extends Component {
                    parent_card_id={this.state.parent_card_id}
                    /> : ''}</>
           } else if(content[0].type === 'flip-normal' && content[0].selection_contents && content[0].direction === "top-bottom"){
-            return <><div style={childStyle} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -1079,7 +991,7 @@ export class BookWriting extends Component {
                    parent_card_id={this.state.parent_card_id}
                    /> : ''}</>
           } else  if(content[0].type === 'none'){
-            return <><div style={{cursor:"pointer", backgroundColor:"white", padding:"5px"}} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -1123,7 +1035,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}</>
           } else  if(content[0].type === 'share'){
-            return <><div style={{cursor:"pointer", backgroundColor:"white", padding:"5px", border:"1px solid green"}} 
+            return <><div style={cardStyle} 
                         id={content[0].card_id} 
                         className="card_class"
                         onClick={() => this.onClickCardHandler(content[0].card_id,content[0].seq_in_index)} 
@@ -1266,7 +1178,7 @@ export class BookWriting extends Component {
           </div>
         </div>
         <div className="right_side_container" style={{marginRight:toggle}}>
-          <SettingTabs card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
+          <SettingTabs getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
         </div>
       </div>
       </>
