@@ -171,6 +171,10 @@ export class BookWriting extends Component {
       this.setState({
         hide_show_toggle : true
       })
+    } else if(key === '5' ){
+      this.setState({
+        hide_show_toggle : true
+      })
     } else if(key === '0' ){
       this.setState({
         hide_show_toggle : false
@@ -410,33 +414,29 @@ export class BookWriting extends Component {
   };
   
   onClickCardHandler = (value, seq) => {
-    // var elemClass = document.getElementsByClassName("card_class");
-    // var elemBtnsClass = document.getElementsByClassName("card_edit_btns");
+    var elemClass = document.getElementsByClassName("card_class");
+    var elemBtnsClass = document.getElementsByClassName("card_edit_btns");
     
-    // for(var i = 0; i<elemClass.length; i++){
-    //   elemClass[i].style.transform = "none";
-    //   elemClass[i].style.transition = "all ease 0.7s";
-    //   elemClass[i].style.border = "none";
-    //   elemClass[i].style.borderRadius = "0px";
-    //   elemClass[i].style.boxShadow ="none";
-    // }
+    for(var i = 0; i<elemClass.length; i++){
+      elemClass[i].style.transform = "none";
+      elemClass[i].style.transition = "all ease 0.7s";
+      elemClass[i].style.boxShadow ="none";
+    }
 
-    // for( i = 0; i<elemClass.length; i++){
-    //   elemBtnsClass[i].style.display = "none";
-    // }
+    for( var i = 0; i<elemClass.length; i++){
+      elemBtnsClass[i].style.display = "none";
+    }
 
 
     var elem = document.getElementById(value);
-    // var elem_btn = document.getElementById(value+"_btn");
-    // elem.style.transform = "scale( 1.01 )";
-    // elem.style.transition = "all ease 0.7s";
-    // elem.style.border = "1px solid lightgrey";
-    // elem.style.borderRadius = "10px";
-    // elem.style.boxShadow = "5px 5px 5px -3px rgba(112,112,112,1)";
+    var elem_btn = document.getElementById(value+"_btn");
+    elem.style.transform = "scale( 1.01 )";
+    elem.style.transition = "all ease 0.7s";
+    elem.style.boxShadow = "0px 0px 6px 0px rgba(112,112,112,1)";
 
-    // elem_btn.style.display = "flex";
-    // elem_btn.style.flexDirection = "row";
-    // elem_btn.style.justifyContent = "space-between";
+    elem_btn.style.display = "flex";
+    elem_btn.style.flexDirection = "row";
+    elem_btn.style.justifyContent = "space-between";
 
 
     let offsetTop  = elem.getBoundingClientRect().top;
@@ -695,39 +695,135 @@ export class BookWriting extends Component {
         }
         
 
-          if(content[0].flag == "1"){
-            var star = <StarTwoTone />
-          } else if(content[0].flag == "2"){
-            star = <><StarTwoTone /><StarTwoTone /></>
-          } else if(content[0].flag == "3"){
-            star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
-          } else if(content[0].flag == "4"){
-            star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
-          } else if(content[0].flag == "5"){
-            star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
-          } else {
-            star = ''
-          }
-          const cardStyle = {
-            cursor:"pointer", backgroundColor:`${cardBackgroundColor}`, 
-            margin:`${cardInnerMarginTop}px ${cardInnerMarginRight}px ${cardInnerMarginBottom}px ${cardInnerMarginLeft}px`, 
-            padding:`${cardInnerPaddingTop}px ${cardInnerPaddingLeft}px ${cardInnerPaddingRight}px ${cardInnerPaddingBottom}px`, 
-            border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
-          }
-          const face1Style = {
-            width:"100%",
-            backgroundColor:`${face1BackgroundColor}`, 
-            margin:`${face1InnerMarginTop}px ${face1InnerMarginRight}px ${face1InnerMarginBottom}px ${face1InnerMarginLeft}px`, 
-            padding:`${face1InnerPaddingTop}px ${face1InnerPaddingLeft}px ${face1InnerPaddingRight}px ${face1InnerPaddingBottom}px`, 
-            border:`${face1borderTopType} ${face1borderTopThickness}px ${face1borderTopColor}`
-          }
-          const face2Style = {
-            width:"100%",
-            backgroundColor:`${face2BackgroundColor}`, 
-            margin:`${face2InnerMarginTop}px ${face2InnerMarginRight}px ${face2InnerMarginBottom}px ${face2InnerMarginLeft}px`, 
-            padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
-            border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
-          }
+        if(content[0].flag == "1"){
+          var star = <StarTwoTone />
+        } else if(content[0].flag == "2"){
+          star = <><StarTwoTone /><StarTwoTone /></>
+        } else if(content[0].flag == "3"){
+          star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
+        } else if(content[0].flag == "4"){
+          star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
+        } else if(content[0].flag == "5"){
+          star = <><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /><StarTwoTone /></>
+        } else {
+          star = ''
+        }
+        const cardStyle = {
+          cursor:"pointer", backgroundColor:`${cardBackgroundColor}`, 
+          margin:`${cardInnerMarginTop}px ${cardInnerMarginRight}px ${cardInnerMarginBottom}px ${cardInnerMarginLeft}px`, 
+          padding:`${cardInnerPaddingTop}px ${cardInnerPaddingLeft}px ${cardInnerPaddingRight}px ${cardInnerPaddingBottom}px`, 
+          border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
+        }
+        const face1Style = {
+          width:"100%",
+          backgroundColor:`${face1BackgroundColor}`, 
+          margin:`${face1InnerMarginTop}px ${face1InnerMarginRight}px ${face1InnerMarginBottom}px ${face1InnerMarginLeft}px`, 
+          padding:`${face1InnerPaddingTop}px ${face1InnerPaddingLeft}px ${face1InnerPaddingRight}px ${face1InnerPaddingBottom}px`, 
+          border:`${face1borderTopType} ${face1borderTopThickness}px ${face1borderTopColor}`
+        }
+        const face2Style = {
+          width:"100%",
+          backgroundColor:`${face2BackgroundColor}`, 
+          margin:`${face2InnerMarginTop}px ${face2InnerMarginRight}px ${face2InnerMarginBottom}px ${face2InnerMarginLeft}px`, 
+          padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
+          border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
+        }
+        console.log("handle this:", content[0].cardTypeDetail.row_style.face1)
+        const face1RowStyle = content[0].cardTypeDetail.row_style.face1.map((style,index)=>{
+
+        })
+        console.log(content[0].face1)
+
+        const face1Contents = content[0].face1.map((item,contentsIndex)=>{
+          let borderTopType
+          let borderTopThickness
+          let borderTopColor
+          let BackgroundColor
+          let InnerMarginTop
+          let InnerMarginRight
+          let InnerMarginBottom
+          let InnerMarginLeft
+          let InnerPaddingTop
+          let InnerPaddingRight
+          let InnerPaddingBottom
+          let InnerPaddingLeft
+          let rowStyle
+          content[0].cardTypeDetail.row_style.face1.map((style,styleIndex)=>{
+            if(styleIndex === contentsIndex){
+              console.log('1111111111111111',item)
+              console.log('2222222222222222',style)
+              borderTopType = style.border.package.type
+              borderTopThickness = style.border.package.thickness
+              borderTopColor = style.border.package.color
+              BackgroundColor = style.background_color
+              InnerMarginTop = style.outer_margin.top
+              InnerMarginRight = style.outer_margin.right
+              InnerMarginBottom = style.outer_margin.bottom
+              InnerMarginLeft = style.outer_margin.left
+              InnerPaddingTop = style.inner_padding.top
+              InnerPaddingRight = style.inner_padding.right
+              InnerPaddingBottom = style.inner_padding.bottom
+              InnerPaddingLeft = style.inner_padding.left 
+              rowStyle = {
+                width:"100%",
+                backgroundColor:`${BackgroundColor}`, 
+                margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px`, 
+                padding:`${InnerPaddingTop}px ${InnerPaddingLeft}px ${InnerPaddingRight}px ${InnerPaddingBottom}px`, 
+                border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
+              }
+            }
+          })
+          return <div style={rowStyle}>{item}</div>
+        })
+
+        if(content[0].face2){
+          var face2Contents = content[0].face2.map((item,contentsIndex)=>{
+            let borderTopType
+            let borderTopThickness
+            let borderTopColor
+            let BackgroundColor
+            let InnerMarginTop
+            let InnerMarginRight
+            let InnerMarginBottom
+            let InnerMarginLeft
+            let InnerPaddingTop
+            let InnerPaddingRight
+            let InnerPaddingBottom
+            let InnerPaddingLeft
+            let rowStyle
+            content[0].cardTypeDetail.row_style.face2.map((style,styleIndex)=>{
+              if(styleIndex === contentsIndex){
+                console.log('1111111111111111',item)
+                console.log('2222222222222222',style)
+                borderTopType = style.border.package.type
+                borderTopThickness = style.border.package.thickness
+                borderTopColor = style.border.package.color
+                BackgroundColor = style.background_color
+                InnerMarginTop = style.outer_margin.top
+                InnerMarginRight = style.outer_margin.right
+                InnerMarginBottom = style.outer_margin.bottom
+                InnerMarginLeft = style.outer_margin.left
+                InnerPaddingTop = style.inner_padding.top
+                InnerPaddingRight = style.inner_padding.right
+                InnerPaddingBottom = style.inner_padding.bottom
+                InnerPaddingLeft = style.inner_padding.left 
+                rowStyle = {
+                  width:"100%",
+                  backgroundColor:`${BackgroundColor}`, 
+                  margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px`, 
+                  padding:`${InnerPaddingTop}px ${InnerPaddingLeft}px ${InnerPaddingRight}px ${InnerPaddingBottom}px`, 
+                  border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
+                }
+              }
+            })
+            return <div style={rowStyle}>{item}</div>
+          })
+          console.log('33333333333333333',face2Contents)
+        }
+        
+        
+
+
           if(content[0].type === 'read'){
             return <> <div style={cardStyle} 
                         id={content[0].card_id} 
@@ -738,7 +834,7 @@ export class BookWriting extends Component {
                     <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div>{content[0].face1}</div>
+                      <div>{face1Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -783,8 +879,8 @@ export class BookWriting extends Component {
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
                     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div style={face1Style}>{content[0].face1}</div>
-                      <div style={face2Style}>{content[0].face2}</div>
+                      <div style={face1Style}>{face1Contents}</div>
+                      <div style={face2Style}>{face2Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -1236,7 +1332,17 @@ export class BookWriting extends Component {
           </div>
         </div>
         <div className="right_side_container" style={{marginRight:toggle}}>
-          <SettingTabs onFaceChangeHandler={this.onFaceChangeHandler} onCardChangeHandler={this.onCardChangeHandler} faceSetting_selected={this.state.face_selected_props} cardSetting_selected={this.state.card_selected_props} getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
+          <SettingTabs onFaceChangeHandler={this.onFaceChangeHandler} 
+                       onCardChangeHandler={this.onCardChangeHandler} 
+                       faceSetting_selected={this.state.face_selected_props} 
+                       cardSetting_selected={this.state.card_selected_props} 
+                       getCardTypeList={this.getCardTypeList} 
+                       card_selected={this.state.card_selected_detailsetting} 
+                       onCardChangeHandler={this.onCardChangeHandler} 
+                       initialValues={this.state.initialValues} 
+                       cardType={this.state.card_type} 
+                       toggle={this.state.hide_show_toggle} 
+                       onClick={this.handleClick}/>
         </div>
       </div>
       </>

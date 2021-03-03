@@ -5,6 +5,7 @@ import PageSetting from './PageSetting'
 import CardSetting from './CardSetting'
 import FaceSetting from './FaceSetting'
 import RowSetting from './RowSetting'
+import FontSetting from './FontSetting'
 const { TabPane } = Tabs;
 
 
@@ -47,6 +48,9 @@ class SettingTabs extends Component {
           </TabPane>
           <TabPane tab="행설정" key="4">
             <RowSetting onFaceChangeHandler={this.props.onFaceChangeHandler} faceSetting_selected={this.props.faceSetting_selected} onCardChangeHandler={this.props.onCardChangeHandler} cardSetting_selected={this.props.cardSetting_selected} getCardTypeList={this.props.getCardTypeList} card_selected={this.props.card_selected} cardType={this.props.cardType}/>
+          </TabPane>
+          <TabPane tab="폰트설정" key="5">
+            <FontSetting onFaceChangeHandler={this.props.onFaceChangeHandler} faceSetting_selected={this.props.faceSetting_selected} onCardChangeHandler={this.props.onCardChangeHandler} cardSetting_selected={this.props.cardSetting_selected} getCardTypeList={this.props.getCardTypeList} card_selected={this.props.card_selected} cardType={this.props.cardType}/>
           </TabPane>
         </Tabs>
     );
