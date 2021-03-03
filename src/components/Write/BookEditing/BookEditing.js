@@ -66,6 +66,7 @@ export class BookWriting extends Component {
        current_card_name:'',
        parent_card_id:'',
        card_selected_props:'',
+       face_selected_props:'',
     }
     this.onSelect = this.onSelect.bind(this)
   }
@@ -506,6 +507,13 @@ export class BookWriting extends Component {
     console.log('onCardChangeHandler : ',e.target.value)
     this.setState({
       card_selected_props:e.target.value
+    })
+  }
+
+  onFaceChangeHandler = (e) => {
+    console.log('onFaceChangeHandler : ',e.target.value)
+    this.setState({
+      face_selected_props:e.target.value
     })
   }
   render() {
@@ -1228,7 +1236,7 @@ export class BookWriting extends Component {
           </div>
         </div>
         <div className="right_side_container" style={{marginRight:toggle}}>
-          <SettingTabs onCardChangeHandler={this.onCardChangeHandler} cardSetting_selected={this.state.card_selected_props} getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
+          <SettingTabs onFaceChangeHandler={this.onFaceChangeHandler} onCardChangeHandler={this.onCardChangeHandler} faceSetting_selected={this.state.face_selected_props} cardSetting_selected={this.state.card_selected_props} getCardTypeList={this.getCardTypeList} card_selected={this.state.card_selected_detailsetting} onCardChangeHandler={this.onCardChangeHandler} initialValues={this.state.initialValues} cardType={this.state.card_type} toggle={this.state.hide_show_toggle} onClick={this.handleClick}/>
         </div>
       </div>
       </>

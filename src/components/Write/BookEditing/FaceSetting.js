@@ -25,7 +25,7 @@ class FaceSetting extends Component {
       borderStyle:"solid",
       borderColor:"#FFFFFF",
       borderThickness:0,
-      face_selected:0,
+      face_selected:'',
       
 
      };
@@ -65,31 +65,6 @@ class FaceSetting extends Component {
       }
     })
     console.log("final : ", prev_face_style)
-    
-    // const initialValues = {
-    //   outer_margin:{
-    //     top:this.state.marginTop,
-    //     right:this.state.marginRight,
-    //     left:this.state.marginLeft,
-    //     bottom:this.state.marginBottom,
-    //   },
-    //   inner_padding:{
-    //     top:this.state.paddingTop,
-    //     bottom:this.state.paddingBottom,
-    //     left:this.state.paddingLeft,
-    //     right:this.state.paddingRight
-    //   },
-    //   background_color:this.state.backgroundColor,
-    //   border:{
-    //     mode:"package",
-    //     package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-    //     top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-    //     bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-    //     left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-    //     right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-    //   }
-    // }
-    // console.log("before submit : ",initialValues)
 
     axios.post('api/cardtype/update-facestyle',{
       cardtype_id: this.props.cardSetting_selected,
@@ -190,12 +165,22 @@ class FaceSetting extends Component {
         });
       })
   }
-  onFaceChangeHandler = (e) => {
+
+  onCardChangeHandler = (e) => {
     console.log('onCardChangeHandler : ',e.target.value)
-    console.log('onCardChangeHandler : ',e.target.selectedIndex)
+    this.setState({
+      card_selected:e.target.value
+    })
+    this.props.onCardChangeHandler(e)
+  }
+
+  onFaceChangeHandler = (e) => {
+    console.log('onFaceChangeHandler : ',e.target.value)
+    console.log('onFaceChangeHandler : ',e.target.selectedIndex)
     this.setState({
       face_selected:e.target.value
     })
+    this.props.onFaceChangeHandler(e)
     this.getInitialValues(this.props.cardSetting_selected,e.target.selectedIndex)
   }
 
@@ -338,9 +323,9 @@ class FaceSetting extends Component {
   render() {
     if(this.props.cardType) {
       var cardTypeListOption = this.props.cardType.map((card_type)=>{
-        if(card_type._id === this.props.cardSetting_selected) {
+        // if(card_type._id === this.props.cardSetting_selected) {
           return <option key={this.getKey()} value={card_type._id}>{card_type.name} - ({card_type.type} 카드)</option>
-        }
+        // }
       } )
       var cardFaceListOption = this.props.cardType.map((card_type)=>{
         if(card_type._id === this.props.cardSetting_selected){
@@ -363,7 +348,7 @@ class FaceSetting extends Component {
                 <div className='select_page_size_div'>
                     <div>카드</div>
                     <div>
-                      <select defaultValue="카드선택" size='small' value={this.props.cardSetting_selected} style={{ width: 195 }}>
+                      <select defaultValue="카드선택" size='small' onChange={this.onCardChangeHandler} value={this.props.cardSetting_selected} style={{ width: 195 }}>
                         {/* <option key="default1" value="카드선택">카드선택</option> */}
                         {cardTypeListOption}
                       </select>
@@ -372,7 +357,7 @@ class FaceSetting extends Component {
                 <div className='select_page_size_div'>
                     <div>면</div>
                     <div>
-                      <select defaultValue="면선택" size='small' onChange={this.onFaceChangeHandler} style={{ width: 195 }}>
+                      <select defaultValue="면선택" size='small' onChange={this.onFaceChangeHandler} value={this.props.faceSetting_selected} style={{ width: 195 }}>
                         <option key="default2" value="면선택">면선택</option>
                         {cardFaceListOption}
                       </select>
