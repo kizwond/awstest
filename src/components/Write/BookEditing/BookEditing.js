@@ -728,11 +728,7 @@ export class BookWriting extends Component {
           padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
           border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
         }
-        console.log("handle this:", content[0].cardTypeDetail.row_style.face1)
-        const face1RowStyle = content[0].cardTypeDetail.row_style.face1.map((style,index)=>{
-
-        })
-        console.log(content[0].face1)
+        console.log("handle this:", content[0].cardTypeDetail.font)
 
         const face1Contents = content[0].face1.map((item,contentsIndex)=>{
           let borderTopType
@@ -750,8 +746,6 @@ export class BookWriting extends Component {
           let rowStyle
           content[0].cardTypeDetail.row_style.face1.map((style,styleIndex)=>{
             if(styleIndex === contentsIndex){
-              console.log('1111111111111111',item)
-              console.log('2222222222222222',style)
               borderTopType = style.border.package.type
               borderTopThickness = style.border.package.thickness
               borderTopColor = style.border.package.color
@@ -764,15 +758,59 @@ export class BookWriting extends Component {
               InnerPaddingRight = style.inner_padding.right
               InnerPaddingBottom = style.inner_padding.bottom
               InnerPaddingLeft = style.inner_padding.left 
-              rowStyle = {
-                width:"100%",
-                backgroundColor:`${BackgroundColor}`, 
-                margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px`, 
-                padding:`${InnerPaddingTop}px ${InnerPaddingLeft}px ${InnerPaddingRight}px ${InnerPaddingBottom}px`, 
-                border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
-              }
+              
             }
           })
+          
+          let align
+          let bold
+          let color
+          let fontType
+          let fontStyle
+          let size
+          let underline 
+          content[0].cardTypeDetail.font.face1.map((font,fontIndex)=>{
+            if(fontIndex === contentsIndex){
+              console.log(font)
+              if(font.bold === "on"){
+                var font_weight = "700"
+              } else {
+                font_weight = "400"
+              }
+              if(font.italic === "on"){
+                var font_style = "italic"
+              } else {
+                font_style = "none"
+              }
+              if(font.underline === "on"){
+                var text_decoration = "underline "
+              } else {
+                text_decoration = "none"
+              }
+              align = font.align
+              bold = font_weight
+              color = font.color
+              fontType = font.font
+              fontStyle = font_style
+              size = font.size
+              underline = text_decoration
+            }
+          })
+          rowStyle = {
+            width:"100%",
+            backgroundColor:`${BackgroundColor}`, 
+            margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px `, 
+            padding:`${InnerPaddingTop}px ${InnerPaddingRight}px ${InnerPaddingBottom}px ${InnerPaddingLeft}px`, 
+            border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`,
+            textAlign:`${align}`,
+            fontWeight:`${bold}`,
+            color:`${color}`,
+            textAlign:`${align}`,
+            fontStyle:`${fontStyle}`,
+            fontSize:`${size}px`,
+            textDecoration:`${underline}`,
+          }
+            console.log(rowStyle)
           return <div style={rowStyle}>{item}</div>
         })
 
@@ -793,8 +831,6 @@ export class BookWriting extends Component {
             let rowStyle
             content[0].cardTypeDetail.row_style.face2.map((style,styleIndex)=>{
               if(styleIndex === contentsIndex){
-                console.log('1111111111111111',item)
-                console.log('2222222222222222',style)
                 borderTopType = style.border.package.type
                 borderTopThickness = style.border.package.thickness
                 borderTopColor = style.border.package.color
@@ -810,15 +846,62 @@ export class BookWriting extends Component {
                 rowStyle = {
                   width:"100%",
                   backgroundColor:`${BackgroundColor}`, 
-                  margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px`, 
-                  padding:`${InnerPaddingTop}px ${InnerPaddingLeft}px ${InnerPaddingRight}px ${InnerPaddingBottom}px`, 
+                  margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px `, 
+                  padding:`${InnerPaddingTop}px ${InnerPaddingRight}px ${InnerPaddingBottom}px ${InnerPaddingLeft}px`, 
                   border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`
                 }
               }
             })
+            let align
+            let bold
+            let color
+            let fontType
+            let fontStyle
+            let size
+            let underline 
+            content[0].cardTypeDetail.font.face2.map((font,fontIndex)=>{
+              if(fontIndex === contentsIndex){
+                console.log(font)
+                if(font.bold === "on"){
+                  var font_weight = "700"
+                } else {
+                  font_weight = "400"
+                }
+                if(font.italic === "on"){
+                  var font_style = "italic"
+                } else {
+                  font_style = "none"
+                }
+                if(font.underline === "on"){
+                  var text_decoration = "underline "
+                } else {
+                  text_decoration = "none"
+                }
+                align = font.align
+                bold = font_weight
+                color = font.color
+                fontType = font.font
+                fontStyle = font_style
+                size = font.size
+                underline = text_decoration
+              }
+            })
+            rowStyle = {
+              width:"100%",
+              backgroundColor:`${BackgroundColor}`, 
+              margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px `, 
+              padding:`${InnerPaddingTop}px ${InnerPaddingRight}px ${InnerPaddingBottom}px ${InnerPaddingLeft}px`, 
+              border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`,
+              textAlign:`${align}`,
+              fontWeight:`${bold}`,
+              color:`${color}`,
+              textAlign:`${align}`,
+              fontStyle:`${fontStyle}`,
+              fontSize:`${size}px`,
+              textDecoration:`${underline}`,
+            }
             return <div style={rowStyle}>{item}</div>
           })
-          console.log('33333333333333333',face2Contents)
         }
         
         

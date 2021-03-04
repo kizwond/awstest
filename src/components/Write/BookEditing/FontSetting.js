@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Affix, Collapse, Form, Switch, Select, Input, InputNumber } from 'antd';
+import { Affix, Collapse, Form, Checkbox, Select, Input, InputNumber } from 'antd';
 import { BoldOutlined,ItalicOutlined,UnderlineOutlined,AlignCenterOutlined,AlignLeftOutlined,AlignRightOutlined } from '@ant-design/icons';
 import Button from '../../styledComponents/defaultButton'
 import axios from 'axios'
@@ -12,19 +12,13 @@ class FontSetting extends Component {
     super(props);
     this.state = { 
       card_selected:'',
-      direction:"left-right",
-      backgroundColor:"#FFFFFF",
-      marginTop:0,
-      marginRight:0,
-      marginLeft:0,
-      marginBottom:0,
-      paddingTop:0,
-      paddingRight:0,
-      paddingLeft:0,
-      paddingBottom:0,
-      borderStyle:"solid",
-      borderColor:"#FFFFFF",
-      borderThickness:0,
+      fontAlign:'',
+      fontType:'',
+      fontColor:'',
+      fontSize:'',
+      fontBold:'',
+      fontItalic:'',
+      fontUnderLine:'',
       face_selected:'',
       face_selected_index:'',
       row_selected:'',
@@ -40,146 +34,97 @@ class FontSetting extends Component {
   }
 
   onFinish = () => {
-    console.log(this.state.prev_row_style)
-    const prev_row_style = this.state.prev_row_style
-    if(this.state.face_selected_index === 1){
-      const update_row_style = prev_row_style.face1.map(style=>{
-        if(this.state.row_selected === style._id){
-          style.background_color = this.state.backgroundColor
-          style.outer_margin = {
-            top:this.state.marginTop,
-            right:this.state.marginRight,
-            left:this.state.marginLeft,
-            bottom:this.state.marginBottom,
-          }
-          style.inner_padding = {
-            top:this.state.paddingTop,
-            bottom:this.state.paddingBottom,
-            left:this.state.paddingLeft,
-            right:this.state.paddingRight
-          }
-          style.border={
-            mode:"package",
-            package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-          }
-        }
-      })
+    console.log(this.state.prev_font_style)
+    const prev_font_style = this.state.prev_font_style
+
+    if(this.state.fontItalic === true){
+        var fontItalic = "on"
     } else {
-      const update_row_style = prev_row_style.face2.map(style=>{
-        if(this.state.row_selected === style._id){
-          style.background_color = this.state.backgroundColor
-          style.outer_margin = {
-            top:this.state.marginTop,
-            right:this.state.marginRight,
-            left:this.state.marginLeft,
-            bottom:this.state.marginBottom,
-          }
-          style.inner_padding = {
-            top:this.state.paddingTop,
-            bottom:this.state.paddingBottom,
-            left:this.state.paddingLeft,
-            right:this.state.paddingRight
-          }
-          style.border={
-            mode:"package",
-            package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-          }
-        }
-      })
+        fontItalic = "off"
     }
-    
-    console.log("final : ", prev_row_style)
+    if(this.state.fontBold === true){
+        var fontBold = "on"
+    } else {
+        fontBold = "off"
+    }
+    if(this.state.fontUnderLine === true){
+        var fontUnderLine = "on"
+    } else {
+        fontUnderLine = "off"
+    }
 
-    axios.post('api/cardtype/update-rowstyle',{
-      cardtype_id: this.props.cardSetting_selected,
-      updated_row_style:prev_row_style,
-      book_id:this.props.cardType[0].book_id,
-    }).then(res => {
-      console.log(res.data)
-      this.props.getCardTypeList()
-    })
+    if(this.state.face_selected_index === 1){
+        const update_font_style = prev_font_style.face1.map((style,font_index)=>{
+            if(this.state.row_selected_index === font_index+1){
+                style.font = this.state.fontType
+                style.bold = fontBold
+                style.size = this.state.fontSize
+                style.italic = fontItalic
+                style.underline = fontUnderLine
+                style.color = this.state.fontColor
+            }
+        })
+    } else {
+        const update_font_style = prev_font_style.face2.map((style,font_index)=>{
+            if(this.state.row_selected_index === font_index+1){
+                style.font = this.state.fontType
+                style.bold = fontBold
+                style.size = this.state.fontSize
+                style.italic = fontItalic
+                style.color = this.state.fontColor
+            }
+        })
+      }
+      console.log("final : ", prev_font_style)
+
+      axios.post('api/cardtype/update-font',{
+        cardtype_id: this.props.cardSetting_selected,
+        updated_font:prev_font_style,
+        book_id:this.props.cardType[0].book_id,
+      }).then(res => {
+        console.log(res.data)
+        this.props.getCardTypeList()
+      })
   }
 
-  onChangeBackgroundColor = (e) => {
+  onChangeFontType = (fontType) => {
+    console.log(fontType)
+    this.setState({
+      fontType:fontType
+    })
+  }
+  onChangeFontColor = (e) => {
+    console.log(e)
     console.log(e.target.value)
     this.setState({
-      backgroundColor:e.target.value
+      fontColor:e.target.value
     })
   }
-  onChangeMarginTop = (marginTop) => {
-    console.log(marginTop)
+  onChangeFontSize = (fontSize) => {
+    console.log(fontSize)
     this.setState({
-      marginTop:marginTop
+      fontSize:fontSize
     })
   }
-  onChangeMarginRight = (marginRight) => {
-    console.log(marginRight)
-    this.setState({
-      marginRight:marginRight
-    })
+  onChangeFontBold = (fontBold) => {
+    console.log(fontBold)
+    this.setState(prevState=>({
+      fontBold:!prevState.fontBold
+    }))
   }
-  onChangeMarginBottom = (marginBottom) => {
-    console.log(marginBottom)
-    this.setState({
-      marginBottom:marginBottom
-    })
+  onChangeFontItalic = (fontItalic) => {
+    console.log(fontItalic)
+    this.setState(prevState=>({
+        fontItalic:!prevState.fontItalic
+      }))
   }
-  onChangeMarginLeft = (marginLeft) => {
-    console.log(marginLeft)
-    this.setState({
-      marginLeft:marginLeft
-    })
+  onChangeFontUnderLine = (fontUnderLine) => {
+    console.log(fontUnderLine)
+    this.setState(prevState=>({
+        fontUnderLine:!prevState.fontUnderLine
+      }))
   }
-  onChangePaddingTop = (paddingTop) => {
-    console.log(paddingTop)
-    this.setState({
-      paddingTop:paddingTop
-    })
-  }
-  onChangePaddingRight = (paddingRight) => {
-    console.log(paddingRight)
-    this.setState({
-      paddingRight:paddingRight
-    })
-  }
-  onChangePaddingBottom = (paddingBottom) => {
-    console.log(paddingBottom)
-    this.setState({
-      paddingBottom:paddingBottom
-    })
-  }
-  onChangePaddingLeft = (paddingLeft) => {
-    console.log(paddingLeft)
-    this.setState({
-      paddingLeft:paddingLeft
-    })
-  }
-  onChangeBorderStyle = (borderStyle) => {
-    console.log(borderStyle)
-    this.setState({
-      borderStyle:borderStyle
-    })
-  }
-  onChangeBorderColor = (e) => {
-    console.log(e.target.value)
-    this.setState({
-      borderColor:e.target.value
-    })
-  }
-  onChangeBorderThickness = (borderThickness) => {
-    console.log(borderThickness)
-    this.setState({
-      borderThickness:borderThickness
-    })
-  }
+  
   componentDidMount(){
     this.getCardTypeList()
   }
@@ -255,7 +200,7 @@ class FontSetting extends Component {
             }
             
             this.setState({
-              prev_font:value.font
+              prev_font_style:value.font
             })
           }
         })
@@ -269,26 +214,44 @@ class FontSetting extends Component {
             size:size[0],
             underline:underline[0],
         }
+
+        if(bold[0]=== "off"){
+            var boldCheck = false
+        }else{
+            boldCheck = true
+        }
+
+        if(italic[0]=== "off"){
+            var italicCheck = false
+        }else{
+            italicCheck = true
+        }
+
+        if(underline[0]=== "off"){
+            var underlineCheck = false
+        }else{
+            underlineCheck = true
+        }
       
       console.log('선택한 카드타입의 기본값 :',initialValues)
 
       this.setState({
-        align:initialValues.align 
+        fontAlign:initialValues.align 
       })
       this.setState({
-        bold:initialValues.bold
+        fontBold:boldCheck
       })
       this.setState({
-        font:initialValues.font
+        fontType:initialValues.font
       })
       this.setState({
-        italic:initialValues.italic
+        fontItalic:italicCheck
       })
       this.setState({
-        size:initialValues.size
+        fontSize:initialValues.size
       })
       this.setState({
-        underline:initialValues.underline
+        fontUnderLine:underlineCheck
       })
 
   }
@@ -375,37 +338,37 @@ class FontSetting extends Component {
                 <div className='select_page_size_div'>
                     <div>폰트</div>
                     <div>
-                        <Input type="text" size='small' onChange={this.onChangeBackgroundColor}  style={{ width: 125 }} />
+                        <Input type="text" size='small' onChange={this.onChangeFontType} value={this.state.fontType} style={{ width: 125 }} />
                     </div>
                 </div>
                 <div className='select_page_size_div'>
                     <div>색</div>
                     <div>
-                        <Input type="color" size='small' onChange={this.onChangeBackgroundColor}  style={{ width: 125 }} />
+                        <Input type="color" size='small' onChange={this.onChangeFontColor} value={this.state.fontColor} style={{ width: 125 }} />
                     </div>
                 </div>
                 <div className='select_page_size_div'>
                     <div>크기</div>
                     <div>
-                        <InputNumber size='small' onChange={this.onChangeMarginLeft}  style={{ width: 100,fontSize:10 }} type="number"/>
+                        <InputNumber size='small' onChange={this.onChangeFontSize}  value={this.state.fontSize} style={{ width: 100,fontSize:10 }} type="number"/>
                     </div>
                 </div>
                 <div className='select_page_size_div'>
                     <div>볼드</div>
                     <div>
-                        <InputNumber size='small' onChange={this.onChangeMarginLeft}  style={{ width: 100,fontSize:10 }} type="number"/>
+                        <Checkbox onChange={this.onChangeFontBold} checked={this.state.fontBold} />
                     </div>
                 </div>
                 <div className='select_page_size_div'>
                     <div>이탈릭</div>
                     <div>
-                        <InputNumber size='small' onChange={this.onChangeMarginLeft}  style={{ width: 100,fontSize:10 }} type="number"/>
+                        <Checkbox onChange={this.onChangeFontItalic} checked={this.state.fontItalic}/>
                     </div>
                 </div>
                 <div className='select_page_size_div'>
                     <div>밑줄</div>
                     <div>
-                        <InputNumber size='small' onChange={this.onChangeMarginLeft}  style={{ width: 100,fontSize:10 }} type="number"/>
+                        <Checkbox onChange={this.onChangeFontUnderLine} checked={this.state.fontUnderLine}/>
                     </div>
                 </div>
               </div>
