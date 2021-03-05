@@ -185,15 +185,11 @@ class CardSetting extends Component {
   }
   onCardChangeHandler = (e) => {
     console.log('onCardChangeHandler : ',e.target.value)
-    if(this.props.cardSetting_selected){
-      this.setState({
-        card_selected:this.props.cardSetting_selected
-      })
-    } else {
+    
       this.setState({
         card_selected:e.target.value
       })
-    }
+    
     
     this.props.onCardChangeHandler(e)
     this.getInitialValues(e.target.value)
@@ -383,7 +379,7 @@ class CardSetting extends Component {
                 <div className='select_page_size_div'>
                     <div>카드</div>
                     <div>
-                      <select defaultValue="카드선택" size='small' onChange={this.onCardChangeHandler} value={this.props.cardSetting_selected} style={{ width: 195 }}>
+                      <select defaultValue="카드선택" size='small' onChange={this.onCardChangeHandler} value={this.state.card_selected} style={{ width: 195 }}>
                         <option key="default1" value="카드선택">카드선택</option>
                         {cardTypeListOption}
                       </select>
