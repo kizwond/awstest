@@ -55,16 +55,28 @@ class FontSetting extends Component {
 
     if(this.state.face_selected_index === 1){
         //여기다가 if 문을 작성해야함 row 일때랑 selections일때
-        const update_font_style = prev_font_style.face1.map((style,font_index)=>{
-            if(this.state.row_selected_index === font_index+1){
-                style.font = this.state.fontType
-                style.bold = fontBold
-                style.size = this.state.fontSize
-                style.italic = fontItalic
-                style.underline = fontUnderLine
-                style.color = this.state.fontColor
-            }
-        })
+        if(this.state.row_selected_optionName === "row"){
+            const update_font_style = prev_font_style.face1.map((style,font_index)=>{
+                if(this.state.row_selected_index === font_index+1){
+                    style.font = this.state.fontType
+                    style.bold = fontBold
+                    style.size = this.state.fontSize
+                    style.italic = fontItalic
+                    style.underline = fontUnderLine
+                    style.color = this.state.fontColor
+                }
+            })
+        } else if(this.state.row_selected_optionName === "selection"){
+            const update_font_style = prev_font_style.selection[0]
+                    update_font_style.font = this.state.fontType
+                    update_font_style.bold = fontBold
+                    update_font_style.size = this.state.fontSize
+                    update_font_style.italic = fontItalic
+                    update_font_style.underline = fontUnderLine
+                    update_font_style.color = this.state.fontColor
+                
+        }
+        
     } else {
         const update_font_style = prev_font_style.face2.map((style,font_index)=>{
             if(this.state.row_selected_index === font_index+1){
