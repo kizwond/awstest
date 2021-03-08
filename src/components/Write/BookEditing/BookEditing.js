@@ -610,29 +610,29 @@ export class BookWriting extends Component {
           }
 
         } else if (cardTypeChosen.type === "none"){
-          const none = []
-          for( i = 0; i <none_column_num; i++){
-            none.push(<FroalaEditorView model={content.contents.none[i]}/>) 
+          const face1 = []
+          for( i = 0; i <face1_column_num; i++){
+            face1.push(<FroalaEditorView model={content.contents.face1[i]}/>) 
           }
           const annotation_contents = [];
           for( i = 0; i <annot_column_num; i++){
             annotation_contents.push(<FroalaEditorView model={content.contents.annotation[i]}/>)
           }
           const total = []
-          total.push({cardTypeDetail:cardTypeChosen,'content':content,'none':none,'annotation_contents':annotation_contents,'type':cardTypeChosen.type, 'card_id':content._id, seq_in_index:content.seq_in_index})
+          total.push({cardTypeDetail:cardTypeChosen,'content':content,'face1':face1,'annotation_contents':annotation_contents,'type':cardTypeChosen.type, 'card_id':content._id, seq_in_index:content.seq_in_index})
           return total
 
         } else if (cardTypeChosen.type === "share"){
-          const share = []
-          for( i = 0; i <share_column_num; i++){
-            share.push(<FroalaEditorView model={content.contents.share[i]}/>) 
+          const face1 = []
+          for( i = 0; i <face1_column_num; i++){
+            face1.push(<FroalaEditorView model={content.contents.face1[i]}/>) 
           }
           const annotation_contents = [];
           for( i = 0; i <annot_column_num; i++){
             annotation_contents.push(<FroalaEditorView model={content.contents.annotation[i]}/>)
           }
           const total = []
-          total.push({cardTypeDetail:cardTypeChosen,'content':content,'share':share,'annotation_contents':annotation_contents,'type':cardTypeChosen.type, 'card_id':content._id, seq_in_index:content.seq_in_index})
+          total.push({cardTypeDetail:cardTypeChosen,'content':content,'face1':face1,'annotation_contents':annotation_contents,'type':cardTypeChosen.type, 'card_id':content._id, seq_in_index:content.seq_in_index})
           return total
         }
 
@@ -728,7 +728,7 @@ export class BookWriting extends Component {
           padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
           border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
         }
-        console.log("handle this:", content[0].cardTypeDetail.font)
+        console.log("handle this:", content[0])
 
         const face1Contents = content[0].face1.map((item,contentsIndex)=>{
           let borderTopType
@@ -903,6 +903,68 @@ export class BookWriting extends Component {
             return <div style={rowStyle}>{item}</div>
           })
         }
+
+
+        if(content[0].selection_contents){
+          var selectionContents = content[0].selection_contents.map((item,contentsIndex)=>{
+            console.log(content[0].cardTypeDetail)
+            const selectionStyle = content[0].cardTypeDetail.row_style.selection[0]
+
+                let borderTopType = selectionStyle.border.package.type
+                let borderTopThickness = selectionStyle.border.package.thickness
+                let borderTopColor = selectionStyle.border.package.color
+                let BackgroundColor = selectionStyle.background_color
+                let InnerMarginTop = selectionStyle.outer_margin.top
+                let InnerMarginRight = selectionStyle.outer_margin.right
+                let InnerMarginBottom = selectionStyle.outer_margin.bottom
+                let InnerMarginLeft = selectionStyle.outer_margin.left
+                let InnerPaddingTop = selectionStyle.inner_padding.top
+                let InnerPaddingRight = selectionStyle.inner_padding.right
+                let InnerPaddingBottom = selectionStyle.inner_padding.bottom
+                let InnerPaddingLeft = selectionStyle.inner_padding.left 
+              
+            const selectionFont = content[0].cardTypeDetail.font.selection[0]
+
+                if(selectionFont.bold === "on"){
+                  var font_weight = "700"
+                } else {
+                  font_weight = "400"
+                }
+                if(selectionFont.italic === "on"){
+                  var font_style = "italic"
+                } else {
+                  font_style = "none"
+                }
+                if(selectionFont.underline === "on"){
+                  var text_decoration = "underline "
+                } else {
+                  text_decoration = "none"
+                }
+                let align = selectionFont.align
+                let bold = font_weight
+                let color = selectionFont.color
+                let fontType = selectionFont.font
+                let fontStyle = font_style
+                let size = selectionFont.size
+                let underline = text_decoration
+
+            let rowStyle = {
+              width:"100%",
+              backgroundColor:`${BackgroundColor}`, 
+              margin:`${InnerMarginTop}px ${InnerMarginRight}px ${InnerMarginBottom}px ${InnerMarginLeft}px `, 
+              padding:`${InnerPaddingTop}px ${InnerPaddingRight}px ${InnerPaddingBottom}px ${InnerPaddingLeft}px`, 
+              border:`${borderTopType} ${borderTopThickness}px ${borderTopColor}`,
+              textAlign:`${align}`,
+              fontWeight:`${bold}`,
+              color:`${color}`,
+              textAlign:`${align}`,
+              fontStyle:`${fontStyle}`,
+              fontSize:`${size}px`,
+              textDecoration:`${underline}`,
+            }
+            return <div style={rowStyle}>{item}</div>
+          })
+        }
         
         
 
@@ -917,7 +979,7 @@ export class BookWriting extends Component {
                     <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div>{star}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div>{face1Contents}</div>
+                    <div style={face1Style}>{face1Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -1029,10 +1091,10 @@ export class BookWriting extends Component {
                     <div>{star}</div>
                     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}> 
-                        <div>{content[0].face1}</div>
-                        <div>{content[0].selection_contents}</div>
+                        <div style={face1Style}>{face1Contents}</div>
+                        <div>{selectionContents}</div>
                       </div>
-                      <div>{content[0].face2}</div>
+                      <div style={face2Style}>{face2Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -1099,8 +1161,8 @@ export class BookWriting extends Component {
                     <div>{star}</div>
                     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={{display:'flex', flexDirection:'column', width:"100%"}}>
-                        <div style={face1Style}>{content[0].face1}</div>
-                        <div style={face2Style}>{content[0].face2}</div>
+                        <div style={face1Style}>{face1Contents}</div>
+                        <div style={face2Style}>{face2Contents}</div>
                       </div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
@@ -1168,9 +1230,9 @@ export class BookWriting extends Component {
                     <div>{star}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={{marginBottom:'5px', display:'flex', flexDirection:'column'}}>
-                        <div>{content[0].face1}</div>
-                        <div>{content[0].selection_contents}</div>
-                        <div>{content[0].face2}</div>
+                        <div style={face1Style}>{face1Contents}</div>
+                        <div>{selectionContents}</div>
+                        <div style={face2Style}>{face2Contents}</div>
                       </div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
@@ -1236,7 +1298,7 @@ export class BookWriting extends Component {
                         onMouseLeave={() => this.onLeaveCardHandler(content[0].card_id)} >
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div>{content[0].none}</div>
+                      <div style={face1Style}>{face1Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>
@@ -1280,7 +1342,7 @@ export class BookWriting extends Component {
                         onMouseLeave={() => this.onLeaveCardHandler(content[0].card_id)} >
                            <div style={{fontSize:'11px', color:"blue"}}>참고 : {content[0].cardTypeDetail.name}</div>
                     <div style={{marginBottom:'5px', display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                      <div>{content[0].share}</div>
+                      <div style={face1Style}>{face1Contents}</div>
                       <div>{content[0].annotation_contents}</div>
                     </div>
                     <div id={content[0].card_id+"_btn"} className="card_edit_btns" style={{display:"none"}}>

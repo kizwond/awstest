@@ -54,6 +54,7 @@ class FontSetting extends Component {
     }
 
     if(this.state.face_selected_index === 1){
+        //여기다가 if 문을 작성해야함 row 일때랑 selections일때
         const update_font_style = prev_font_style.face1.map((style,font_index)=>{
             if(this.state.row_selected_index === font_index+1){
                 style.font = this.state.fontType
@@ -165,12 +166,13 @@ class FontSetting extends Component {
     console.log('onRowChangeHandler : ',e.target.selectedIndex)
     this.setState({
       row_selected:e.target.value,
-      row_selected_index:e.target.selectedIndex
+      row_selected_index:e.target.selectedIndex,
+      row_selected_optionName : e.target.selectedOptions[0].attributes[0].nodeValue
     })
-    this.getInitialValues(this.props.cardSetting_selected,e.target.selectedIndex)
+    this.getInitialValues(this.props.cardSetting_selected,e.target.selectedIndex,e.target.selectedOptions[0].attributes[0].nodeValue)
   }
 
-  getInitialValues = (id,index) => {
+  getInitialValues = (id,index,optionName) => {
     console.log('11111111111111111111111111',id)
       const align = []
       const bold = []
@@ -184,12 +186,22 @@ class FontSetting extends Component {
           if(value._id === id){
             console.log(value)
             if(this.state.face_selected_index === 1){
-                align.push(value.font.face1[index-1].align)
-                bold.push(value.font.face1[index-1].bold)
-                font.push(value.font.face1[index-1].font)
-                italic.push(value.font.face1[index-1].italic)
-                size.push(value.font.face1[index-1].size)
-                underline.push(value.font.face1[index-1].underline)
+                if(optionName === "row") {
+                    align.push(value.font.face1[index-1].align)
+                    bold.push(value.font.face1[index-1].bold)
+                    font.push(value.font.face1[index-1].font)
+                    italic.push(value.font.face1[index-1].italic)
+                    size.push(value.font.face1[index-1].size)
+                    underline.push(value.font.face1[index-1].underline)
+                  } else if(optionName === "selection"){
+                    align.push(value.font.selection[0].align)
+                    bold.push(value.font.selection[0].bold)
+                    font.push(value.font.selection[0].font)
+                    italic.push(value.font.selection[0].italic)
+                    size.push(value.font.selection[0].size)
+                    underline.push(value.font.selection[0].underline)
+                  }
+                
             } else {
                 align.push(value.font.face2[index-1].align)
                 bold.push(value.font.face2[index-1].bold)
@@ -280,20 +292,35 @@ class FontSetting extends Component {
           if(this.state.face_selected_index === 1){
             const row_options = card_type.row_style.face1.map((row,index)=>{
               console.log(row,index)
-              return <><option value={row._id}>{index+1}행</option></>
+              return <><option name="row" value={row._id}>{index+1}행</option></>
             })
             return row_options
 
           } else if(this.state.face_selected_index === 2) {
             const row_options = card_type.row_style.face2.map((row,index)=>{
               console.log(row,index)
-              return <><option value={row._id}>{index+1}행</option></>
+              return <><option name="row" value={row._id}>{index+1}행</option></>
             })
             return row_options
           } 
         }
       })
       console.log(cardRowListOption)
+
+      var cardSelectionOption = this.props.cardType.map((card_type)=>{
+        if(card_type._id === this.props.cardSetting_selected){
+          console.log('---------------------------------', card_type)
+          if(this.state.face_selected_index === 1){
+            const selection = card_type.row_style.selection[0]
+            return <><option name="selection" value={selection._id}>보기</option></>
+
+          } else if(this.state.face_selected_index === 2) {
+            return 
+          } 
+        }
+      })
+
+
     }
 
     
@@ -327,6 +354,7 @@ class FontSetting extends Component {
                       <select defaultValue="행선택" onChange={this.onRowChangeHandler} size='small' style={{ width: 195 }}>
                         <option key="default3" value="행선택">행선택</option>
                         {cardRowListOption}
+                        {cardSelectionOption}
                       </select>
                     </div>
                 </div>

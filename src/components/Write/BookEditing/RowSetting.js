@@ -43,31 +43,60 @@ class RowSetting extends Component {
     console.log(this.state.prev_row_style)
     const prev_row_style = this.state.prev_row_style
     if(this.state.face_selected_index === 1){
-      const update_row_style = prev_row_style.face1.map(style=>{
-        if(this.state.row_selected === style._id){
-          style.background_color = this.state.backgroundColor
-          style.outer_margin = {
-            top:this.state.marginTop,
-            right:this.state.marginRight,
-            left:this.state.marginLeft,
-            bottom:this.state.marginBottom,
+      if(this.state.row_selected_optionName === "row"){
+        const update_row_style = prev_row_style.face1.map(style=>{
+          if(this.state.row_selected === style._id){
+            style.background_color = this.state.backgroundColor
+            style.outer_margin = {
+              top:this.state.marginTop,
+              right:this.state.marginRight,
+              left:this.state.marginLeft,
+              bottom:this.state.marginBottom,
+            }
+            style.inner_padding = {
+              top:this.state.paddingTop,
+              bottom:this.state.paddingBottom,
+              left:this.state.paddingLeft,
+              right:this.state.paddingRight
+            }
+            style.border={
+              mode:"package",
+              package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+            }
           }
-          style.inner_padding = {
-            top:this.state.paddingTop,
-            bottom:this.state.paddingBottom,
-            left:this.state.paddingLeft,
-            right:this.state.paddingRight
+        })
+      } else if(this.state.row_selected_optionName === "selection"){
+        const update_row_style = prev_row_style.selection.map(style=>{
+          if(this.state.row_selected === style._id){
+            style.background_color = this.state.backgroundColor
+            style.outer_margin = {
+              top:this.state.marginTop,
+              right:this.state.marginRight,
+              left:this.state.marginLeft,
+              bottom:this.state.marginBottom,
+            }
+            style.inner_padding = {
+              top:this.state.paddingTop,
+              bottom:this.state.paddingBottom,
+              left:this.state.paddingLeft,
+              right:this.state.paddingRight
+            }
+            style.border={
+              mode:"package",
+              package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+              right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
+            }
           }
-          style.border={
-            mode:"package",
-            package:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            top:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            bottom:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            left:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-            right:{type:this.state.borderStyle, thickness:this.state.borderThickness, color:this.state.borderColor},
-          }
-        }
-      })
+        })
+      }
+      
     } else {
       const update_row_style = prev_row_style.face2.map(style=>{
         if(this.state.row_selected === style._id){
@@ -218,15 +247,18 @@ class RowSetting extends Component {
   onRowChangeHandler = (e) => {
     console.log('onRowChangeHandler : ',e.target.value)
     console.log('onRowChangeHandler : ',e.target.selectedIndex)
+    console.log('onRowChangeHandler : ',e.target.selectedOptions[0].attributes[0].nodeValue)
     this.setState({
       row_selected:e.target.value,
-      row_selected_index:e.target.selectedIndex
+      row_selected_index:e.target.selectedIndex,
+      row_selected_optionName : e.target.selectedOptions[0].attributes[0].nodeValue
     })
-    this.getInitialValues(this.props.cardSetting_selected,e.target.selectedIndex)
+    this.getInitialValues(this.props.cardSetting_selected,e.target.selectedIndex,e.target.selectedOptions[0].attributes[0].nodeValue)
   }
 
-  getInitialValues = (id,index) => {
+  getInitialValues = (id,index,optionName) => {
     console.log('11111111111111111111111111',id)
+    console.log(optionName)
       const margin = []
       const padding = []
       const background_color = []
@@ -242,16 +274,30 @@ class RowSetting extends Component {
           if(value._id === id){
             console.log(value)
             if(this.state.face_selected_index === 1){
-              margin.push(value.row_style.face1[index-1].outer_margin)
-              padding.push(value.row_style.face1[index-1].inner_padding)
-              background_color.push(value.row_style.face1[index-1].background_color)
-              left_right_ratio.push(value.row_style.face1[index-1].left_right_ratio)
-              packageDetail.push(value.row_style.face1[index-1].border.package)
-              borderTopDetail.push(value.row_style.face1[index-1].border.top)
-              borderRightDetail.push(value.row_style.face1[index-1].border.right)
-              borderBottomDetail.push(value.row_style.face1[index-1].border.bottom)
-              borderLeftDetail.push(value.row_style.face1[index-1].border.left)
-              console.log(value)
+              if(optionName === "row") {
+                margin.push(value.row_style.face1[index-1].outer_margin)
+                padding.push(value.row_style.face1[index-1].inner_padding)
+                background_color.push(value.row_style.face1[index-1].background_color)
+                left_right_ratio.push(value.row_style.face1[index-1].left_right_ratio)
+                packageDetail.push(value.row_style.face1[index-1].border.package)
+                borderTopDetail.push(value.row_style.face1[index-1].border.top)
+                borderRightDetail.push(value.row_style.face1[index-1].border.right)
+                borderBottomDetail.push(value.row_style.face1[index-1].border.bottom)
+                borderLeftDetail.push(value.row_style.face1[index-1].border.left)
+                console.log(value)
+              } else if(optionName === "selection"){
+                margin.push(value.row_style.selection[0].outer_margin)
+                padding.push(value.row_style.selection[0].inner_padding)
+                background_color.push(value.row_style.selection[0].background_color)
+                left_right_ratio.push(value.row_style.selection[0].left_right_ratio)
+                packageDetail.push(value.row_style.selection[0].border.package)
+                borderTopDetail.push(value.row_style.selection[0].border.top)
+                borderRightDetail.push(value.row_style.selection[0].border.right)
+                borderBottomDetail.push(value.row_style.selection[0].border.bottom)
+                borderLeftDetail.push(value.row_style.selection[0].border.left)
+                console.log(value)
+              }
+              
             } else {
               margin.push(value.row_style.face2[index-1].outer_margin)
               padding.push(value.row_style.face2[index-1].inner_padding)
@@ -399,20 +445,33 @@ class RowSetting extends Component {
           if(this.state.face_selected_index === 1){
             const row_options = card_type.row_style.face1.map((row,index)=>{
               console.log(row,index)
-              return <><option value={row._id}>{index+1}행</option></>
+              return <><option name="row" value={row._id}>{index+1}행</option></>
             })
             return row_options
 
           } else if(this.state.face_selected_index === 2) {
             const row_options = card_type.row_style.face2.map((row,index)=>{
               console.log(row,index)
-              return <><option value={row._id}>{index+1}행</option></>
+              return <><option name="row" value={row._id}>{index+1}행</option></>
             })
             return row_options
           } 
         }
       })
-      console.log(cardRowListOption)
+
+      var cardSelectionOption = this.props.cardType.map((card_type)=>{
+        if(card_type._id === this.props.cardSetting_selected){
+          console.log('---------------------------------', card_type)
+          if(this.state.face_selected_index === 1){
+            const selection = card_type.row_style.selection[0]
+            return <><option name="selection" value={selection._id}>보기</option></>
+
+          } else if(this.state.face_selected_index === 2) {
+            return 
+          } 
+        }
+      })
+
     }
 
     
@@ -446,6 +505,7 @@ class RowSetting extends Component {
                       <select defaultValue="행선택" onChange={this.onRowChangeHandler} size='small' style={{ width: 195 }}>
                         <option key="default3" value="행선택">행선택</option>
                         {cardRowListOption}
+                        {cardSelectionOption}
                       </select>
                     </div>
                 </div>
