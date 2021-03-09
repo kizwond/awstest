@@ -6,7 +6,8 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 import 'froala-editor/css/plugins.pkgd.min.css'
 import 'froala-editor/js/plugins.pkgd.min.js'
 import 'froala-editor/js/languages/ko'
-import 'froala-editor//css/themes/gray.min.css'
+import 'froala-editor//css/themes/gray.css'
+// import 'froala-editor//css/themes/gray.min.css'
 
 import FroalaEditorComponent from 'react-froala-wysiwyg';
 
@@ -311,6 +312,51 @@ export class EditorTry extends Component {
     });
     this.setState({card_add:false})
   }
+  applyClass = () => {
+    const thisFontStyle = this.props.styling
+    const thisCardCount = this.props.current_card
+
+    const face1count = thisCardCount.face1
+    const selectioncount = thisCardCount.selection
+    const face2count = thisCardCount.face2
+    const annotcount = thisCardCount.annot
+
+    var matches = document.getElementsByClassName('editor_try');
+
+    //editor inputfileds에 클래스 부여
+    for (var i=0; i<matches.length; i++) {
+      matches.item(i).classList.add('field'+i);
+      console.log("hello")
+    }
+    console.log("here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    //부여된 클래스에 필드 속성에 따라 style정보 적용
+    const styleArray = []
+    for (var a=0; a<face1count; a++) {
+      styleArray.push(thisFontStyle.font.face1[a])
+    }
+    for (var b=0; b<selectioncount; b++) {
+      styleArray.push(thisFontStyle.font.selection[b])
+    }
+    for (var c=0; c<face2count; c++) {
+      styleArray.push(thisFontStyle.font.face2[c])
+    }
+    console.log(styleArray)
+
+    for (var d=0; d<matches.length-1; d++) {
+      var query = document.querySelector(".field"+d);
+      console.log(styleArray[d].color)
+      query.style.color = styleArray[d].color
+      query.style.fontSize = styleArray[d].size+"px"
+      if(styleArray[d].italic === "on") {
+        query.style.fontStyle = "italic"
+      }
+      if(styleArray[d].bold === "on") {
+        query.style.fontWeight = 700
+      }
+      
+    }
+  }
+
   render() {
     console.log('aslkdfjasldfjasldfkajsdklfj:', this.props.card_type_name)
     const config={
@@ -326,13 +372,16 @@ export class EditorTry extends Component {
       charCounterCount: false,
       language: 'ko',
       toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'subscript', 'superscript', 
-                       'fontFamily', 'fontSize', 'color', 
+                       'fontFamily', 'fontSize', 'color', 'textColor',
                        'align', 'formatOL', 'formatUL', 'outdent', 'indent',
                        'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', 
                        'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting',
                        'help', 'html', 'undo', 'redo'],
     }
 console.log('arrayForEditor:', this.props.arrayForEditor)
+console.log('1111111111111111111111111111111111:',this.props.current_card)
+console.log('1111111111111111111111111111111111:',this.props.styling)
+    
     const editorList = this.props.arrayForEditor.map((item,index)=>{
       return (
                 <div key={index} style={{display:"flex", marginTop:"5px", alignItems:"center"}}>
@@ -348,6 +397,8 @@ console.log('arrayForEditor:', this.props.arrayForEditor)
         )
       })
 
+      this.applyClass()
+     
     return (
       <>
       <div id="editor" style={{border:"1px solid black", borderRadius:"10px"}}>

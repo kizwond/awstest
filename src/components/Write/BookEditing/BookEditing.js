@@ -13,7 +13,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 import 'froala-editor/css/plugins.pkgd.min.css'
 import 'froala-editor/js/plugins.pkgd.min.js'
 import 'froala-editor/js/languages/ko'
-import 'froala-editor//css/themes/gray.min.css'
+// import 'froala-editor//css/themes/gray.min.css'
 
 
 // import FroalaEditorComponent from 'react-froala-wysiwyg';
@@ -221,9 +221,13 @@ export class BookWriting extends Component {
     console.log("check 1", this.state.card_type)
     const contentsList = this.state.card_type.map((content)=>{
       console.log(content)
+      
       console.log(content.name)
       if(content.name === key){
         console.log('here', content)
+        this.setState({
+          editorStyling:content
+        })
           const cardType = content.type
           const selectionLength = content.num_of_row.selection
           console.log(cardType)
@@ -1005,6 +1009,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1045,6 +1050,7 @@ export class BookWriting extends Component {
                       <div> 
                       <Space>   
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1058,6 +1064,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1069,6 +1076,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1115,6 +1123,7 @@ export class BookWriting extends Component {
                       <div>
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1128,6 +1137,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1139,6 +1149,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1184,6 +1195,7 @@ export class BookWriting extends Component {
                       <div>
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1197,6 +1209,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1208,6 +1221,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1254,6 +1268,7 @@ export class BookWriting extends Component {
                       <div>
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1267,6 +1282,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1278,6 +1294,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1311,6 +1328,7 @@ export class BookWriting extends Component {
                       <div>
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1324,6 +1342,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1362,6 +1381,7 @@ export class BookWriting extends Component {
                       <div>
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}
@@ -1376,6 +1396,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1387,6 +1408,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
+                   styling={this.state.editorStyling}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}

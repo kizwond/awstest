@@ -192,6 +192,7 @@ class FontSetting extends Component {
       const italic = []
       const size = []
       const underline = []
+      const color = []
 
         console.log('22222222222222222222222222222')
         this.state.card_type.map((value)=>{
@@ -205,6 +206,7 @@ class FontSetting extends Component {
                     italic.push(value.font.face1[index-1].italic)
                     size.push(value.font.face1[index-1].size)
                     underline.push(value.font.face1[index-1].underline)
+                    color.push(value.font.face1[index-1].color)
                   } else if(optionName === "selection"){
                     align.push(value.font.selection[0].align)
                     bold.push(value.font.selection[0].bold)
@@ -212,6 +214,7 @@ class FontSetting extends Component {
                     italic.push(value.font.selection[0].italic)
                     size.push(value.font.selection[0].size)
                     underline.push(value.font.selection[0].underline)
+                    color.push(value.font.selection[0].color)
                   }
                 
             } else {
@@ -221,6 +224,7 @@ class FontSetting extends Component {
                 italic.push(value.font.face2[index-1].italic)
                 size.push(value.font.face2[index-1].size)
                 underline.push(value.font.face2[index-1].underline)
+                color.push(value.font.face2[index-1].color)
             }
             
             this.setState({
@@ -237,6 +241,7 @@ class FontSetting extends Component {
             italic:italic[0],
             size:size[0],
             underline:underline[0],
+            color:color[0],
         }
 
         if(bold[0]=== "off"){
@@ -276,6 +281,9 @@ class FontSetting extends Component {
       })
       this.setState({
         fontUnderLine:underlineCheck
+      })
+      this.setState({
+        fontColor:initialValues.color
       })
 
   }
