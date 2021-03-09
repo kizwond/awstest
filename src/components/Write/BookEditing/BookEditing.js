@@ -1101,7 +1101,7 @@ export class BookWriting extends Component {
                     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
                       <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}> 
                         <div style={face1Style}>{face1Contents}</div>
-                        <div>{selectionContents}</div>
+                        <div style={face1Style}>{selectionContents}</div>
                       </div>
                       <div style={face2Style}>{face2Contents}</div>
                       <div>{content[0].annotation_contents}</div>
