@@ -458,14 +458,19 @@ class RowSetting extends Component {
           } 
         }
       })
-
+      
       var cardSelectionOption = this.props.cardType.map((card_type)=>{
         if(card_type._id === this.props.cardSetting_selected){
           console.log('---------------------------------', card_type)
           if(this.state.face_selected_index === 1){
-            const selection = card_type.row_style.selection[0]
-            return <><option name="selection" value={selection._id}>보기</option></>
-
+            if(card_type.row_style.selection.length > 0) {
+              const selection = card_type.row_style.selection[0]
+              console.log(selection)
+              return <><option name="selection" value={selection._id}>보기</option></>
+            } else {
+              return
+            }
+            
           } else if(this.state.face_selected_index === 2) {
             return 
           } 
