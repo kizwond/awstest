@@ -91,7 +91,7 @@ export class BookWriting extends Component {
       book_id:value
     })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         sessionStorage.setItem('firstIndex', res.data.indexList[0]._id)
         this.setState({ 
           table_of_contents:res.data.indexList,
@@ -108,7 +108,7 @@ export class BookWriting extends Component {
       book_id:value
     })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.setState({ 
           card_type:res.data.cardtypes
         });
@@ -405,7 +405,7 @@ export class BookWriting extends Component {
       index_id: info.node.index_id
     })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.setState({ 
           contents:res.data.cardlist,
           loading : false
@@ -652,7 +652,7 @@ export class BookWriting extends Component {
 
     if(contentsList){
       var list = contentsList.map((content)=>{
-        console.log(content)
+        // console.log(content)
         const borderTopType = content[0].cardTypeDetail.card_style.border.package.type
         const borderTopThickness = content[0].cardTypeDetail.card_style.border.package.thickness
         const borderTopColor = content[0].cardTypeDetail.card_style.border.package.color
@@ -728,7 +728,7 @@ export class BookWriting extends Component {
           padding:`${face2InnerPaddingTop}px ${face2InnerPaddingLeft}px ${face2InnerPaddingRight}px ${face2InnerPaddingBottom}px`, 
           border:`${face2borderTopType} ${face2borderTopThickness}px ${face2borderTopColor}`
         }
-        console.log("handle this:", content[0])
+        // console.log("handle this:", content[0])
 
         const face1Contents = content[0].face1.map((item,contentsIndex)=>{
           let borderTopType
@@ -771,7 +771,7 @@ export class BookWriting extends Component {
           let underline 
           content[0].cardTypeDetail.font.face1.map((font,fontIndex)=>{
             if(fontIndex === contentsIndex){
-              console.log(font)
+              // console.log(font)
               if(font.bold === "on"){
                 var font_weight = "700"
               } else {
@@ -810,7 +810,7 @@ export class BookWriting extends Component {
             fontSize:`${size}px`,
             textDecoration:`${underline}`,
           }
-            console.log(rowStyle)
+            // console.log(rowStyle)
           return <div style={rowStyle}>{item}</div>
         })
 
@@ -861,7 +861,7 @@ export class BookWriting extends Component {
             let underline 
             content[0].cardTypeDetail.font.face2.map((font,fontIndex)=>{
               if(fontIndex === contentsIndex){
-                console.log(font)
+                // console.log(font)
                 if(font.bold === "on"){
                   var font_weight = "700"
                 } else {
@@ -907,7 +907,7 @@ export class BookWriting extends Component {
 
         if(content[0].selection_contents){
           var selectionContents = content[0].selection_contents.map((item,contentsIndex)=>{
-            console.log(content[0].cardTypeDetail)
+            // console.log(content[0].cardTypeDetail)
             const selectionStyle = content[0].cardTypeDetail.row_style.selection[0]
 
                 let borderTopType = selectionStyle.border.package.type
@@ -991,6 +991,7 @@ export class BookWriting extends Component {
                       <div>  
                       <Space>
                         <CardEditing arrayForEditor={this.state.arrayForEditor}
+                                     cardTypeDetail={content[0].cardTypeDetail}
                                      updateContentsListState={this.updateContentsListState}
                                      index_id={this.state.index_id}
                                      card_type={content[0].type}

@@ -317,7 +317,7 @@ export class CardEditing extends Component {
       card_id : this.props.card_id,
       cardtype_id:this.props.content.cardtype_id._id,
       index_id:this.props.index_id,
-      flag_of_maker : [Number(this.state.flag)],
+      maker_flag : [Number(this.state.flag)],
       share : share_array,
       face1 : face1_array,
       selection : selection_array,
@@ -351,15 +351,16 @@ export class CardEditing extends Component {
 
   addCardHandler = () => {
     console.log('content : ', this.props.content)
+    const CardTypeDetail = this.props.cardTypeDetail
     const { content } = this.props
-    const cardType = content.cardtype_id.type
-    const selectionLength = content.cardtype_id.num_of_row.selection
+    const cardType = this.props.card_type
+    const selectionLength = CardTypeDetail.num_of_row.selection
     console.log(cardType)
 
 
         if (cardType === 'read') {
-            const faceLength_1 = content.cardtype_id.num_of_row.face1
-            const annotLength = content.cardtype_id.num_of_row.annotation
+            const faceLength_1 = CardTypeDetail.num_of_row.face1
+            const annotLength = CardTypeDetail.num_of_row.annotation
             const face_array = []
             for ( var i = 1; i < faceLength_1+1; i++) {
               face_array.push('1면'+i+'행')
@@ -378,9 +379,9 @@ export class CardEditing extends Component {
             var contentsList = face_array
           } else if (cardType === 'flip-normal') {
             if(selectionLength > 0){
-              const faceLength_1 = content.cardtype_id.num_of_row.face1
-              const faceLength_2 = content.cardtype_id.num_of_row.face2
-              const annotLength = content.cardtype_id.num_of_row.annotation
+              const faceLength_1 = CardTypeDetail.num_of_row.face1
+              const faceLength_2 = CardTypeDetail.num_of_row.face2
+              const annotLength = CardTypeDetail.num_of_row.annotation
               const face_array = []
               for ( i = 1; i < faceLength_1+1; i++) {
                 face_array.push('1면'+i+'행')
@@ -408,9 +409,9 @@ export class CardEditing extends Component {
               contentsList = face_array
 
             }else {
-              const faceLength_1 = content.cardtype_id.num_of_row.face1
-              const faceLength_2 = content.cardtype_id.num_of_row.face2
-              const annotLength = content.cardtype_id.num_of_row.annotation
+              const faceLength_1 = CardTypeDetail.num_of_row.face1
+              const faceLength_2 = CardTypeDetail.num_of_row.face2
+              const annotLength = CardTypeDetail.num_of_row.annotation
               const face_array = []
               for ( i = 1; i < faceLength_1+1; i++) {
                 face_array.push('1면'+i+'행')
@@ -435,8 +436,8 @@ export class CardEditing extends Component {
             }
             
           } else if (cardType === 'share') {
-            const shareLength = content.cardtype_id.num_of_row.share
-            const annotLength = content.cardtype_id.num_of_row.annotation
+            const shareLength = CardTypeDetail.num_of_row.share
+            const annotLength = CardTypeDetail.num_of_row.annotation
             const face_array = []
             for ( i = 1; i < shareLength+1; i++) {
               face_array.push('공통'+i+'행')
@@ -455,8 +456,8 @@ export class CardEditing extends Component {
             contentsList = face_array
 
           } else if (cardType === 'none') {
-            const noneLength = content.cardtype_id.num_of_row.none
-            const annotLength = content.cardtype_id.num_of_row.annotation
+            const noneLength = CardTypeDetail.num_of_row.none
+            const annotLength = CardTypeDetail.num_of_row.annotation
             const face_array = []
             for ( i = 1; i < noneLength+1; i++) {
               face_array.push('비학습카드')
