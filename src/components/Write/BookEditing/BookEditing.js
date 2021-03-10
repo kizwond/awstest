@@ -92,7 +92,7 @@ export class BookWriting extends Component {
       book_id:value
     })
       .then(res => {
-        // console.log(res.data)
+        console.log(res.data)
         sessionStorage.setItem('firstIndex', res.data.indexList[0]._id)
         this.setState({ 
           table_of_contents:res.data.indexList,
@@ -539,8 +539,12 @@ export class BookWriting extends Component {
     }
     
     if(this.state.contents){
+      console.log(this.state.contents)
       var contentsList = this.state.contents.map((content)=>{
+        console.log(content)
+        console.log(this.state.card_type)
         const cardTypeChosen = this.state.card_type.find(element => element._id === content.cardtype_id)
+        console.log(cardTypeChosen)
         const flag_column_num = cardTypeChosen.num_of_row.maker_flag;
         const face1_column_num = cardTypeChosen.num_of_row.face1;
         const selection_column_num = cardTypeChosen.num_of_row.selection;
