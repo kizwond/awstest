@@ -313,9 +313,11 @@ export class EditorTry extends Component {
     this.setState({card_add:false})
   }
   applyClass = () => {
-    const thisFontStyle = this.props.styling
+    console.log(this.props.editor_style)
+    const thisFontStyle = this.props.editor_style
     const thisCardCount = this.props.current_card
-
+    console.log(thisFontStyle)
+    console.log(thisCardCount)
     const face1count = thisCardCount.face1
     const selectioncount = thisCardCount.selection
     const face2count = thisCardCount.face2
@@ -380,7 +382,7 @@ export class EditorTry extends Component {
     }
 console.log('arrayForEditor:', this.props.arrayForEditor)
 console.log('1111111111111111111111111111111111:',this.props.current_card)
-console.log('1111111111111111111111111111111111:',this.props.styling)
+console.log('1111111111111111111111111111111111:',this.props.editor_style)
     
     const editorList = this.props.arrayForEditor.map((item,index)=>{
       return (
@@ -396,8 +398,10 @@ console.log('1111111111111111111111111111111111:',this.props.styling)
                 </div>
         )
       })
-
-      this.applyClass()
+      if(this.props.editor_style){
+        this.applyClass()
+      }
+      
      
     return (
       <>

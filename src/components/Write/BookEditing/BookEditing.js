@@ -67,6 +67,7 @@ export class BookWriting extends Component {
        parent_card_id:'',
        card_selected_props:'',
        face_selected_props:'',
+       editor_style:''
     }
     this.onSelect = this.onSelect.bind(this)
   }
@@ -225,9 +226,6 @@ export class BookWriting extends Component {
       console.log(content.name)
       if(content.name === key){
         console.log('here', content)
-        this.setState({
-          editorStyling:content
-        })
           const cardType = content.type
           const selectionLength = content.num_of_row.selection
           console.log(cardType)
@@ -242,10 +240,12 @@ export class BookWriting extends Component {
               face_array.push(content.nick_of_row.annotation[i-1])
             }
             console.log(face_array)
+            console.log(content)
             this.setState({
               current_card: {'face1':faceLength_1,'annot':annotLength},
               current_card_type:content._id,
-              card_type_name:content.type
+              card_type_name:content.type,
+              editor_style:content
             })
             return face_array
           } else if (cardType === 'flip-normal') {
@@ -270,7 +270,8 @@ export class BookWriting extends Component {
               this.setState({
                 current_card: {'face1':faceLength_1,'selection':selectionLength,'face2':faceLength_2,'annot':annotLength},
                 current_card_type:content._id,
-                card_type_name:content.type
+                card_type_name:content.type,
+                editor_style:content
               })
               return face_array
 
@@ -292,7 +293,8 @@ export class BookWriting extends Component {
               this.setState({
                 current_card: {'face1':faceLength_1,'face2':faceLength_2,'annot':annotLength},
                 current_card_type:content._id,
-                card_type_name:content.type
+                card_type_name:content.type,
+                editor_style:content
               })
               return face_array
             }
@@ -311,7 +313,8 @@ export class BookWriting extends Component {
             this.setState({
               current_card: {'face1':faceLength_1,'annot':annotLength},
               current_card_type:content._id,
-              card_type_name:content.type
+              card_type_name:content.type,
+              editor_style:content
             })
             return face_array
 
@@ -329,7 +332,8 @@ export class BookWriting extends Component {
             this.setState({
               current_card: {'face1':faceLength_1,'annot':annotLength},
               current_card_type:content._id,
-              card_type_name:content.type
+              card_type_name:content.type,
+              editor_style:content
             })
             return face_array
           }
@@ -1009,7 +1013,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1064,7 +1068,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1076,7 +1080,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1137,7 +1141,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1149,7 +1153,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1209,7 +1213,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1221,7 +1225,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1282,7 +1286,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1294,7 +1298,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1342,7 +1346,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1396,7 +1400,7 @@ export class BookWriting extends Component {
                     </div>
                   </div>
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
@@ -1408,7 +1412,7 @@ export class BookWriting extends Component {
                    current_card={this.state.current_card}
                    /> : ''}
                    {this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? <EditorTry arrayForEditor={this.state.arrayForEditor}
-                   styling={this.state.editorStyling}
+                   editor_style={this.state.editor_style}
                    selected_card_seq={this.state.selected_card_seq}
                    handleSubmit={this.handleSubmit}
                    cardAddStateHandler={this.cardAddStateHandler}
