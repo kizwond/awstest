@@ -10,7 +10,6 @@ class FlipSide extends Component {
     }
     render() { 
         if(this.props.card_status){
-            console.log(this.props.card_status)
             const card = this.props.card_status.detail_status
             var level = card.level
             var total_study_times = card.total_study_times
