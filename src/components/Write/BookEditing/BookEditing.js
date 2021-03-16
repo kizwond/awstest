@@ -544,7 +544,26 @@ export class BookWriting extends Component {
 		);
 	};
 
-	editorTry = () => {
+	editorTry1 = () => {
+		return (
+			<>
+				<EditorTry
+					arrayForEditor={this.state.arrayForEditor}
+					editor_style={this.state.editor_style}
+					selected_card_seq={this.state.selected_card_seq}
+					handleSubmit={this.handleSubmit}
+					cardAddStateHandler={this.cardAddStateHandler}
+					card_type_name={this.state.card_type_name}
+					updateContentsState={this.updateContentsState}
+					current_card_type={this.state.current_card_type}
+					contents={this.state.contents}
+					index_id={this.state.index_id}
+					current_card={this.state.current_card}
+				/>
+			</>
+		);
+	};
+	editorTry2 = () => {
 		return (
 			<>
 				<EditorTry
@@ -1126,7 +1145,7 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id ? this.editorTry1() : ""}
 						</>
 					);
 				} else if (content[0].type === "flip-normal" && !content[0].selection_contents && content[0].direction === "left-right") {
@@ -1177,8 +1196,8 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry() : ""}
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry1() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry2() : ""}
 						</>
 					);
 				} else if (content[0].type === "flip-normal" && content[0].selection_contents && content[0].direction === "left-right") {
@@ -1238,8 +1257,8 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry() : ""}
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry1() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry2() : ""}
 						</>
 					);
 				} else if (content[0].type === "flip-normal" && !content[0].selection_contents && content[0].direction === "top-bottom") {
@@ -1298,8 +1317,8 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry() : ""}
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry1() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry2() : ""}
 						</>
 					);
 				} else if (content[0].type === "flip-normal" && content[0].selection_contents && content[0].direction === "top-bottom") {
@@ -1360,8 +1379,8 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry() : ""}
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry1() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry2() : ""}
 						</>
 					);
 				} else if (content[0].type === "none") {
@@ -1444,8 +1463,8 @@ export class BookWriting extends Component {
 									</div>
 								</div>
 							</div>
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry() : ""}
-							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === false ? this.editorTry1() : ""}
+							{this.state.card_add === true && this.state.card_selected_id === content[0].card_id && this.state.child_card_add === true ? this.editorTry2() : ""}
 						</>
 					);
 				}
