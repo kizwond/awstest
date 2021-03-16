@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Affix, Collapse, Switch, Select, Input, Upload, message } from 'antd';
 import { BoldOutlined,ItalicOutlined,UnderlineOutlined,UploadOutlined  } from '@ant-design/icons';
 import Button from '../../styledComponents/defaultButton'
+import axios from 'axios'
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -18,6 +19,7 @@ class PageSetting extends Component {
       pageInnerPaddingBottom:"",
       pageInnerPaddingLeft:"",
       pageInnerPaddingRight:"",
+      page_type:[]
      };
   }
 
@@ -49,30 +51,91 @@ class PageSetting extends Component {
       pageColor:e.target.value
     })
   }
-  onChangePageInnerPaddingTop = (value) => {
+  onChangePageInnerPaddingTop = (e) => {
     this.setState({
-      pageInnerPaddingTop:value
+      pageInnerPaddingTop:e.target.value
     })
   }
-  onChangePageInnerPaddingBottom = (value) => {
+  onChangePageInnerPaddingBottom = (e) => {
     this.setState({
-      pageInnerPaddingBottom:value
+      pageInnerPaddingBottom:e.target.value
     })
   }
-  onChangePageInnerPaddingLeft = (value) => {
+  onChangePageInnerPaddingLeft = (e) => {
     this.setState({
-      pageInnerPaddingLeft:value
+      pageInnerPaddingLeft:e.target.value
     })
   }
-  onChangePageInnerPaddingRight = (value) => {
+  onChangePageInnerPaddingRight = (e) => {
     this.setState({
-      pageInnerPaddingRight:value
+      pageInnerPaddingRight:e.target.value
+    })
+  }
+
+  
+  componentDidMount(){
+    this.getPageSetting()
+  }
+  getPageSetting = async () =>{
+    const value = sessionStorage.getItem("book_id");
+		await axios.post("api/pagetype/get-pagetype", {
+				book_id: value,
+			})
+			.then((res) => {
+				console.log(res.data)
+				this.setState({
+					page_type: res.data.pagetype,
+				});
+			});
+
+    this.defaultValue()
+  }
+  defaultValue = () => {
+    const page_type_defaults = this.state.page_type
+    console.log(page_type_defaults[0])
+    this.setState({
+      pageWidth:page_type_defaults[0].pagetype.size.width,
+      pageHeight:page_type_defaults[0].pagetype.size.height,
+      pageAnnotRatio:page_type_defaults[0].pagetype.annot_ratio,
+      pageColor:page_type_defaults[0].pagetype.color,
+      pageInnerPaddingTop:page_type_defaults[0].pagetype.inner_padding.top,
+      pageInnerPaddingBottom:page_type_defaults[0].pagetype.inner_padding.bottom,
+      pageInnerPaddingLeft:page_type_defaults[0].pagetype.inner_padding.left,
+      pageInnerPaddingRight:page_type_defaults[0].pagetype.inner_padding.right,
     })
   }
 
   onFinish = () => {
-    console.log("onfinish")
+    const updated_pagetype = {
+      annot_ratio : Number(this.state.pageAnnotRatio),
+      color: this.state.pageColor,
+      inner_padding : {
+        top: Number(this.state.pageInnerPaddingTop),
+        bottom: Number(this.state.pageInnerPaddingBottom),
+        left: Number(this.state.pageInnerPaddingLeft),
+        right: Number(this.state.pageInnerPaddingRight),
+      },
+      size:{
+        width:Number(this.state.pageWidth),
+        height:Number(this.state.pageHeight)
+      }
+    }
+    console.log(updated_pagetype)
+    const value = sessionStorage.getItem("book_id");
+    axios.post("api/pagetype/update-pagetype", {
+      book_id: value,
+      updated_pagetype:updated_pagetype,
+    })
+    .then((res) => {
+      console.log(res.data)
+      this.setState({
+        page_type: res.data.pagetype,
+      });
+    });
+    
   }
+
+
   render() {
    
     return (
