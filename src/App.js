@@ -15,7 +15,7 @@ import ChooseIndex from "./components/chooseIndex/ChooseIndex";
 import StudyFlip from "./components/flipMode/StudyFlip";
 import FinishStudy from "./components/studyResult/FinishStudy";
 import BookEditing from "./components/Write/BookEditing/BookEditing";
-import BookNaming from "./components/Write/BookEditing/BookNaming";
+import BookNaming from "./components/Write/BookEditing/BookNaming"
 
 class App extends Component {
   constructor(props) {
