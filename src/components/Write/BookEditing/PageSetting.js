@@ -86,12 +86,13 @@ class PageSetting extends Component {
 				this.setState({
 					page_type: res.data.pagetype,
 				});
+        this.defaultValue(res.data.pagetype)
 			});
 
-    this.defaultValue()
+    
   }
-  defaultValue = () => {
-    const page_type_defaults = this.state.page_type
+  defaultValue = (value) => {
+    const page_type_defaults = value
     console.log(page_type_defaults[0])
     this.setState({
       pageWidth:page_type_defaults[0].pagetype.size.width,

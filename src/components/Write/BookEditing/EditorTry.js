@@ -163,6 +163,7 @@ export class EditorTry extends Component {
 
   handleSubmit = () => {
     console.log('1111111111111111111111111111111111:',this.props.current_card)
+    console.log("----------------=====================-------------------------")
     const current = this.props.current_card
 
     if(current){
