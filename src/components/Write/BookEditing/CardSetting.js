@@ -191,7 +191,7 @@ class CardSetting extends Component {
       })
     
     
-    this.props.onCardChangeHandler(e)
+    // this.props.onCardChangeHandler(e)
     this.getInitialValues(e.target.value)
   }
 
