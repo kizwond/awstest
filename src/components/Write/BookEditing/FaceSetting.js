@@ -26,7 +26,7 @@ class FaceSetting extends Component {
       borderColor: "#FFFFFF",
       borderThickness: 0,
       face_selected: "",
-      readShareNoneSelected:false
+      
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -173,21 +173,8 @@ class FaceSetting extends Component {
     this.setState({
       card_selected: e.target.value,
     });
-    // this.props.onCardChangeHandler(e)
-    var cardTypeListOption = this.props.cardType.find((card_type) => {
-      console.log(card_type);
-      if (card_type._id === e.target.value) {
-        if(card_type.tyle === "read"){
-          this.setState({
-            readShareNoneSelected: true
-          })
-        } else {
-          this.setState({
-            readShareNoneSelected: false
-          })
-        }
-      }
-    });
+    this.props.onCardChangeHandler(e)
+    
   };
 
   onFaceChangeHandler = (e) => {
@@ -336,20 +323,21 @@ class FaceSetting extends Component {
   };
 
   render() {
+    console.log(this.state.readShareNoneSelected)
     if (this.props.cardType) {
       var cardTypeListOption = this.props.cardType.map((card_type) => {
         console.log(card_type);
-        // if(card_type._id === this.props.cardSetting_selected) {
+        if(card_type.type === "flip-normal") {
         return (
           <option key={this.getKey()} value={card_type._id}>
             {card_type.name} - ({card_type.type} 카드)
           </option>
         );
-        // }
+        }
       });
       var cardFaceListOption = this.props.cardType.map((card_type) => {
-        if (card_type._id === this.state.face_selected) {
-          if (card_type.type === "read" || "share" || "none") {
+        if (card_type._id === this.props.cardSetting_selected) {
+          if (card_type.type === "read" || card_type.type ==="share" || card_type.type ==="none") {
             return;
           } else if (card_type.type === "flip-normal") {
             return (
@@ -380,11 +368,11 @@ class FaceSetting extends Component {
                     </select>
                   </div>
                 </div>
-                {/* {this.state.readShareNoneSelected === false &&  */}
+                
                 <div className="select_page_size_div">
                   <div>면</div>
                   <div>
-                    <select defaultValue="면선택" size="small" onChange={this.onFaceChangeHandler} value={this.state.face_selected} style={{ width: 195 }}>
+                    <select defaultValue="면선택" size="small" onChange={this.onFaceChangeHandler} value={this.props.faceSetting_selected} style={{ width: 195 }}>
                       <option key="default2" value="면선택">
                         면선택
                       </option>
@@ -392,16 +380,12 @@ class FaceSetting extends Component {
                     </select>
                   </div>
                 </div>
-                {/* // } */}
                 
-                {/* <div className='select_page_size_div'>
-                    <div>행</div>
-                    <div>
-                      <Select defaultValue="행선택" size='small' style={{ width: 195 }}>
-                        <Option key="default3" value="행선택">행선택</Option>
-                      </Select>
-                    </div>
-                </div> */}
+                
+                <div className='' style={{width:"100%", fontSize:"10px", marginLeft:"30px", marginTop:"10px"}}>
+                    <div>※ 읽기카드, 공통지문카드 및 비학습카드는 면설정이 없습니다.</div>
+                    
+                </div>
               </div>
             </Panel>
 
@@ -411,7 +395,7 @@ class FaceSetting extends Component {
                   <div>배경색</div>
                   <div className="select_card_bg_color_right">
                     <div>
-                      <Input type="color" size="small" onChange={this.onChangeBackgroundColor} value={this.state.backgroundColor} style={{ width: 125 }} type="color" />
+                      <Input type="color" size="small" onChange={this.onChangeBackgroundColor} value={this.state.backgroundColor} style={{ width: 125 }} />
                     </div>
                   </div>
                 </div>

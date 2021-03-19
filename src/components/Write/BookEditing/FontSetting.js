@@ -208,7 +208,7 @@ class FontSetting extends Component {
     this.state.card_type.map((value) => {
       if (value._id === id) {
         console.log(value);
-        if (value.type === "read" || "share" || "none") {
+        if (value.type === "read" || value.type === "share" || value.type === "none") {
           align.push(value.font.face1[index - 1].align);
           bold.push(value.font.face1[index - 1].bold);
           font.push(value.font.face1[index - 1].font);

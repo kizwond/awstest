@@ -29,6 +29,7 @@ class RowSetting extends Component {
       face_selected_index: "",
       row_selected: "",
       row_selected_index: "",
+      readShareNoneSelected:false
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -258,6 +259,20 @@ class RowSetting extends Component {
       card_selected: e.target.value,
     });
     this.props.onCardChangeHandler(e);
+    var cardTypeListOption = this.props.cardType.map((card_type) => {
+      console.log(card_type);
+      if (card_type._id === e.target.value) {
+        if(card_type.type === "read" ||card_type.type === "share" ||card_type.type === "none" ){
+          this.setState({
+            readShareNoneSelected: true
+          })
+        } else {
+          this.setState({
+            readShareNoneSelected: false
+          })
+        }
+      }
+    });
   };
 
   onFaceChangeHandler = (e) => {
@@ -299,7 +314,7 @@ class RowSetting extends Component {
     this.state.card_type.map((value) => {
       if (value._id === id) {
         console.log(value);
-        if (value.type === "read" || "share" || "none") {
+        if (value.type === "read" || value.type === "share" || value.type === "none") {
           margin.push(value.row_style.face1[index - 1].outer_margin);
           padding.push(value.row_style.face1[index - 1].inner_padding);
           background_color.push(value.row_style.face1[index - 1].background_color);
@@ -568,6 +583,7 @@ class RowSetting extends Component {
                     </select>
                   </div>
                 </div>
+                {this.state.readShareNoneSelected === false && 
                 <div className="select_page_size_div">
                   <div>면</div>
                   <div>
@@ -579,6 +595,7 @@ class RowSetting extends Component {
                     </select>
                   </div>
                 </div>
+                }
                 <div className="select_page_size_div">
                   <div>행</div>
                   <div>
