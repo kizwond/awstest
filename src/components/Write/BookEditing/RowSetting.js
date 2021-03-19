@@ -29,7 +29,7 @@ class RowSetting extends Component {
       face_selected_index: "",
       row_selected: "",
       row_selected_index: "",
-      readShareNoneSelected:false
+      readShareNoneSelected: false,
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -262,14 +262,14 @@ class RowSetting extends Component {
     var cardTypeListOption = this.props.cardType.map((card_type) => {
       console.log(card_type);
       if (card_type._id === e.target.value) {
-        if(card_type.type === "read" ||card_type.type === "share" ||card_type.type === "none" ){
+        if (card_type.type === "read" || card_type.type === "share" || card_type.type === "none") {
           this.setState({
-            readShareNoneSelected: true
-          })
+            readShareNoneSelected: true,
+          });
         } else {
           this.setState({
-            readShareNoneSelected: false
-          })
+            readShareNoneSelected: false,
+          });
         }
       }
     });
@@ -583,19 +583,19 @@ class RowSetting extends Component {
                     </select>
                   </div>
                 </div>
-                {this.state.readShareNoneSelected === false && 
-                <div className="select_page_size_div">
-                  <div>면</div>
-                  <div>
-                    <select defaultValue="면선택" size="small" onChange={this.onFaceChangeHandler} style={{ width: 195 }}>
-                      <option key="default2" value="면선택">
-                        면선택
-                      </option>
-                      {cardFaceListOption}
-                    </select>
+                {this.state.readShareNoneSelected === false && (
+                  <div className="select_page_size_div">
+                    <div>면</div>
+                    <div>
+                      <select defaultValue="면선택" size="small" onChange={this.onFaceChangeHandler} style={{ width: 195 }}>
+                        <option key="default2" value="면선택">
+                          면선택
+                        </option>
+                        {cardFaceListOption}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                }
+                )}
                 <div className="select_page_size_div">
                   <div>행</div>
                   <div>

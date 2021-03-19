@@ -26,7 +26,6 @@ class FaceSetting extends Component {
       borderColor: "#FFFFFF",
       borderThickness: 0,
       face_selected: "",
-      
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -173,8 +172,7 @@ class FaceSetting extends Component {
     this.setState({
       card_selected: e.target.value,
     });
-    this.props.onCardChangeHandler(e)
-    
+    this.props.onCardChangeHandler(e);
   };
 
   onFaceChangeHandler = (e) => {
@@ -323,21 +321,21 @@ class FaceSetting extends Component {
   };
 
   render() {
-    console.log(this.state.readShareNoneSelected)
+    console.log(this.state.readShareNoneSelected);
     if (this.props.cardType) {
       var cardTypeListOption = this.props.cardType.map((card_type) => {
         console.log(card_type);
-        if(card_type.type === "flip-normal") {
-        return (
-          <option key={this.getKey()} value={card_type._id}>
-            {card_type.name} - ({card_type.type} 카드)
-          </option>
-        );
+        if (card_type.type === "flip-normal") {
+          return (
+            <option key={this.getKey()} value={card_type._id}>
+              {card_type.name} - ({card_type.type} 카드)
+            </option>
+          );
         }
       });
       var cardFaceListOption = this.props.cardType.map((card_type) => {
         if (card_type._id === this.props.cardSetting_selected) {
-          if (card_type.type === "read" || card_type.type ==="share" || card_type.type ==="none") {
+          if (card_type.type === "read" || card_type.type === "share" || card_type.type === "none") {
             return;
           } else if (card_type.type === "flip-normal") {
             return (
@@ -368,7 +366,7 @@ class FaceSetting extends Component {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="select_page_size_div">
                   <div>면</div>
                   <div>
@@ -380,11 +378,9 @@ class FaceSetting extends Component {
                     </select>
                   </div>
                 </div>
-                
-                
-                <div className='' style={{width:"100%", fontSize:"10px", marginLeft:"30px", marginTop:"10px"}}>
-                    <div>※ 읽기카드, 공통지문카드 및 비학습카드는 면설정이 없습니다.</div>
-                    
+
+                <div className="" style={{ width: "100%", fontSize: "10px", marginLeft: "30px", marginTop: "10px" }}>
+                  <div>※ 읽기카드, 공통지문카드 및 비학습카드는 면설정이 없습니다.</div>
                 </div>
               </div>
             </Panel>

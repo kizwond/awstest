@@ -86,7 +86,8 @@ export class BookWriting extends Component {
 
   getPageSetting = () => {
     const value = sessionStorage.getItem("book_id");
-    axios.post("api/pagetype/get-pagetype", {
+    axios
+      .post("api/pagetype/get-pagetype", {
         book_id: value,
       })
       .then((res) => {
@@ -233,9 +234,9 @@ export class BookWriting extends Component {
     // console.log("------------------->", key);
     // console.log("check 1", this.state.card_type);
     const contentsList = this.state.card_type.map((content) => {
-    //   console.log(content);
+      //   console.log(content);
 
-    //   console.log(content.name);
+      //   console.log(content.name);
       if (content.name === key) {
         // console.log("here", content);
         const cardType = content.type;
@@ -251,8 +252,8 @@ export class BookWriting extends Component {
           for (i = 1; i < annotLength + 1; i++) {
             face_array.push(content.nick_of_row.annotation[i - 1]);
           }
-        //   console.log(face_array);
-        //   console.log(content);
+          //   console.log(face_array);
+          //   console.log(content);
           this.setState({
             current_card: { face1: faceLength_1, annot: annotLength },
             current_card_type: content._id,
@@ -328,7 +329,7 @@ export class BookWriting extends Component {
           for (i = 1; i < annotLength + 1; i++) {
             face_array.push(content.nick_of_row.annotation[i - 1]);
           }
-        //   console.log(face_array);
+          //   console.log(face_array);
           this.setState({
             current_card: { face1: faceLength_1, annot: annotLength },
             current_card_type: content._id,
@@ -346,7 +347,7 @@ export class BookWriting extends Component {
           for (i = 1; i < annotLength + 1; i++) {
             face_array.push(content.nick_of_row.annotation[i - 1]);
           }
-        //   console.log(face_array);
+          //   console.log(face_array);
           this.setState({
             current_card: { face1: faceLength_1, annot: annotLength },
             current_card_type: content._id,
@@ -613,7 +614,7 @@ export class BookWriting extends Component {
     }
 
     if (this.state.contents) {
-    //   console.log(this.state.contents);
+      //   console.log(this.state.contents);
       var contentsList = this.state.contents.map((content) => {
         // console.log(content);
         // console.log(this.state.card_type);
@@ -792,10 +793,10 @@ export class BookWriting extends Component {
       var list = contentsList.map((content) => {
         // console.log(content)
         const contentPath = content[0].cardTypeDetail;
-		// console.log(contentPath.card_style.left_right_ratio)
+        // console.log(contentPath.card_style.left_right_ratio)
 
-        var cardLeftRatio = contentPath.card_style.left_right_ratio.face1
-        var cardRightRatio = contentPath.card_style.left_right_ratio.face2
+        var cardLeftRatio = contentPath.card_style.left_right_ratio.face1;
+        var cardRightRatio = contentPath.card_style.left_right_ratio.face2;
         const borderTopType = contentPath.card_style.border.package.type;
         const borderTopThickness = contentPath.card_style.border.package.thickness;
         const borderTopColor = contentPath.card_style.border.package.color;
@@ -939,7 +940,7 @@ export class BookWriting extends Component {
           let underline;
           content[0].cardTypeDetail.font.face1.map((font, fontIndex) => {
             if (fontIndex === contentsIndex) {
-            //   console.log(font)
+              //   console.log(font)
               if (font.bold === "on") {
                 var font_weight = "700";
               } else {
@@ -978,7 +979,7 @@ export class BookWriting extends Component {
             fontSize: `${size}px`,
             textDecoration: `${underline}`,
           };
-        //   console.log(rowStyle)
+          //   console.log(rowStyle)
           return <div style={rowStyle}>{item}</div>;
         });
 
@@ -1125,12 +1126,12 @@ export class BookWriting extends Component {
             return <div style={rowStyle}>{item}</div>;
           });
         }
-		if (this.state.page_type) {
-			// console.log(this.state.page_type);
-			const pageType = this.state.page_type[0].pagetype;
-			var annot_ratio = pageType.annot_ratio;
-			var face_ratio = 100-annot_ratio;
-		  }
+        if (this.state.page_type) {
+          // console.log(this.state.page_type);
+          const pageType = this.state.page_type[0].pagetype;
+          var annot_ratio = pageType.annot_ratio;
+          var face_ratio = 100 - annot_ratio;
+        }
         if (content[0].type === "read") {
           return (
             <>
@@ -1153,8 +1154,8 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <div style={{...face1Style, width:`${face_ratio}%`}}>{face1Contents}</div>
-                  <div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ ...face1Style, width: `${face_ratio}%` }}>{face1Contents}</div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1190,11 +1191,11 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-					<div style={{display:"flex", flexDirection:"row", width:`${face_ratio}%`}}>
-						<div style={{...face1Style,width:`${cardLeftRatio}%`}}>{face1Contents}</div>
-						<div style={{...face2Style,width:`${cardRightRatio}%`}}>{face2Contents}</div>
-					</div>
-					<div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ display: "flex", flexDirection: "row", width: `${face_ratio}%` }}>
+                    <div style={{ ...face1Style, width: `${cardLeftRatio}%` }}>{face1Contents}</div>
+                    <div style={{ ...face2Style, width: `${cardRightRatio}%` }}>{face2Contents}</div>
+                  </div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1244,21 +1245,21 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-					<div style={{display:"flex", width:`${face_ratio}%`}}>
-						<div
-							style={{
-							display: "flex",
-							flexDirection: "column",
-							justifyContent: "space-between",
-							width:`${cardLeftRatio}%`
-							}}
-						>
-							<div style={face1Style}>{face1Contents}</div>
-							<div style={face1Style}>{selectionContents}</div>
-						</div>
-						<div style={{...face2Style, width:`${cardRightRatio}%`}}>{face2Contents}</div>
-					</div>
-					<div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ display: "flex", width: `${face_ratio}%` }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        width: `${cardLeftRatio}%`,
+                      }}
+                    >
+                      <div style={face1Style}>{face1Contents}</div>
+                      <div style={face1Style}>{selectionContents}</div>
+                    </div>
+                    <div style={{ ...face2Style, width: `${cardRightRatio}%` }}>{face2Contents}</div>
+                  </div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1308,19 +1309,19 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-					<div style={{display:"flex", flexDirection:"row", width:"100%"}}>
-						<div
-							style={{
-							display: "flex",
-							flexDirection: "column",
-							width:`${face_ratio}%`
-							}}
-						>
-							<div style={face1Style}>{face1Contents}</div>
-							<div style={face2Style}>{face2Contents}</div>
-						</div>
-						<div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
-					</div>
+                  <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: `${face_ratio}%`,
+                      }}
+                    >
+                      <div style={face1Style}>{face1Contents}</div>
+                      <div style={face2Style}>{face2Contents}</div>
+                    </div>
+                    <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
+                  </div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1371,20 +1372,20 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-					<div style={{width:`${face_ratio}%`}}>
-						<div
-							style={{
-							marginBottom: "5px",
-							display: "flex",
-							flexDirection: "column",
-							}}
-						>
-							<div style={face1Style}>{face1Contents}</div>
-							<div>{selectionContents}</div>
-							<div style={face2Style}>{face2Contents}</div>
-						</div>
-				  	</div>
-                  <div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ width: `${face_ratio}%` }}>
+                    <div
+                      style={{
+                        marginBottom: "5px",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div style={face1Style}>{face1Contents}</div>
+                      <div>{selectionContents}</div>
+                      <div style={face2Style}>{face2Contents}</div>
+                    </div>
+                  </div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1415,7 +1416,7 @@ export class BookWriting extends Component {
             </>
           );
         } else if (content[0].type === "none") {
-			console.log("none card should be appeared!!!!!!!!!!!!!!!!!!!!!")
+          console.log("none card should be appeared!!!!!!!!!!!!!!!!!!!!!");
           return (
             <>
               <div
@@ -1435,8 +1436,8 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                   <div style={{...face1Style, width:`${face_ratio}%`}}>{face1Contents}</div>
-				   <div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ ...face1Style, width: `${face_ratio}%` }}>{face1Contents}</div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1472,8 +1473,8 @@ export class BookWriting extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <div style={{...face1Style, width:`${face_ratio}%`}}>{face1Contents}</div>
-                  <div style={{width:`${annot_ratio}%`}}>{content[0].annotation_contents}</div>
+                  <div style={{ ...face1Style, width: `${face_ratio}%` }}>{face1Contents}</div>
+                  <div style={{ width: `${annot_ratio}%` }}>{content[0].annotation_contents}</div>
                 </div>
                 <div id={content[0].card_id + "_btn"} className="card_edit_btns" style={{ display: "none" }}>
                   <div>
@@ -1504,11 +1505,11 @@ export class BookWriting extends Component {
     }
 
     if (this.state.page_type) {
-    //   console.log(this.state.page_type);
+      //   console.log(this.state.page_type);
       const pageType = this.state.page_type[0].pagetype;
       var annot_ratio = pageType.annot_ratio;
-	  var page_width = pageType.size.width;
-	  var page_height = pageType.size.height;
+      var page_width = pageType.size.width;
+      var page_height = pageType.size.height;
       var page_background_color = pageType.color;
       var page_innerPadding_top = pageType.inner_padding.top;
       var page_innerPadding_bottom = pageType.inner_padding.bottom;
@@ -1518,7 +1519,7 @@ export class BookWriting extends Component {
 
     const a4Page = {
       width: `${page_width}px`,
-	  minHeight:`${page_height}px`,
+      minHeight: `${page_height}px`,
       padding: `${page_innerPadding_top}px ${page_innerPadding_right}px ${page_innerPadding_bottom}px ${page_innerPadding_left}px`,
       border: "1px #D3D3D3 solid",
       borderRadius: "5px",
