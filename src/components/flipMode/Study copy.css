@@ -1,0 +1,23 @@
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
+}
+
+.ant-dropdown-trigger{
+  color:black;
+  text-decoration: none;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  width:100px;
+  line-height: 30px;
+}
+
+.ant-dropdown-menu-item, .ant-dropdown-menu-submenu-title{
+  font-size:12px;
+}
+.nav_bar_hidden{
+  display: none;
+}
+
