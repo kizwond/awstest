@@ -228,6 +228,17 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
 
   }
+  
+// 마지막 know 날짜.
+
+// 오늘날짜에 시간
+//   1 13
+//   2 16
+//   3 19
+//   4
+//   5
+//   6
+// 경과시간이 나온다
 
   render() {
     if (this.state.contents.length > 0) {
