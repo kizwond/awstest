@@ -153,14 +153,14 @@ class FlipMode extends Component {
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
   onClickInterval = (status, interval) => {
-    console.log("short clicked!!")
-    console.log(this.state.contents[0]._id)
-    const card_id = this.state.contents[0]._id
+    console.log("onClickInterval clicked!!");
+    console.log(this.state.contents[0]._id);
+    const card_id = this.state.contents[0]._id;
     const now = new Date();
-    if(status === "short"){
-      var next_review_time = interval
-    } else if(status === "long"){
-      next_review_time = interval
+    if (status === "short") {
+      var next_review_time = interval;
+    } else if (status === "long") {
+      next_review_time = interval;
     }
     const now_mili_convert = Date.parse(now);
 
@@ -179,66 +179,146 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = review_date;
     card_details_session[selectedIndex].detail_status.recent_selection = status;
-    card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times+1 ;
-    card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times+1 ;
-    console.log(card_details_session)
+    card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
+    card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+    card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
+    card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert; //"지금시점 데이타를 밀리세컨드로 해서 누적시킬것임";
+    card_details_session[selectedIndex].status = "ing";
+    console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
-  }
+  };
 
-  onClickRemembered = () =>{
-    console.log("onClick Remembered!!!")
-    const card_id = this.state.contents[0]._id
+  onClickRemembered = () => {
+    console.log("onClick Remembered!!!");
+    const card_id = this.state.contents[0]._id;
     const now = new Date();
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+
     const selectedIndex = card_details_session.findIndex((item, index) => {
       return item._id === card_id;
     });
-    const now_mili_convert = Date.parse(now);
-    var hours = (now_mili_convert / (1000 * 60 * 60))
-    console.log(now_mili_convert)
-    console.log(hours)
-    const level_config = JSON.parse(sessionStorage.getItem("level_config"));
-    console.log(level_config[0])
-    const retention_count_curve_type = level_config[0].retention_count_curve.type
-    const retention_count_curve_a = -7
-    const retention_count_curve_b = 7
-    // const retention_count_curve_a = level_config[0].retention_count_curve.a
-    // const retention_count_curve_b = level_config[0].retention_count_curve.b
-    // const sensitivity = level_config[0].sensitivity
-    const sensitivity = 0.8
-    const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times 
-    if(retention_count_curve_type === "linear"){
-      var modified_retention =  (1 - retention_count_curve_b)/retention_count_curve_a
-    }
-    // if(retention_count_curve_type === "linear"){
-    //   var modified_retention =  (current_lev_study_times - retention_count_curve_b)/retention_count_curve_a
-    // }
+    console.log(card_details_session[selectedIndex]);
 
+    const now_mili_convert = Date.parse(now);
+    var hours = now_mili_convert / (1000 * 60 * 60);
+    console.log(now_mili_convert);
+    console.log(hours);
+    const level_config = JSON.parse(sessionStorage.getItem("level_config"));
+    console.log(level_config[0]);
+    const retention_count_curve_type = level_config[0].retention_count_curve.type;
+    const retention_count_curve_a = level_config[0].retention_count_curve.a;
+    const retention_count_curve_b = level_config[0].retention_count_curve.b;
+    const sensitivity = level_config[0].sensitivity / 100;
+    const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
+    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    const level = card_details_session[selectedIndex].detail_status.level;
+
+    if (retention_count_curve_type === "linear") {
+      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
+    } else if (retention_count_curve_type === "log") {
+      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    } else if (retention_count_curve_type === "exp") {
+      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    }
+
+    if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
+      var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    } else {
+      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    }
+
+    console.log(level_next);
+    const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
+    console.log(time_next); //hours값이다
+    const addTime = this.milliseconds(time_next, 0, 0);
+    const need_study_time = new Date(now_mili_convert + addTime);
+    console.log(need_study_time);
+    card_details_session[selectedIndex].detail_status.recent_study_time = now;
+    card_details_session[selectedIndex].detail_status.recent_selection = "know";
+    card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+    card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times;
     card_details_session[selectedIndex].detail_status.retention_for_regression = modified_retention;
-    const level = card_details_session[selectedIndex].detail_status.level
-    const level_next = level + sensitivity*(((Math.log((24*Math.log(0.8)/Math.log(modified_retention))))/Math.log(2))+1-level)
-    console.log(level_next)
-    const time_next = (Math.pow(2,(level_next-1))*Math.log(0.8))/Math.log(0.8)
-    console.log(time_next) //hours값이다
-    // 24보다크면 day
+    card_details_session[selectedIndex].detail_status.current_lev_study_times = 0;
+    card_details_session[selectedIndex].detail_status.current_lev_accu_study_time = 0;
+    card_details_session[selectedIndex].detail_status.former_level = level;
+    card_details_session[selectedIndex].detail_status.level = level_next;
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+    card_details_session[selectedIndex].status = "ing";
+    card_details_session[selectedIndex].detail_status.recent_know_time = now;
+    card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+  };
 
-  }
-  
-// 마지막 know 날짜.
+  getKnowTime = () => {
+    const card_id = this.state.contents[0]._id;
+    const now = new Date();
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
 
-// 오늘날짜에 시간
-//   1 13
-//   2 16
-//   3 19
-//   4
-//   5
-//   6
-// 경과시간이 나온다
+    const selectedIndex = card_details_session.findIndex((item, index) => {
+      return item._id === card_id;
+    });
+    console.log(card_details_session[selectedIndex]);
+
+    const now_mili_convert = Date.parse(now);
+    var hours = now_mili_convert / (1000 * 60 * 60);
+    console.log(now_mili_convert);
+    console.log(hours);
+    const level_config = JSON.parse(sessionStorage.getItem("level_config"));
+    console.log(level_config[0]);
+    const retention_count_curve_type = level_config[0].retention_count_curve.type;
+    const retention_count_curve_a = level_config[0].retention_count_curve.a;
+    const retention_count_curve_b = level_config[0].retention_count_curve.b;
+    const sensitivity = level_config[0].sensitivity / 100;
+    const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
+    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    const level = card_details_session[selectedIndex].detail_status.level;
+
+    if (retention_count_curve_type === "linear") {
+      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
+    } else if (retention_count_curve_type === "log") {
+      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    } else if (retention_count_curve_type === "exp") {
+      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    }
+
+    if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
+      var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    } else {
+      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    }
+
+    console.log(level_next);
+    const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
+    console.log(time_next); //hours값이다
+    if (time_next > 24) {
+      var time = time_next / 24;
+      var unit = "days";
+    } else {
+      time = time_next;
+      unit = "hours";
+    }
+    return { time: time, unit: unit };
+  };
+
+  // 마지막 know 날짜.
+  //  밀리세컨드로 바꾸고 더해주고. times로 나누고
+  //  t에버리지로 나눠서 공식에 쓴다.
+  // 오늘날짜에 시간
+  //   1 13
+  //   2 16
+  //   3 19
+  //   4
+  //   5
+  //   6
+  // 경과시간이 나온다
 
   render() {
     if (this.state.contents.length > 0) {
@@ -254,11 +334,13 @@ class FlipMode extends Component {
         var long_nick = level_config.restudy_period.long.nick;
         var short_on_off = level_config.restudy_period.short.on_off;
         var long_on_off = level_config.restudy_period.long.on_off;
+        var knowTimeValue = this.getKnowTime();
+        console.log(time_next);
+        var time_next = knowTimeValue.time.toFixed(2);
+        var time_unit = knowTimeValue.unit;
       }
     }
 
-  
-    
     return (
       <div style={style_study_layout_container}>
         <div style={style_study_layout_top}>
@@ -333,18 +415,19 @@ class FlipMode extends Component {
                   카드
                 </Button>
                 {short_on_off === "on" && (
-                  <Button onClick={()=>this.onClickInterval("short",short_period)} width="200px" style={{ ...buttonDefault }}>
+                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
                     {short_nick}({short_period})
                   </Button>
                 )}
                 {long_on_off === "on" && (
-                  <Button onClick={()=>this.onClickInterval("long",long_period)} width="200px" style={{ ...buttonDefault }}>
+                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
                     {long_nick}({long_period})
                   </Button>
                 )}
 
                 <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만
+                  ok!이제그만/{time_next}
+                  {time_unit}
                 </Button>
                 <Button width="35px" style={{ ...buttonDefault, padding: 0 }}>
                   ...
