@@ -22,7 +22,7 @@ class FlipMode extends Component {
       isOn_total: false,
       start_total: 0,
       average_completed: 0,
-      clickCount: 1,
+      clickCount: 0,
       flag: "white",
       pageStatus: "normal",
       cardlist_studying: [],
@@ -153,6 +153,12 @@ class FlipMode extends Component {
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
   onClickInterval = (status, interval) => {
+
+    this.setState((prevState) => ({
+      clickCount: prevState.clickCount + 1,
+    }));
+
+
     console.log("onClickInterval clicked!!");
     console.log(this.state.contents[0]._id);
     const card_id = this.state.contents[0]._id;
@@ -175,6 +181,23 @@ class FlipMode extends Component {
     const selectedIndex = card_details_session.findIndex((item, index) => {
       return item._id === card_id;
     });
+
+
+    //이전카드보기를 위한 학습로그 저장.
+    const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
+    const study_log = { card_id: card_id };
+    if (study_log_session) {
+      study_log_session.push(study_log);
+      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+    } else {
+      sessionStorage.setItem("study_log", JSON.stringify([]));
+      const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
+      study_log_session.push(study_log);
+      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+    }
+
+
+
     //학습정보 업데이트
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = review_date;
@@ -184,15 +207,35 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
     card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
-      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert; //"지금시점 데이타를 밀리세컨드로 해서 누적시킬것임";
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert; 
     card_details_session[selectedIndex].status = "ing";
     console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
+
   };
 
   onClickRemembered = () => {
+
+    this.setState((prevState) => ({
+      clickCount: prevState.clickCount + 1,
+    }));
+
     console.log("onClick Remembered!!!");
     const card_id = this.state.contents[0]._id;
     const now = new Date();
@@ -202,6 +245,20 @@ class FlipMode extends Component {
       return item._id === card_id;
     });
     console.log(card_details_session[selectedIndex]);
+
+    //이전카드보기를 위한 학습로그 저장.
+    const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
+    const study_log = { card_id: card_id };
+    if (study_log_session) {
+      study_log_session.push(study_log);
+      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+    } else {
+      sessionStorage.setItem("study_log", JSON.stringify([]));
+      const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
+      study_log_session.push(study_log);
+      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+    }
+
 
     const now_mili_convert = Date.parse(now);
     var hours = now_mili_convert / (1000 * 60 * 60);
@@ -254,6 +311,21 @@ class FlipMode extends Component {
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
   };
 
   getKnowTime = () => {
@@ -308,18 +380,6 @@ class FlipMode extends Component {
     return { time: time, unit: unit };
   };
 
-  // 마지막 know 날짜.
-  //  밀리세컨드로 바꾸고 더해주고. times로 나누고
-  //  t에버리지로 나눠서 공식에 쓴다.
-  // 오늘날짜에 시간
-  //   1 13
-  //   2 16
-  //   3 19
-  //   4
-  //   5
-  //   6
-  // 경과시간이 나온다
-
   render() {
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
@@ -335,7 +395,7 @@ class FlipMode extends Component {
         var short_on_off = level_config.restudy_period.short.on_off;
         var long_on_off = level_config.restudy_period.long.on_off;
         var knowTimeValue = this.getKnowTime();
-        console.log(time_next);
+
         var time_next = knowTimeValue.time.toFixed(2);
         var time_unit = knowTimeValue.unit;
       }
