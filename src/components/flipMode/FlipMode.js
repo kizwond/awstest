@@ -380,6 +380,31 @@ class FlipMode extends Component {
     return { time: time, unit: unit };
   };
 
+
+  finishStudy = () => {
+    alert("학습할 카드가 없습니다. 학습결과 화면으로 이동합니다.");
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    if (cardlist_to_send) {
+      console.log("서버에 학습데이타를 전송할 시간이다!!!!");
+      sessionStorage.setItem("current_seq", 0);
+      const sessionId = sessionStorage.getItem("sessionId");
+      axios
+        .post("api/studyresult/create-studyresult", {
+          cardlist_studied: cardlist_to_send,
+          session_id: sessionId,
+          status: "finished",
+        })
+        .then((res) => {
+          console.log("학습정보 전송완료!!!", res.data);
+          sessionStorage.removeItem("cardlist_to_send");
+          window.location.href = "/study-result";
+        });
+    } else {
+      window.location.href = "/study-result";
+    }
+  };
+
+  
   render() {
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
