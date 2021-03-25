@@ -34,6 +34,61 @@ class FlipMode extends Component {
   getKey() {
     return this.keyCount++;
   }
+
+
+  getKnowTime = () => {
+    const card_id = this.state.contents[0]._id;
+    const now = new Date();
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+
+    const selectedIndex = card_details_session.findIndex((item, index) => {
+      return item._id === card_id;
+    });
+    console.log(card_details_session[selectedIndex]);
+
+    const now_mili_convert = Date.parse(now);
+    var hours = now_mili_convert / (1000 * 60 * 60);
+    console.log(now_mili_convert);
+    console.log(hours);
+    const level_config = JSON.parse(sessionStorage.getItem("level_config"));
+    console.log(level_config[0]);
+    const retention_count_curve_type = level_config[0].retention_count_curve.type;
+    const retention_count_curve_a = level_config[0].retention_count_curve.a;
+    const retention_count_curve_b = level_config[0].retention_count_curve.b;
+    const sensitivity = level_config[0].sensitivity / 100;
+    const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
+    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    const level = card_details_session[selectedIndex].detail_status.level;
+
+    if (retention_count_curve_type === "linear") {
+      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
+    } else if (retention_count_curve_type === "log") {
+      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    } else if (retention_count_curve_type === "exp") {
+      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    }
+
+    if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
+      var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    } else {
+      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+    }
+
+    console.log(level_next);
+    const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
+    console.log(time_next); //hours값이다
+    if (time_next > 24) {
+      var time = time_next / 24;
+      var unit = "days";
+    } else {
+      time = time_next;
+      unit = "hours";
+    }
+    return { time: time, unit: unit };
+  };
+
+
   startTimer = () => {
     this.setState({
       isOn: true,
@@ -138,9 +193,11 @@ class FlipMode extends Component {
   };
 
   getContents = async () => {
+    const current_seq = sessionStorage.getItem("current_seq");
+    console.log(current_seq)
     await axios
       .post("api/studyexecute/get-studying-cards", {
-        card_ids: [this.state.cardlist_studying[0]._id],
+        card_ids: [this.state.cardlist_studying[Number(current_seq)]._id],
       })
       .then((res) => {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
@@ -153,7 +210,8 @@ class FlipMode extends Component {
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
   onClickInterval = (status, interval) => {
-
+    const current_seq = sessionStorage.getItem("current_seq");
+    sessionStorage.setItem("current_seq", Number(current_seq)+1);
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
     }));
@@ -228,9 +286,25 @@ class FlipMode extends Component {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
 
+
+    console.log(card_details_session.length)
+    console.log(Number(current_seq)+1)
+
+    if(card_details_session.length === Number(current_seq)+1){
+      
+      alert("학습할 카드가 없어")
+    } else {
+      this.getContents()
+    }
+
+    
   };
 
+
+
   onClickRemembered = () => {
+    const current_seq = sessionStorage.getItem("current_seq");
+    sessionStorage.setItem("current_seq", Number(current_seq)+1);
 
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
@@ -326,85 +400,11 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-  };
 
-  getKnowTime = () => {
-    const card_id = this.state.contents[0]._id;
-    const now = new Date();
-    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
-
-    const selectedIndex = card_details_session.findIndex((item, index) => {
-      return item._id === card_id;
-    });
-    console.log(card_details_session[selectedIndex]);
-
-    const now_mili_convert = Date.parse(now);
-    var hours = now_mili_convert / (1000 * 60 * 60);
-    console.log(now_mili_convert);
-    console.log(hours);
-    const level_config = JSON.parse(sessionStorage.getItem("level_config"));
-    console.log(level_config[0]);
-    const retention_count_curve_type = level_config[0].retention_count_curve.type;
-    const retention_count_curve_a = level_config[0].retention_count_curve.a;
-    const retention_count_curve_b = level_config[0].retention_count_curve.b;
-    const sensitivity = level_config[0].sensitivity / 100;
-    const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
-    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
-    const level = card_details_session[selectedIndex].detail_status.level;
-
-    if (retention_count_curve_type === "linear") {
-      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
-    } else if (retention_count_curve_type === "log") {
-      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    } else if (retention_count_curve_type === "exp") {
-      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    }
-
-    if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
-      var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
-    } else {
-      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
-      level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
-    }
-
-    console.log(level_next);
-    const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
-    console.log(time_next); //hours값이다
-    if (time_next > 24) {
-      var time = time_next / 24;
-      var unit = "days";
-    } else {
-      time = time_next;
-      unit = "hours";
-    }
-    return { time: time, unit: unit };
+    this.getContents()
   };
 
 
-  finishStudy = () => {
-    alert("학습할 카드가 없습니다. 학습결과 화면으로 이동합니다.");
-    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
-    if (cardlist_to_send) {
-      console.log("서버에 학습데이타를 전송할 시간이다!!!!");
-      sessionStorage.setItem("current_seq", 0);
-      const sessionId = sessionStorage.getItem("sessionId");
-      axios
-        .post("api/studyresult/create-studyresult", {
-          cardlist_studied: cardlist_to_send,
-          session_id: sessionId,
-          status: "finished",
-        })
-        .then((res) => {
-          console.log("학습정보 전송완료!!!", res.data);
-          sessionStorage.removeItem("cardlist_to_send");
-          window.location.href = "/study-result";
-        });
-    } else {
-      window.location.href = "/study-result";
-    }
-  };
-
-  
   render() {
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
