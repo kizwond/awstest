@@ -258,15 +258,20 @@ class FlipMode extends Component {
 
     //학습정보 업데이트
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = review_date;
     card_details_session[selectedIndex].detail_status.recent_selection = status;
+    card_details_session[selectedIndex].detail_status.recent_study_result = status;
     card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
     card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
     card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
       card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert; 
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
     card_details_session[selectedIndex].status = "ing";
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = now;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = now;
     console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
@@ -286,12 +291,8 @@ class FlipMode extends Component {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
 
-
-    console.log(card_details_session.length)
-    console.log(Number(current_seq)+1)
-
+    //학습데이터 처리 후 새카드 불러오기
     if(card_details_session.length === Number(current_seq)+1){
-      
       alert("학습할 카드가 없어")
     } else {
       this.getContents()
@@ -371,7 +372,9 @@ class FlipMode extends Component {
     console.log(need_study_time);
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
     card_details_session[selectedIndex].detail_status.recent_selection = "know";
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+    card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
     card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times;
     card_details_session[selectedIndex].detail_status.retention_for_regression = modified_retention;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = 0;
@@ -382,6 +385,9 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].status = "ing";
     card_details_session[selectedIndex].detail_status.recent_know_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
+    card_details_session[selectedIndex].detail_status.status_in_session = "off";
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = now;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = now;
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
