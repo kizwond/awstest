@@ -374,6 +374,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].status = "ing";
     card_details_session[selectedIndex].detail_status.recent_know_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
+    card_details_session[selectedIndex].detail_status.former_status_in_session = card_details_session[selectedIndex].detail_status.status_in_session;
     card_details_session[selectedIndex].detail_status.status_in_session = "off";
     card_details_session[selectedIndex].detail_status.recent_stay_hour = 10;
     card_details_session[selectedIndex].detail_status.total_stay_hour = 10;
@@ -434,12 +435,12 @@ class FlipMode extends Component {
       var second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       if (this.state.level_config) {
         const level_config = this.state.level_config[0];
-        var short_period = level_config.restudy_period.short.period;
-        var long_period = level_config.restudy_period.long.period;
-        var short_nick = level_config.restudy_period.short.nick;
-        var long_nick = level_config.restudy_period.long.nick;
-        var short_on_off = level_config.restudy_period.short.on_off;
-        var long_on_off = level_config.restudy_period.long.on_off;
+        var short_period = level_config.restudy_option.short.period;
+        var long_period = level_config.restudy_option.long.period;
+        var short_nick = level_config.restudy_option.short.nick;
+        var long_nick = level_config.restudy_option.long.nick;
+        var short_on_off = level_config.restudy_option.short.on_off;
+        var long_on_off = level_config.restudy_option.long.on_off;
         var knowTimeValue = this.getKnowTime();
 
         var time_next = knowTimeValue.time.toFixed(2);
