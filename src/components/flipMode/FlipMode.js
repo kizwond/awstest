@@ -35,7 +35,6 @@ class FlipMode extends Component {
     return this.keyCount++;
   }
 
-
   getKnowTime = () => {
     const card_id = this.state.contents[0]._id;
     const now = new Date();
@@ -87,7 +86,6 @@ class FlipMode extends Component {
     }
     return { time: time, unit: unit };
   };
-
 
   startTimer = () => {
     this.setState({
@@ -194,7 +192,7 @@ class FlipMode extends Component {
 
   getContents = async () => {
     const current_seq = sessionStorage.getItem("current_seq");
-    console.log(current_seq)
+    console.log(current_seq);
     await axios
       .post("api/studyexecute/get-studying-cards", {
         card_ids: [this.state.cardlist_studying[Number(current_seq)]._id],
@@ -211,11 +209,10 @@ class FlipMode extends Component {
 
   onClickInterval = (status, interval) => {
     const current_seq = sessionStorage.getItem("current_seq");
-    sessionStorage.setItem("current_seq", Number(current_seq)+1);
+    sessionStorage.setItem("current_seq", Number(current_seq) + 1);
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
     }));
-
 
     console.log("onClickInterval clicked!!");
     console.log(this.state.contents[0]._id);
@@ -240,7 +237,6 @@ class FlipMode extends Component {
       return item._id === card_id;
     });
 
-
     //이전카드보기를 위한 학습로그 저장.
     const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
     const study_log = { card_id: card_id };
@@ -254,8 +250,6 @@ class FlipMode extends Component {
       sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
     }
 
-
-
     //학습정보 업데이트
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
@@ -267,11 +261,11 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
     card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
-      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert; 
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
     card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
     card_details_session[selectedIndex].status = "ing";
-    card_details_session[selectedIndex].detail_status.recent_stay_hour = now;
-    card_details_session[selectedIndex].detail_status.total_stay_hour = now;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = 10;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = 10;
     console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
@@ -292,20 +286,16 @@ class FlipMode extends Component {
     console.log("cardlist_to_send", cardlist_to_send);
 
     //학습데이터 처리 후 새카드 불러오기
-    if(card_details_session.length === Number(current_seq)+1){
-      alert("학습할 카드가 없어")
+    if (card_details_session.length === Number(current_seq) + 1) {
+      this.finishStudy()
     } else {
-      this.getContents()
+      this.getContents();
     }
-
-    
   };
-
-
 
   onClickRemembered = () => {
     const current_seq = sessionStorage.getItem("current_seq");
-    sessionStorage.setItem("current_seq", Number(current_seq)+1);
+    sessionStorage.setItem("current_seq", Number(current_seq) + 1);
 
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
@@ -333,7 +323,6 @@ class FlipMode extends Component {
       study_log_session.push(study_log);
       sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
     }
-
 
     const now_mili_convert = Date.parse(now);
     var hours = now_mili_convert / (1000 * 60 * 60);
@@ -386,12 +375,11 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_know_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
     card_details_session[selectedIndex].detail_status.status_in_session = "off";
-    card_details_session[selectedIndex].detail_status.recent_stay_hour = now;
-    card_details_session[selectedIndex].detail_status.total_stay_hour = now;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = 10;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = 10;
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
-
 
     //서버에 보내기 위한 학습정보 리스트 생성
     const updateThis = card_details_session[selectedIndex];
@@ -407,9 +395,36 @@ class FlipMode extends Component {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
 
-    this.getContents()
+    //학습데이터 처리 후 새카드 불러오기
+    if (card_details_session.length === Number(current_seq) + 1) {
+      this.finishStudy()
+    } else {
+      this.getContents();
+    }
   };
 
+  finishStudy = async () => {
+    alert("학습할 카드가 없습니다. 학습결과 화면으로 이동합니다.");
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    if (cardlist_to_send) {
+      console.log("서버에 학습데이타를 전송할 시간이다!!!!");
+      sessionStorage.setItem("current_seq", 0);
+      const sessionId = sessionStorage.getItem("sessionId");
+      await axios
+        .post("api/studyresult/create-studyresult", {
+          cardlist_studied: cardlist_to_send,
+          session_id: sessionId,
+          status: "finished",
+        })
+        .then((res) => {
+          console.log("학습정보 전송완료!!!", res.data);
+          sessionStorage.removeItem("cardlist_to_send");
+          window.location.href = "/study-result";
+        });
+    } else {
+      window.location.href = "/study-result";
+    }
+  };
 
   render() {
     if (this.state.contents.length > 0) {
