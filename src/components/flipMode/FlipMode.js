@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Avatar, Menu, Dropdown, Modal, Popover } from "antd";
+import { Avatar, Menu, Dropdown, Modal, Popover, Select } from "antd";
 import { UserOutlined, DownOutlined, FlagFilled, SettingOutlined, LeftSquareOutlined, RightSquareOutlined } from "@ant-design/icons";
 import ProgressBar from "./progressBar";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import Button from "../styledComponents/defaultButton";
 import FlipSide from "./FlipSide";
 const { confirm } = Modal;
+const { Option } = Select;
 
 const session_id = sessionStorage.getItem("sessionId");
 
@@ -287,7 +288,7 @@ class FlipMode extends Component {
 
     //학습데이터 처리 후 새카드 불러오기
     if (card_details_session.length === Number(current_seq) + 1) {
-      this.finishStudy()
+      this.finishStudy();
     } else {
       this.getContents();
     }
@@ -398,7 +399,7 @@ class FlipMode extends Component {
 
     //학습데이터 처리 후 새카드 불러오기
     if (card_details_session.length === Number(current_seq) + 1) {
-      this.finishStudy()
+      this.finishStudy();
     } else {
       this.getContents();
     }
@@ -426,8 +427,24 @@ class FlipMode extends Component {
       window.location.href = "/study-result";
     }
   };
-
+  selectHandleChange = (value) => {
+    console.log(value);
+  };
   render() {
+    const content = (
+      <div style={{ fontSize: "11px", height:"120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent:"space-evenly" }}>
+        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px" }}>
+          <span style={{ fontSize: "15px" }}>통과</span><span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
+        </Button>
+        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
+          <span style={{ fontSize: "15px" }}>보류</span><span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+        </Button>
+        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
+          <span style={{ fontSize: "15px" }}>졸업</span><span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+        </Button>
+      </div>
+    );
+
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
       console.log(contents);
@@ -536,9 +553,11 @@ class FlipMode extends Component {
                   ok!이제그만/{time_next}
                   {time_unit}
                 </Button>
-                <Button width="35px" style={{ ...buttonDefault, padding: 0 }}>
-                  ...
-                </Button>
+                <Popover placement="bottomLeft" content={content} trigger="click">
+                  <Button size="small" width="35px" style={{ ...buttonDefault, height: "32px" }}>
+                    ...
+                  </Button>
+                </Popover>
               </div>
             </div>
           ) : (
@@ -564,9 +583,11 @@ class FlipMode extends Component {
                 <Button onClick={this.onClickBack} width="200px" style={{ ...buttonDefault }}>
                   원 위치에서 학습 이어하기
                 </Button>
-                <Button width="35px" style={{ ...buttonDefault, padding: 0 }}>
-                  ...
-                </Button>
+                <Popover placement="bottomLeft" content={content} title="..." trigger="click">
+                  <Button size="small" width="35px" style={{ ...buttonDefault, height: "32px" }}>
+                    ...
+                  </Button>
+                </Popover>
               </div>
             </div>
           )}
