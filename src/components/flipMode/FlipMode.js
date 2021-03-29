@@ -44,14 +44,14 @@ class FlipMode extends Component {
     const selectedIndex = card_details_session.findIndex((item, index) => {
       return item._id === card_id;
     });
-    console.log(card_details_session[selectedIndex]);
+
 
     const now_mili_convert = Date.parse(now);
     var hours = now_mili_convert / (1000 * 60 * 60);
-    console.log(now_mili_convert);
-    console.log(hours);
+
+
     const level_config = JSON.parse(sessionStorage.getItem("level_config"));
-    console.log(level_config[0]);
+
     const retention_count_curve_type = level_config[0].retention_count_curve.type;
     const retention_count_curve_a = level_config[0].retention_count_curve.a;
     const retention_count_curve_b = level_config[0].retention_count_curve.b;
@@ -75,9 +75,9 @@ class FlipMode extends Component {
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     }
 
-    console.log(level_next);
+
     const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
-    console.log(time_next); //hours값이다
+
     if (time_next > 24) {
       var time = time_next / 24;
       var unit = "days";
@@ -494,7 +494,6 @@ class FlipMode extends Component {
 
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
-      console.log(contents);
       var first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       var second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       if (this.state.level_config) {
