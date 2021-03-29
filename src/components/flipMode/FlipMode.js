@@ -202,7 +202,12 @@ class FlipMode extends Component {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
         this.setState({
           contents: res.data.cards,
-        });
+        },
+        function () {
+          this.stopTimerTotal();
+          this.resetTimer();
+        }
+        );
       });
   };
 
@@ -251,22 +256,65 @@ class FlipMode extends Component {
       sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
     }
 
+
     //학습정보 업데이트
-    card_details_session[selectedIndex].detail_status.recent_study_time = now;
-    card_details_session[selectedIndex].detail_status.recent_select_time = now;
-    card_details_session[selectedIndex].detail_status.need_study_time = review_date;
-    card_details_session[selectedIndex].detail_status.recent_selection = status;
-    card_details_session[selectedIndex].detail_status.recent_study_result = status;
-    card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
-    card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
-    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
-    card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
-    card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
-      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
-    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
-    card_details_session[selectedIndex].status = "ing";
-    card_details_session[selectedIndex].detail_status.recent_stay_hour = 10;
-    card_details_session[selectedIndex].detail_status.total_stay_hour = 10;
+    if(status === "short" || status === "long"){
+      card_details_session[selectedIndex].detail_status.recent_study_time = now;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.need_study_time = review_date;
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].detail_status.recent_study_result = status;
+      card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
+      card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
+        card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].status = "ing";
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    } else if(status === "pass") {
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.status_in_session = "off";
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    } else if(status === "hold") {
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].status = "ing";
+      card_details_session[selectedIndex].detail_status.recent_study_result = status;
+      card_details_session[selectedIndex].detail_status.recent_study_time = now;
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.status_in_session = "off";
+      card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
+      card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
+        card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
+      card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    } else if(status === "completed") {
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].status = "ing";
+      card_details_session[selectedIndex].detail_status.recent_study_result = status;
+      card_details_session[selectedIndex].detail_status.recent_study_time = now;
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.status_in_session = "off";
+      card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
+      card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
+        card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
+      card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+      card_details_session[selectedIndex].detail_status.former_level = card_details_session[selectedIndex].detail_status.level;
+      card_details_session[selectedIndex].detail_status.level = 10;
+    }
+    
+    
     console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
@@ -427,19 +475,18 @@ class FlipMode extends Component {
       window.location.href = "/study-result";
     }
   };
-  selectHandleChange = (value) => {
-    console.log(value);
-  };
+
+
   render() {
     const content = (
       <div style={{ fontSize: "11px", height:"120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent:"space-evenly" }}>
-        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px" }}>
+        <Button width="150px" onClick={()=>this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px" }}>
           <span style={{ fontSize: "15px" }}>통과</span><span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
         </Button>
-        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
+        <Button width="150px" onClick={()=>this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
           <span style={{ fontSize: "15px" }}>보류</span><span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
         </Button>
-        <Button width="150px" style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
+        <Button width="150px" onClick={()=>this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
           <span style={{ fontSize: "15px" }}>졸업</span><span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
         </Button>
       </div>
@@ -486,7 +533,7 @@ class FlipMode extends Component {
           </ul>
           <div style={clickCount}>{this.state.clickCount}</div>
           <div style={style_study_layout_top_right}>
-            {/* <Timer
+            <Timer
               startTimer={this.startTimer}
               startTimerTotal={this.startTimerTotal}
               stopTimerTotal={this.stopTimerTotal}
@@ -497,7 +544,7 @@ class FlipMode extends Component {
               time_total={this.state.time_total}
               isOn_total={this.state.isOn_total}
               start_total={this.state.start_total}
-            /> */}
+            />
           </div>
         </div>
         <div style={style_study_layout_bottom}>
