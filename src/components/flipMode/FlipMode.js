@@ -413,7 +413,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
     card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
-    card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times;
+    card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times +1;
     card_details_session[selectedIndex].detail_status.retention_for_regression = modified_retention;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = 0;
     card_details_session[selectedIndex].detail_status.current_lev_accu_study_time = 0;
