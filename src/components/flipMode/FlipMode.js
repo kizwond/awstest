@@ -168,6 +168,11 @@ class FlipMode extends Component {
     this.setState({
       pageStatus: status,
     });
+
+    if(status === "back"){
+      console.log("back side open, get contents from study_log in sessionstorage")
+    }
+
   };
 
   componentDidMount() {
