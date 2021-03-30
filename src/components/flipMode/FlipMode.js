@@ -28,7 +28,7 @@ class FlipMode extends Component {
       pageStatus: "normal",
       cardlist_studying: [],
       contents: [],
-      backContents:[],
+      backContents: [],
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -46,27 +46,23 @@ class FlipMode extends Component {
       return item._id === card_id;
     });
 
-
     const now_mili_convert = Date.parse(now);
     var hours = now_mili_convert / (1000 * 60 * 60);
 
-
     const level_config = JSON.parse(sessionStorage.getItem("level_config"));
 
-    const retention_count_curve_type = level_config[0].retention_count_curve.type;
-    const retention_count_curve_a = level_config[0].retention_count_curve.a;
-    const retention_count_curve_b = level_config[0].retention_count_curve.b;
+    // const retention_count_curve_type = level_config[0].retention_count_curve.type;
+    // const retention_count_curve_a = level_config[0].retention_count_curve.a;
+    // const retention_count_curve_b = level_config[0].retention_count_curve.b;
     const sensitivity = level_config[0].sensitivity / 100;
     const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
     const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
     const level = card_details_session[selectedIndex].detail_status.level;
 
-    if (retention_count_curve_type === "linear") {
-      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
-    } else if (retention_count_curve_type === "log") {
-      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    } else if (retention_count_curve_type === "exp") {
-      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
+      var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
+    } else {
+      modified_retention = level_config[0].retention["t20"];
     }
 
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
@@ -75,7 +71,6 @@ class FlipMode extends Component {
       const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     }
-
 
     const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
 
@@ -190,17 +185,53 @@ class FlipMode extends Component {
       })
       .then((res) => {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        this.setState({
-          contents: res.data.cards,
-        },
-        function () {
-          this.stopTimerTotal();
-          this.resetTimer();
-        }
+        this.setState(
+          {
+            contents: res.data.cards,
+          },
+          function () {
+            this.stopTimerTotal();
+            this.resetTimer();
+          }
         );
       });
   };
 
+  getContentsList = async () => {
+    if (this.state.cardlist_studying.length < 10) {
+      console.log(this.state.cardlist_studying);
+      var ids = this.state.cardlist_studying.map((item) => {
+        return item._id;
+      });
+      console.log(ids);
+    } else {
+      ids = this.state.cardlist_studying.map((item, index) => {
+        const hello = () => {
+          if (index < 6) {
+            return item._id;
+          }
+        };
+        return hello;
+      });
+    }
+
+    await axios
+      .post("api/studyexecute/get-studying-cards", {
+        card_ids: ids,
+      })
+      .then((res) => {
+        console.log("첫번째 카드 컨텐츠 res : ", res.data);
+        this.setState(
+          {
+            contents: res.data.cards,
+          },
+          function () {
+            this.stopTimerTotal();
+            this.resetTimer();
+          }
+        );
+      });
+  };
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
@@ -247,9 +278,8 @@ class FlipMode extends Component {
       sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
     }
 
-
     //학습정보 업데이트
-    if(status === "short" || status === "long"){
+    if (status === "short" || status === "long") {
       card_details_session[selectedIndex].detail_status.recent_study_time = now;
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.need_study_time = review_date;
@@ -265,13 +295,13 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].status = "ing";
       card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    } else if(status === "pass") {
+    } else if (status === "pass") {
       card_details_session[selectedIndex].detail_status.recent_selection = status;
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.status_in_session = "off";
       card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    } else if(status === "hold") {
+    } else if (status === "hold") {
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
       card_details_session[selectedIndex].status = "ing";
       card_details_session[selectedIndex].detail_status.recent_study_result = status;
@@ -286,7 +316,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
       card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    } else if(status === "completed") {
+    } else if (status === "completed") {
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
       card_details_session[selectedIndex].status = "ing";
       card_details_session[selectedIndex].detail_status.recent_study_result = status;
@@ -304,8 +334,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.former_level = card_details_session[selectedIndex].detail_status.level;
       card_details_session[selectedIndex].detail_status.level = 10;
     }
-    
-    
+
     console.log(card_details_session);
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
@@ -370,22 +399,27 @@ class FlipMode extends Component {
     console.log(hours);
     const level_config = JSON.parse(sessionStorage.getItem("level_config"));
     console.log(level_config[0]);
-    const retention_count_curve_type = level_config[0].retention_count_curve.type;
-    const retention_count_curve_a = level_config[0].retention_count_curve.a;
-    const retention_count_curve_b = level_config[0].retention_count_curve.b;
+    // const retention_count_curve_type = level_config[0].retention_count_curve.type;
+    // const retention_count_curve_a = level_config[0].retention_count_curve.a;
+    // const retention_count_curve_b = level_config[0].retention_count_curve.b;
     const sensitivity = level_config[0].sensitivity / 100;
     const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
     const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
     const level = card_details_session[selectedIndex].detail_status.level;
 
-    if (retention_count_curve_type === "linear") {
-      var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
-    } else if (retention_count_curve_type === "log") {
-      modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    } else if (retention_count_curve_type === "exp") {
-      modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    // if (retention_count_curve_type === "linear") {
+    //   var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
+    // } else if (retention_count_curve_type === "log") {
+    //   modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    // } else if (retention_count_curve_type === "exp") {
+    //   modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
+    // }
+    if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
+      var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
+    } else {
+      modified_retention = level_config[0].retention["t20"];
     }
-
+    console.log("modified_retention------", modified_retention);
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
       var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     } else {
@@ -404,7 +438,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
     card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
-    card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times +1;
+    card_details_session[selectedIndex].detail_status.studytimes_for_regression = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
     card_details_session[selectedIndex].detail_status.retention_for_regression = modified_retention;
     card_details_session[selectedIndex].detail_status.current_lev_study_times = 0;
     card_details_session[selectedIndex].detail_status.current_lev_accu_study_time = 0;
@@ -467,7 +501,6 @@ class FlipMode extends Component {
     }
   };
 
-
   onClickBack = () => {
     if (this.state.pageStatus === "normal") {
       var status = "back";
@@ -478,47 +511,50 @@ class FlipMode extends Component {
       pageStatus: status,
     });
 
-    if(status === "back"){
-      console.log("back side open, get contents from study_log in sessionstorage")
-      this.getBackContents()
+    if (status === "back") {
+      console.log("back side open, get contents from study_log in sessionstorage");
+      this.getBackContents();
     }
-
   };
-  
+
   getBackContents = async () => {
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
-    const idList = backCardIds.map((item)=>{
-      return item.card_id
-    })
-    console.log(idList)
+    const idList = backCardIds.map((item) => {
+      return item.card_id;
+    });
+    console.log(idList);
     await axios
       .post("api/studyexecute/get-studying-cards", {
         card_ids: idList,
       })
       .then((res) => {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        this.setState({
-          backContents: res.data.cards,
-        },
-        function () {
-          this.stopTimerTotal();
-          this.resetTimer();
-        }
+        this.setState(
+          {
+            backContents: res.data.cards,
+          },
+          function () {
+            this.stopTimerTotal();
+            this.resetTimer();
+          }
         );
       });
   };
 
   render() {
     const content = (
-      <div style={{ fontSize: "11px", height:"120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent:"space-evenly" }}>
-        <Button width="150px" onClick={()=>this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px" }}>
-          <span style={{ fontSize: "15px" }}>통과</span><span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
+      <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+        <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+          <span style={{ fontSize: "15px" }}>통과</span>
+          <span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
         </Button>
-        <Button width="150px" onClick={()=>this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
-          <span style={{ fontSize: "15px" }}>보류</span><span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+        <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+          <span style={{ fontSize: "15px" }}>보류</span>
+          <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
         </Button>
-        <Button width="150px" onClick={()=>this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign:"left", paddingLeft:"10px"  }}>
-          <span style={{ fontSize: "15px" }}>졸업</span><span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+        <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+          <span style={{ fontSize: "15px" }}>졸업</span>
+          <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
         </Button>
       </div>
     );
