@@ -173,7 +173,7 @@ class FlipMode extends Component {
           level_config: res.data.level_config,
         });
       });
-    this.getContents();
+    this.getContentsList();
   };
 
   getContents = async () => {
@@ -198,23 +198,18 @@ class FlipMode extends Component {
   };
 
   getContentsList = async () => {
-    if (this.state.cardlist_studying.length < 10) {
-      console.log(this.state.cardlist_studying);
-      var ids = this.state.cardlist_studying.map((item) => {
-        return item._id;
-      });
-      console.log(ids);
+    const ids = []
+    console.log(this.state.cardlist_studying)
+    if(this.state.cardlist_studying.length < 6){
+      for( var i = 0; i < this.state.cardlist_studying.length; i++){
+        ids.push(this.state.cardlist_studying[i]._id)
+      }
     } else {
-      ids = this.state.cardlist_studying.map((item, index) => {
-        const hello = () => {
-          if (index < 6) {
-            return item._id;
-          }
-        };
-        return hello;
-      });
+      for( i = 0; i<6; i++){
+        ids.push(this.state.cardlist_studying[i]._id)
+      }
     }
-
+    
     await axios
       .post("api/studyexecute/get-studying-cards", {
         card_ids: ids,
