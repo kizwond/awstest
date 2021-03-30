@@ -28,6 +28,7 @@ class FlipMode extends Component {
       pageStatus: "normal",
       cardlist_studying: [],
       contents: [],
+      backContents:[],
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -159,22 +160,6 @@ class FlipMode extends Component {
     });
   };
 
-  onClickBack = () => {
-    if (this.state.pageStatus === "normal") {
-      var status = "back";
-    } else {
-      status = "normal";
-    }
-    this.setState({
-      pageStatus: status,
-    });
-
-    if(status === "back"){
-      console.log("back side open, get contents from study_log in sessionstorage")
-    }
-
-  };
-
   componentDidMount() {
     this.getCardList();
   }
@@ -215,6 +200,7 @@ class FlipMode extends Component {
         );
       });
   };
+
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
@@ -481,6 +467,46 @@ class FlipMode extends Component {
     }
   };
 
+
+  onClickBack = () => {
+    if (this.state.pageStatus === "normal") {
+      var status = "back";
+    } else {
+      status = "normal";
+    }
+    this.setState({
+      pageStatus: status,
+    });
+
+    if(status === "back"){
+      console.log("back side open, get contents from study_log in sessionstorage")
+      this.getBackContents()
+    }
+
+  };
+  
+  getBackContents = async () => {
+    const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
+    const idList = backCardIds.map((item)=>{
+      return item.card_id
+    })
+    console.log(idList)
+    await axios
+      .post("api/studyexecute/get-studying-cards", {
+        card_ids: idList,
+      })
+      .then((res) => {
+        console.log("첫번째 카드 컨텐츠 res : ", res.data);
+        this.setState({
+          backContents: res.data.cards,
+        },
+        function () {
+          this.stopTimerTotal();
+          this.resetTimer();
+        }
+        );
+      });
+  };
 
   render() {
     const content = (
