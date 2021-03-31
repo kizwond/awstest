@@ -29,6 +29,7 @@ class FlipMode extends Component {
       cardlist_studying: [],
       contents: [],
       backContents: [],
+      contentsList:[],
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -179,25 +180,30 @@ class FlipMode extends Component {
   getContents = async () => {
     const current_seq = sessionStorage.getItem("current_seq");
     console.log(current_seq);
-    await axios
-      .post("api/studyexecute/get-studying-cards", {
-        card_ids: [this.state.cardlist_studying[Number(current_seq)]._id],
-      })
-      .then((res) => {
-        console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        this.setState(
-          {
-            contents: res.data.cards,
-          },
-          function () {
-            this.stopTimerTotal();
-            this.resetTimer();
-          }
-        );
-      });
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    console.log(card_details_session);
+    const card_id = card_details_session[current_seq]._id
+    console.log(card_id)
+    const contentForNow = this.state.contentsList.find((item)=>{
+      if(item._id === card_id){
+        console.log(item)
+        return item
+      }
+    })
+    console.log(contentForNow)
+    this.setState(
+      {
+        contents: [contentForNow],
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
   };
 
   getContentsList = async () => {
+    const current_seq = sessionStorage.getItem("current_seq");
     const ids = []
     console.log(this.state.cardlist_studying)
     if(this.state.cardlist_studying.length < 6){
@@ -205,7 +211,7 @@ class FlipMode extends Component {
         ids.push(this.state.cardlist_studying[i]._id)
       }
     } else {
-      for( i = 0; i<6; i++){
+      for( i = current_seq; i<current_seq+6; i++){
         ids.push(this.state.cardlist_studying[i]._id)
       }
     }
@@ -218,14 +224,12 @@ class FlipMode extends Component {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
         this.setState(
           {
-            contents: res.data.cards,
-          },
-          function () {
-            this.stopTimerTotal();
-            this.resetTimer();
+            contentsList: res.data.cards,
           }
         );
       });
+
+    this.getContents()
   };
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
