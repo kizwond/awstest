@@ -29,7 +29,7 @@ class FlipMode extends Component {
       cardlist_studying: [],
       contents: [],
       backContents: [],
-      contentsList:[],
+      contentsList: [],
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -182,54 +182,144 @@ class FlipMode extends Component {
     console.log(current_seq);
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
     console.log(card_details_session);
-    const card_id = card_details_session[current_seq]._id
-    console.log(card_id)
-    const contentForNow = this.state.contentsList.find((item)=>{
-      if(item._id === card_id){
-        console.log(item)
-        return item
-      }
-    })
-    console.log(contentForNow)
-    this.setState(
-      {
-        contents: [contentForNow],
-      },
-      function () {
-        this.stopTimerTotal();
-        this.resetTimer();
-      }
-    );
-  };
 
-  getContentsList = async () => {
-    const current_seq = sessionStorage.getItem("current_seq");
-    const ids = []
-    console.log(this.state.cardlist_studying)
-    if(this.state.cardlist_studying.length < 6){
-      for( var i = 0; i < this.state.cardlist_studying.length; i++){
-        ids.push(this.state.cardlist_studying[i]._id)
-      }
+
+    const card_id1 = card_details_session[Number(current_seq)]._id;
+    const card_id2 = card_details_session[Number(current_seq)+1]._id;
+    const card_id3 = card_details_session[Number(current_seq)+2]._id;
+    
+
+    console.log(card_id1)
+    console.log(card_id2)
+    console.log(card_id3)
+    const cardIdsArray = [card_id1, card_id2, card_id3]
+    const contentsToCompare = this.state.contentsList;
+
+    const existing = contentsToCompare.map((item) => {
+      return item._id
+    })
+
+    let difference = existing.filter(id => cardIdsArray.includes(id));
+
+    console.log(difference)
+
+    if(difference.length === 3){
+      const contentForNow = this.state.contentsList.find((item)=> item._id === card_id1)
+      console.log(contentForNow)
+      this.setState(
+        {
+          contents: [contentForNow],
+        },
+        function () {
+          this.stopTimerTotal();
+          this.resetTimer();
+        }
+      );
     } else {
-      for( i = current_seq; i<current_seq+6; i++){
-        ids.push(this.state.cardlist_studying[i]._id)
-      }
+
+      const ids = [];
+      await axios
+      .post("api/studyexecute/get-studying-cards", {
+        card_ids: ids,
+      })
+      .then((res) => {
+        console.log("첫번째 카드 컨텐츠 res : ", res.data);
+        this.setState({
+          contentsList: res.data.cards,
+        });
+      });
     }
     
+
+
+  };
+
+  //최초 카드컨텐츠 리스트를 받아옴.
+  getContentsList = async () => {
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+
+    //이어하기시 필요한 컨텐츠를 미리 불러온다.
+    const on_study_times_none_zero = card_details_session.filter((item) => item.detail_status.session_study_times > 0 && item.detail_status.status_in_session === "on");
+
+    console.log(on_study_times_none_zero);
+    if (on_study_times_none_zero.length === 0) {
+      console.log("이어하기가 아니다.");
+      // 새로운 seq정보를 찾기
+      const willStudyCards = card_details_session.filter((item) => item.detail_status.status_in_session === "on" && item.detail_status.need_study_time_tmp === null);
+      console.log(willStudyCards);
+      const firstCardId = willStudyCards[0]._id;
+
+      const firstSeq = card_details_session.findIndex((item) => item._id === firstCardId);
+      console.log(firstSeq);
+      sessionStorage.setItem("current_seq", firstSeq);
+      // part. 2 finished ( 시퀀스를 찾아서 최종적으로 세션스토리지에 current_seq정보를 넣어줌. )
+
+      // 5개의 카드를 받아옴. 상위에서 willStudyCards로 찾아준 학습대상카드에서 5개의 카드id를 찾음.
+      const seqArray = [0, 1, 2, 3, 4,5,6,7,8,9];
+      if(willStudyCards.length < 10 ){
+        var temp =[]
+        for(var i=0; i<willStudyCards.length; i++){
+          temp.push(willStudyCards[i]._id)
+        }
+      } else {
+        temp = seqArray.map((item) => {
+          return willStudyCards[item]._id;
+        });
+      }
+      
+      console.log(temp);
+      var ids = temp;
+      // 5개의 아이디 생성완료.
+    } else {
+      console.log("이어하기다.")
+
+      const willStudyCards = card_details_session.filter((item) => item.detail_status.status_in_session === "on" && item.detail_status.need_study_time_tmp === null);
+      console.log(willStudyCards);
+      const firstCardId = willStudyCards[0]._id;
+
+      const firstSeq = card_details_session.findIndex((item) => item._id === firstCardId);
+      console.log(firstSeq);
+      sessionStorage.setItem("current_seq", firstSeq);
+      // part. 2 finished ( 시퀀스를 찾아서 최종적으로 세션스토리지에 current_seq정보를 넣어줌. )
+
+      // 신규 10개의 카드를 받아옴. 상위에서 willStudyCards로 찾아준 학습대상카드에서 10개의 카드id를 찾음.
+      temp =[]
+        for( i=0; i<on_study_times_none_zero.length; i++){
+          temp.push(on_study_times_none_zero[i]._id)
+        }
+
+      const seqArray = [0, 1, 2, 3, 4,5,6,7,8,9];
+      if(willStudyCards.length < 10 ){
+        const willStudyIds =[]
+        for( i=0; i<willStudyCards.length; i++){
+          willStudyIds.push(willStudyCards[i]._id)
+        }
+        temp.concat(willStudyIds)
+      } else {
+        const new_temp = seqArray.map((item) => {
+          return willStudyCards[item]._id;
+        });
+        temp.concat(new_temp)
+      }
+
+      console.log(temp);
+      ids = temp;
+      // 이어하기에 이미학습한 컨텐츠 전부 컨텐츠 리스트에 추가.
+    }
+    // part. 1 finished
+
     await axios
       .post("api/studyexecute/get-studying-cards", {
         card_ids: ids,
       })
       .then((res) => {
         console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        this.setState(
-          {
-            contentsList: res.data.cards,
-          }
-        );
+        this.setState({
+          contentsList: res.data.cards,
+        });
       });
 
-    this.getContents()
+    this.getContents();
   };
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
