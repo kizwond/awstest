@@ -15,7 +15,9 @@ import ChooseIndex from "./components/chooseIndex/ChooseIndex";
 import StudyFlip from "./components/flipMode/StudyFlip";
 import FinishStudy from "./components/studyResult/FinishStudy";
 import BookEditing from "./components/Write/BookEditing/BookEditing";
-import BookNaming from "./components/Write/BookEditing/BookNaming"
+import BookNaming from "./components/Write/BookEditing/BookNaming";
+import DetailBook from "./components/bookStore/DetailBook";
+import LinkCategory from "./components/bookStore/LinkCategory";
 
 class App extends Component {
   constructor(props) {
@@ -37,18 +39,47 @@ class App extends Component {
         </Affix>
         <div style={main_container}>
           <Switch>
-            <Route exact path="/" render={() => <Home updatedLoginState={this.updatedLoginState} isLoggedIn={this.state.isLoggedIn} />} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Home
+                  updatedLoginState={this.updatedLoginState}
+                  isLoggedIn={this.state.isLoggedIn}
+                />
+              )}
+            />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/study" component={StudyMain} />
             <Route exact path="/myinfo" component={MyInfoMain} />
-            <Route exact path="/write" render={() => <WritingMain updatedLoginState={this.updatedLoginState} />} />
+            <Route
+              exact
+              path="/write"
+              render={() => (
+                <WritingMain updatedLoginState={this.updatedLoginState} />
+              )}
+            />
             <Route exact path="/store" component={BookStoreMain} />
+            <Route exact path="/detail-book" component={DetailBook} />
+            <Route exact path="/link-category" component={LinkCategory} />
             <Route exact path="/mentoring" component={MentoringMain} />
             <Route exact path="/start-study" component={StudyFlip} />
             <Route exact path="/study-result" component={FinishStudy} />
-            <Route exact path="/session-setting" render={() => <ChooseIndex updatedLoginState={this.updatedLoginState} />} />
-            <Route exact path="/editing" render={() => <BookEditing updatedLoginState={this.updatedLoginState} />} />
+            <Route
+              exact
+              path="/session-setting"
+              render={() => (
+                <ChooseIndex updatedLoginState={this.updatedLoginState} />
+              )}
+            />
+            <Route
+              exact
+              path="/editing"
+              render={() => (
+                <BookEditing updatedLoginState={this.updatedLoginState} />
+              )}
+            />
             <Route exact path="/naming" component={BookNaming} />
           </Switch>
         </div>
