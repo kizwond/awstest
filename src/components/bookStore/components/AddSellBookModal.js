@@ -77,6 +77,7 @@ class AddSellBookModal extends Component {
       hashtag: this.state.hashtag,
       author: this.state.author,
       publisher: this.state.publisher,
+      thumbnail: this.state.img_url,
       intro_book: this.state.intro_book,
       intro_author: this.state.intro_author,
       indexes: this.state.indexes,
@@ -130,6 +131,8 @@ class AddSellBookModal extends Component {
         promotion_period_from: 0,
         promotion_period_to: 0,
         original_book_id: "",
+        img_url:"",
+        prev_thumbnail:"",
       });
       this.resetCheckbox();
     });
@@ -153,12 +156,19 @@ class AddSellBookModal extends Component {
     })
   }
   uploadImgHandler = () => {
+    
     const formData = new FormData();
     formData.append('file', this.state.thumbnail);
+    formData.append('prev_thumbnail', this.state.prev_thumbnail);
 
     axios.post("api/bookstore/upload-thumbnail", formData)
       .then((res) => {
         console.log(res);
+        this.setState({
+          img_url:res.data.url,
+          prev_thumbnail:res.data.url,
+          thumbnail:null
+        })
       });
   }
   resetCheckbox() {
@@ -190,7 +200,7 @@ class AddSellBookModal extends Component {
           cancelText="취소"
           afterClose={this.resetCheckbox}
         >
-          <form>
+
             <label style={{ display: "block", marginTop: "15px" }}>
               제목
               <input
@@ -254,6 +264,7 @@ class AddSellBookModal extends Component {
               />
             </label>
             <button onClick={this.uploadImgHandler}>업로드이미지</button>
+            {this.state.img_url && <><img src={`http://localhost:5000${this.state.img_url}`} alt="thumbnail" width="150px" /></>}
             <label style={{ display: "block", marginTop: "15px" }}>
               책 소개
               <input
@@ -385,7 +396,7 @@ class AddSellBookModal extends Component {
                 />
               </span>
             </label>
-          </form>
+
         </Modal>
       </>
     );
