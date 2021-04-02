@@ -264,7 +264,7 @@ class AddSellBookModal extends Component {
               />
             </label>
             <button onClick={this.uploadImgHandler}>업로드이미지</button>
-            {this.state.img_url && <><img src={`http://localhost:5000${this.state.img_url}`} alt="thumbnail" width="150px" /></>}
+            {this.state.img_url && <><img src={`${this.state.img_url}`} alt="thumbnail" width="150px" /></>}
             <label style={{ display: "block", marginTop: "15px" }}>
               책 소개
               <input
