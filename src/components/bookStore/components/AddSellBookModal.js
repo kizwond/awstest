@@ -156,9 +156,7 @@ class AddSellBookModal extends Component {
     const formData = new FormData();
     formData.append('file', this.state.thumbnail);
 
-    axios.post("api/bookstore/upload-thumbnail", {
-        thumbnail: formData,
-      })
+    axios.post("api/bookstore/upload-thumbnail", formData)
       .then((res) => {
         console.log(res);
       });
