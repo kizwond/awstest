@@ -580,21 +580,12 @@ class FlipMode extends Component {
     console.log(hours);
     const level_config = JSON.parse(sessionStorage.getItem("level_config"));
     console.log(level_config[0]);
-    // const retention_count_curve_type = level_config[0].retention_count_curve.type;
-    // const retention_count_curve_a = level_config[0].retention_count_curve.a;
-    // const retention_count_curve_b = level_config[0].retention_count_curve.b;
+
     const sensitivity = level_config[0].sensitivity / 100;
     const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
     const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
     const level = card_details_session[selectedIndex].detail_status.level;
 
-    // if (retention_count_curve_type === "linear") {
-    //   var modified_retention = (current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a;
-    // } else if (retention_count_curve_type === "log") {
-    //   modified_retention = Math.exp((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    // } else if (retention_count_curve_type === "exp") {
-    //   modified_retention = Math.log((current_lev_study_times + 1 - retention_count_curve_b) / retention_count_curve_a);
-    // }
     if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
       var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
     } else {
