@@ -185,23 +185,40 @@ class FlipMode extends Component {
     const now = new Date();
 
     //복습대상 카드를 찾자
-    const reviewCards = card_details_session.filter((item) => item.detail_status.need_study_time_tmp !== null && item.detail_status.need_study_time_tmp < now);
+    const reviewCards = card_details_session.filter((item) => item.detail_status.need_study_time_tmp !== null && new Date(item.detail_status.need_study_time_tmp) < now);
 
+    console.log(reviewCards)
     if (reviewCards.length > 0) {
+      console.log("here-----------------------------------------")
       //복습대상 카드의 아이디를 배열로
       const reviewCardIds = reviewCards.map((item) => item._id);
+      console.log(reviewCardIds)
       //서버에 해당 아이디들로 컨텐츠를 요청해라.
       await axios
-      .post("api/studyexecute/get-studying-cards", {
-        card_ids: reviewCardIds,
-      })
-      .then((res) => {
-        console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        const contents = this.state.contentsList.concat(res.data.cards)
-        this.setState({
-          contentsList: contents,
+        .post("api/studyexecute/get-studying-cards", {
+          card_ids: reviewCardIds,
+        })
+        .then((res) => {
+          console.log("첫번째 카드 컨텐츠 res : ", res.data);
+          const contents = this.state.contentsList.concat(res.data.cards);
+          this.setState({
+            contentsList: contents,
+          });
         });
-      });
+
+        const card_id1 = reviewCardIds[0];
+        console.log(card_id1)
+        const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
+        console.log(contentForNow);
+        this.setState(
+          {
+            contents: [contentForNow],
+          },
+          function () {
+            this.stopTimerTotal();
+            this.resetTimer();
+          }
+        );
 
     } else {
       //복습대상이 없을때는
@@ -209,7 +226,7 @@ class FlipMode extends Component {
       const card_id1 = card_details_session[Number(current_seq)]._id;
       const card_id2 = card_details_session[Number(current_seq) + 1]._id;
       const card_id3 = card_details_session[Number(current_seq) + 2]._id;
-
+      //위에 카드아이디가 없다면, 워쩔것이냐.
       console.log(card_id1);
       console.log(card_id2);
       console.log(card_id3);
@@ -225,6 +242,7 @@ class FlipMode extends Component {
       console.log(difference);
 
       if (difference.length === 3) {
+        sessionStorage.setItem("current_seq", Number(current_seq) + 1);
         const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
         console.log(contentForNow);
         this.setState(
@@ -237,9 +255,25 @@ class FlipMode extends Component {
           }
         );
       } else {
-
+        sessionStorage.setItem("current_seq", Number(current_seq) + 1);
+        const willStudyCards = card_details_session.filter((item) => item.detail_status.status_in_session === "on" && item.detail_status.need_study_time_tmp === null);
         //현재순서부터 10개의 카드를 다시 요청해라.
-        const ids = [];
+        const temp = [];
+        const seqArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        if (willStudyCards.length < 10) {
+          const willStudyIds = [];
+          for (var i = 0; i < willStudyCards.length; i++) {
+            willStudyIds.push(willStudyCards[i]._id);
+          }
+          temp.concat(willStudyIds);
+        } else {
+          const new_temp = seqArray.map((item) => {
+            return willStudyCards[item]._id;
+          });
+          temp.concat(new_temp);
+        }
+
+        const ids = temp;
         await axios
           .post("api/studyexecute/get-studying-cards", {
             card_ids: ids,
@@ -250,11 +284,22 @@ class FlipMode extends Component {
               contentsList: res.data.cards,
             });
           });
+
+          const card_id1 = card_details_session[Number(current_seq)]._id;
+          const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
+          console.log(contentForNow);
+          this.setState(
+            {
+              contents: [contentForNow],
+            },
+            function () {
+              this.stopTimerTotal();
+              this.resetTimer();
+            }
+          );
+        
       }
     }
-
-
-
   };
 
   //최초 카드컨텐츠 리스트를 받아옴.
@@ -349,7 +394,6 @@ class FlipMode extends Component {
 
   onClickInterval = (status, interval) => {
     const current_seq = sessionStorage.getItem("current_seq");
-    sessionStorage.setItem("current_seq", Number(current_seq) + 1);
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
     }));
@@ -395,6 +439,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.recent_study_time = now;
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.need_study_time = review_date;
+      card_details_session[selectedIndex].detail_status.need_study_time_tmp = review_date;
       card_details_session[selectedIndex].detail_status.recent_selection = status;
       card_details_session[selectedIndex].detail_status.recent_study_result = status;
       card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
@@ -476,7 +521,6 @@ class FlipMode extends Component {
 
   onClickRemembered = () => {
     const current_seq = sessionStorage.getItem("current_seq");
-    sessionStorage.setItem("current_seq", Number(current_seq) + 1);
 
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,

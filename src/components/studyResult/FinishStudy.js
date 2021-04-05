@@ -18,7 +18,7 @@ class FinishStudy extends Component {
         }).then(res => {
             console.log("서버로부터 통계정보 :",res.data)
             this.setState({
-                result:res.data.session.study_result,
+                result:res.data.study_results_by_session,
                 by_book: res.data.study_results_by_book
             })
         })
