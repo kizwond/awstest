@@ -223,14 +223,39 @@ class FlipMode extends Component {
     } else {
       //복습대상이 없을때는
       //const readyToStudyCardId = card_details_session[current_seq]._id;
-      const card_id1 = card_details_session[Number(current_seq)]._id;
-      const card_id2 = card_details_session[Number(current_seq) + 1]._id;
-      const card_id3 = card_details_session[Number(current_seq) + 2]._id;
+      if( card_details_session[Number(current_seq)]){
+        var card_id1 = card_details_session[Number(current_seq)]._id;
+      } else {
+        card_id1 = undefined
+      }
+      
       //위에 카드아이디가 없다면, 워쩔것이냐.
-      console.log(card_id1);
-      console.log(card_id2);
-      console.log(card_id3);
-      const cardIdsArray = [card_id1, card_id2, card_id3];
+      if( card_details_session[Number(current_seq) + 1]){
+        var card_id2 = card_details_session[Number(current_seq) + 1]._id;
+      } else {
+        card_id2 = undefined
+      }
+
+      if( card_details_session[Number(current_seq) + 2]){
+        var card_id3 = card_details_session[Number(current_seq) + 2]._id;
+      } else {
+        card_id3 = undefined
+      }
+
+      if(card_id1 !== undefined && card_id2 !== undefined && card_id3 === undefined){
+        var length_of = 2
+        var cardIdsArray = [card_id1, card_id2];
+      } else if(card_id1 !== undefined && card_id2 === undefined && card_id3 === undefined){
+        length_of = 1
+        cardIdsArray = [card_id1];
+      } else if(card_id1 === undefined && card_id2 === undefined && card_id3 === undefined){
+        return alert("학습할 카드가 없습니다.")
+      } else {
+        length_of = 3
+        cardIdsArray = [card_id1, card_id2, card_id3];
+      }
+      
+      
       const contentsToCompare = this.state.contentsList;
 
       const existing = contentsToCompare.map((item) => {
@@ -241,7 +266,7 @@ class FlipMode extends Component {
 
       console.log(difference);
 
-      if (difference.length === 3) {
+      if (difference.length === length_of) {
         sessionStorage.setItem("current_seq", Number(current_seq) + 1);
         const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
         console.log(contentForNow);
@@ -510,9 +535,9 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-
+    this.sendStudyData()
     //학습데이터 처리 후 새카드 불러오기
-    if (card_details_session.length === Number(current_seq) + 1) {
+    if (card_details_session.length === Number(current_seq)) {
       this.finishStudy();
     } else {
       this.getContents();
@@ -625,12 +650,39 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-
+    this.sendStudyData()
     //학습데이터 처리 후 새카드 불러오기
-    if (card_details_session.length === Number(current_seq) + 1) {
+    if (card_details_session.length === Number(current_seq)) {
       this.finishStudy();
     } else {
       this.getContents();
+    }
+  };
+
+  sendStudyData = async () => {
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    
+    if (cardlist_to_send) {
+      if(cardlist_to_send.length === 3){
+        console.log("공부중 학습데이터 전송!!!!");
+        const sessionId = sessionStorage.getItem("sessionId");
+        await axios
+          .post("api/studyresult/create-studyresult", {
+            cardlist_studied: cardlist_to_send,
+            session_id: sessionId,
+            status: "studying",
+          })
+          .then((res) => {
+            console.log("학습정보 전송완료!!!", res.data);
+            sessionStorage.removeItem("cardlist_to_send");
+          });
+          
+      } else {
+        console.log("cardlist to send under 3 items")
+      }
+      
+    } else {
+      console.log("studying")
     }
   };
 
