@@ -700,6 +700,8 @@ class FlipMode extends Component {
     }
   };
 
+  //오늘은 여기작업하자 & backCardIds에서 마지막 id값을 불러와서 컨텐츠 리스트에서 조회해보고, 있으면 뿌려주고, 없으면 받아오고
+  //back클릭시 현재카드에대한 학습시간을 cardlist to send 에다가 갱신해줘야함.
   onClickBack = () => {
     if (this.state.pageStatus === "normal") {
       var status = "back";
@@ -718,28 +720,81 @@ class FlipMode extends Component {
 
   getBackContents = async () => {
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
+    console.log(backCardIds)
     const idList = backCardIds.map((item) => {
       return item.card_id;
     });
-    console.log(idList);
-    await axios
-      .post("api/studyexecute/get-studying-cards", {
-        card_ids: idList,
-      })
-      .then((res) => {
-        console.log("첫번째 카드 컨텐츠 res : ", res.data);
-        this.setState(
-          {
-            backContents: res.data.cards,
-          },
-          function () {
-            this.stopTimerTotal();
-            this.resetTimer();
-          }
-        );
-      });
-  };
+    console.log(idList)
+    const last_id = idList[idList.length -1]
 
+    console.log(last_id);
+    const get_backContent = this.state.contentsList.find((item)=>item._id === last_id)
+    console.log(get_backContent)
+    this.setState(
+      {
+        backContents: [get_backContent],
+        prevIdIndex: backCardIds.length-2,
+        nextIdIndex: backCardIds.length
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
+  };
+  prevCardClick = () => {
+    console.log("prev card click")
+    const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
+    const prevIdIndex = this.state.prevIdIndex
+    if(backCardIds[prevIdIndex] === undefined){
+      return alert("이전모드 이전 카드가 없습니다.")
+    } else {
+      var prevId = backCardIds[prevIdIndex].card_id
+    }
+    console.log(prevIdIndex)
+    console.log(prevId)
+    
+    const get_backContent = this.state.contentsList.find((item)=>item._id === prevId)
+    console.log(get_backContent)
+    this.setState(
+      {
+        backContents: [get_backContent],
+        prevIdIndex: this.state.prevIdIndex -1,
+        nextIdIndex: this.state.nextIdIndex -1,
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
+  }
+  nextCardClick = () => {
+    console.log("next card click")
+    const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
+    const nextIdIndex = this.state.nextIdIndex
+    if(backCardIds[nextIdIndex] === undefined){
+      return alert("이전모드 다음 카드가 없습니다.")
+    } else {
+      var nextId = backCardIds[nextIdIndex].card_id
+    }
+    
+    console.log(nextIdIndex)
+    console.log(nextId)
+    
+    const get_backContent = this.state.contentsList.find((item)=>item._id === nextId)
+    console.log(get_backContent)
+    this.setState(
+      {
+        backContents: [get_backContent],
+        prevIdIndex: this.state.prevIdIndex +1,
+        nextIdIndex: this.state.nextIdIndex +1,
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
+  }
   render() {
     const content = (
       <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
@@ -757,6 +812,12 @@ class FlipMode extends Component {
         </Button>
       </div>
     );
+    
+    if(this.state.backContents.length > 0){
+      const contents = this.state.backContents[0];
+      var back_first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
+      var back_second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
+    }
 
     if (this.state.contents.length > 0) {
       const contents = this.state.contents[0];
@@ -875,16 +936,16 @@ class FlipMode extends Component {
           ) : (
             <div style={{ width: "1000px", border: "1px solid lightgrey", borderRadius: "10px" }}>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                <LeftSquareOutlined style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
+                <LeftSquareOutlined onClick={this.prevCardClick} style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
                 <div style={contentsDisplay}>
                   <div style={{ position: "relative", height: "50%", width: "910px", border: "1px dashed lightgrey", borderRadius: "5px" }}>
-                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>앞면</div>
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>앞면{back_first_face_data}</div>
                   </div>
                   <div style={{ position: "relative", height: "50%", width: "910px", border: "1px dashed lightgrey", borderRadius: "5px" }}>
-                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>뒷면</div>
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>뒷면{back_second_face_data}</div>
                   </div>
                 </div>
-                <RightSquareOutlined style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
+                <RightSquareOutlined onClick={this.nextCardClick} style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
               </div>
               <div style={buttonDiv}>
                 <Button width="35px" style={{ ...buttonDefault, padding: 0, overflow: "hidden", lineHeight: "13px", color: "lightgrey", cursor: "text" }}>
