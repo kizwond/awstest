@@ -447,17 +447,22 @@ class FlipMode extends Component {
     });
 
     //이전카드보기를 위한 학습로그 저장.
-    const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
-    const study_log = { card_id: card_id };
-    if (study_log_session) {
-      study_log_session.push(study_log);
-      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+    if(status === "back"){
+      console.log("back clicked!!!")
     } else {
-      sessionStorage.setItem("study_log", JSON.stringify([]));
       const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
-      study_log_session.push(study_log);
-      sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+      const study_log = { card_id: card_id };
+      if (study_log_session) {
+        study_log_session.push(study_log);
+        sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+      } else {
+        sessionStorage.setItem("study_log", JSON.stringify([]));
+        const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
+        study_log_session.push(study_log);
+        sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
+      }
     }
+    
 
     //학습정보 업데이트
     if (status === "short" || status === "long") {
@@ -515,6 +520,12 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
       card_details_session[selectedIndex].detail_status.former_level = card_details_session[selectedIndex].detail_status.level;
       card_details_session[selectedIndex].detail_status.level = 10;
+    } else if (status === "back") {
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     }
 
     console.log(card_details_session);
@@ -537,11 +548,28 @@ class FlipMode extends Component {
     console.log("cardlist_to_send", cardlist_to_send);
     this.sendStudyData()
     //학습데이터 처리 후 새카드 불러오기
-    if (card_details_session.length === Number(current_seq)) {
-      this.finishStudy();
+    if(status === "back"){
+      if (this.state.pageStatus === "normal") {
+        var mode = "back";
+      } else {
+        mode = "normal";
+      }
+      this.setState({
+        pageStatus: mode,
+      });
+  
+      if (mode === "back") {
+        console.log("back side open, get contents from study_log in sessionstorage");
+        this.getBackContents();
+      }
     } else {
-      this.getContents();
+      if (card_details_session.length === Number(current_seq)) {
+        this.finishStudy();
+      } else {
+        this.getContents();
+      }
     }
+    
   };
 
   onClickRemembered = () => {
@@ -654,7 +682,7 @@ class FlipMode extends Component {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     
     if (cardlist_to_send) {
-      if(cardlist_to_send.length === 3){
+      if(cardlist_to_send.length > 3){
         console.log("공부중 학습데이터 전송!!!!");
         const sessionId = sessionStorage.getItem("sessionId");
         await axios
@@ -702,7 +730,7 @@ class FlipMode extends Component {
 
   //오늘은 여기작업하자 & backCardIds에서 마지막 id값을 불러와서 컨텐츠 리스트에서 조회해보고, 있으면 뿌려주고, 없으면 받아오고
   //back클릭시 현재카드에대한 학습시간을 cardlist to send 에다가 갱신해줘야함.
-  onClickBack = () => {
+  onClickBack = (card_id) => {
     if (this.state.pageStatus === "normal") {
       var status = "back";
     } else {
@@ -715,6 +743,37 @@ class FlipMode extends Component {
     if (status === "back") {
       console.log("back side open, get contents from study_log in sessionstorage");
       this.getBackContents();
+    } else {
+      const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+      const now = new Date();
+
+      const selectedIndex = card_details_session.findIndex((item, index) => {
+        return item._id === card_id;
+      });
+  
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+      card_details_session[selectedIndex].detail_status.recent_selection = "move";
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+      
+      //업데이트된 학습정보 세션스토리지에 다시 저장
+      sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+  
+      //서버에 보내기 위한 학습정보 리스트 생성
+      const updateThis = card_details_session[selectedIndex];
+      const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+  
+      if (getUpdateThis) {
+        var finalUpdate = getUpdateThis.concat(updateThis);
+      } else {
+        finalUpdate = [updateThis];
+      }
+  
+      sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+      const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+      console.log("cardlist_to_send", cardlist_to_send);
+
     }
   };
 
@@ -743,6 +802,9 @@ class FlipMode extends Component {
     );
   };
   prevCardClick = () => {
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    const now = new Date();
+    
     console.log("prev card click")
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
     const prevIdIndex = this.state.prevIdIndex
@@ -750,10 +812,38 @@ class FlipMode extends Component {
       return alert("이전모드 이전 카드가 없습니다.")
     } else {
       var prevId = backCardIds[prevIdIndex].card_id
+      var currentId = backCardIds[prevIdIndex+1].card_id
     }
     console.log(prevIdIndex)
     console.log(prevId)
+
+    const selectedIndex = card_details_session.findIndex((item, index) => {
+      return item._id === currentId;
+    });
+
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+    card_details_session[selectedIndex].detail_status.recent_selection = "move";
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     
+    //업데이트된 학습정보 세션스토리지에 다시 저장
+    sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
+
     const get_backContent = this.state.contentsList.find((item)=>item._id === prevId)
     console.log(get_backContent)
     this.setState(
@@ -769,6 +859,9 @@ class FlipMode extends Component {
     );
   }
   nextCardClick = () => {
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    const now = new Date();
+
     console.log("next card click")
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
     const nextIdIndex = this.state.nextIdIndex
@@ -776,10 +869,38 @@ class FlipMode extends Component {
       return alert("이전모드 다음 카드가 없습니다.")
     } else {
       var nextId = backCardIds[nextIdIndex].card_id
+      var currentId = backCardIds[nextIdIndex-1].card_id
     }
     
     console.log(nextIdIndex)
     console.log(nextId)
+
+    const selectedIndex = card_details_session.findIndex((item, index) => {
+      return item._id === currentId;
+    });
+
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+    card_details_session[selectedIndex].detail_status.recent_selection = "move";
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    
+    //업데이트된 학습정보 세션스토리지에 다시 저장
+    sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
     
     const get_backContent = this.state.contentsList.find((item)=>item._id === nextId)
     console.log(get_backContent)
@@ -796,6 +917,7 @@ class FlipMode extends Component {
     );
   }
   render() {
+    //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
     const content = (
       <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
         <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
@@ -812,9 +934,25 @@ class FlipMode extends Component {
         </Button>
       </div>
     );
+
+    //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
+    const content2 = (
+      <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+        <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+          <span style={{ fontSize: "15px" }}>보류</span>
+          <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+        </Button>
+        <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+          <span style={{ fontSize: "15px" }}>졸업</span>
+          <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+        </Button>
+      </div>
+    );
+
     
     if(this.state.backContents.length > 0){
       const contents = this.state.backContents[0];
+      var content_id = contents._id
       var back_first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       var back_second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
     }
@@ -906,7 +1044,7 @@ class FlipMode extends Component {
                 </div>
               </div>
               <div style={buttonDiv}>
-                <Button width="35px" onClick={this.onClickBack} style={{ ...buttonDefault, padding: 0, overflow: "hidden", lineHeight: "13px" }}>
+                <Button width="35px" onClick={() => this.onClickInterval("back", 0)} style={{ ...buttonDefault, padding: 0, overflow: "hidden", lineHeight: "13px" }}>
                   이전
                   <br />
                   카드
@@ -939,10 +1077,10 @@ class FlipMode extends Component {
                 <LeftSquareOutlined onClick={this.prevCardClick} style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
                 <div style={contentsDisplay}>
                   <div style={{ position: "relative", height: "50%", width: "910px", border: "1px dashed lightgrey", borderRadius: "5px" }}>
-                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>앞면{back_first_face_data}</div>
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>이전모드 {back_first_face_data}</div>
                   </div>
                   <div style={{ position: "relative", height: "50%", width: "910px", border: "1px dashed lightgrey", borderRadius: "5px" }}>
-                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>뒷면{back_second_face_data}</div>
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>이전모드 {back_second_face_data}</div>
                   </div>
                 </div>
                 <RightSquareOutlined onClick={this.nextCardClick} style={{ fontSize: "30px", color: "lightgrey", cusor: "pointer" }} />
@@ -953,7 +1091,7 @@ class FlipMode extends Component {
                   <br />
                   카드
                 </Button>
-                <Button onClick={this.onClickBack} width="200px" style={{ ...buttonDefault }}>
+                <Button onClick={()=>this.onClickBack(content_id)} width="200px" style={{ ...buttonDefault }}>
                   원 위치에서 학습 이어하기
                 </Button>
                 <Popover placement="bottomLeft" content={content} title="..." trigger="click">
