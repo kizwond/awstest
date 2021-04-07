@@ -208,11 +208,17 @@ class FlipMode extends Component {
 
         const card_id1 = reviewCardIds[0];
         console.log(card_id1)
+        const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+        const selected_status = card_details_session.find((item, index) => {
+          return item._id === card_id1;
+        });
+        const status = selected_status.detail_status.recent_study_result
         const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
         console.log(contentForNow);
         this.setState(
           {
             contents: [contentForNow],
+            cardStatus:status
           },
           function () {
             this.stopTimerTotal();
@@ -268,11 +274,19 @@ class FlipMode extends Component {
 
       if (difference.length === length_of) {
         sessionStorage.setItem("current_seq", Number(current_seq) + 1);
+
+        const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+        const selected_status = card_details_session.find((item, index) => {
+          return item._id === card_id1;
+        });
+        const status = selected_status.detail_status.recent_study_result
+
         const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
         console.log(contentForNow);
         this.setState(
           {
             contents: [contentForNow],
+            cardStatus:status
           },
           function () {
             this.stopTimerTotal();
@@ -311,11 +325,18 @@ class FlipMode extends Component {
           });
 
           const card_id1 = card_details_session[Number(current_seq)]._id;
+
+          const selected_status = card_details_session.find((item, index) => {
+            return item._id === card_id1;
+          });
+          const status = selected_status.detail_status.recent_study_result
+
           const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
           console.log(contentForNow);
           this.setState(
             {
               contents: [contentForNow],
+              cardStatus:status
             },
             function () {
               this.stopTimerTotal();
@@ -526,6 +547,13 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    } else if (status === "restore") {
+      card_details_session[selectedIndex].detail_status.recent_selection = status;
+      card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].detail_status.recent_study_result;
+      card_details_session[selectedIndex].detail_status.recent_select_time = now;
+      card_details_session[selectedIndex].detail_status.status_in_session = "on";
+      card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     }
 
     console.log(card_details_session);
@@ -635,6 +663,7 @@ class FlipMode extends Component {
     console.log(need_study_time);
     card_details_session[selectedIndex].detail_status.recent_study_time = now;
     card_details_session[selectedIndex].detail_status.recent_selection = "know";
+    card_details_session[selectedIndex].detail_status.recent_study_result = "know";
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
     card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
@@ -793,7 +822,8 @@ class FlipMode extends Component {
       {
         backContents: [get_backContent],
         prevIdIndex: backCardIds.length-2,
-        nextIdIndex: backCardIds.length
+        nextIdIndex: backCardIds.length,
+        currentCardId: last_id
       },
       function () {
         this.stopTimerTotal();
@@ -851,6 +881,7 @@ class FlipMode extends Component {
         backContents: [get_backContent],
         prevIdIndex: this.state.prevIdIndex -1,
         nextIdIndex: this.state.nextIdIndex -1,
+        currentCardId: prevId
       },
       function () {
         this.stopTimerTotal();
@@ -909,6 +940,7 @@ class FlipMode extends Component {
         backContents: [get_backContent],
         prevIdIndex: this.state.prevIdIndex +1,
         nextIdIndex: this.state.nextIdIndex +1,
+        currentCardId: nextId
       },
       function () {
         this.stopTimerTotal();
@@ -918,36 +950,47 @@ class FlipMode extends Component {
   }
   render() {
     //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
-    const content = (
-      <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-        <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-          <span style={{ fontSize: "15px" }}>통과</span>
-          <span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
-        </Button>
-        <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-          <span style={{ fontSize: "15px" }}>보류</span>
-          <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
-        </Button>
-        <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-          <span style={{ fontSize: "15px" }}>졸업</span>
-          <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
-        </Button>
-      </div>
-    );
+    if(this.state.pageStatus){
+      if(this.state.pageStatus === "normal"){
+        var content = (
+          <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+            <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+              <span style={{ fontSize: "15px" }}>통과</span>
+              <span style={{ fontSize: "10px" }}> 이번세션에서제외</span>
+            </Button>
+            <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+              <span style={{ fontSize: "15px" }}>보류</span>
+              <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+            </Button>
+            <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+              <span style={{ fontSize: "15px" }}>졸업</span>
+              <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+            </Button>
+          </div>
+        );
+      } else if(this.state.pageStatus === "back"){
+        if(this.state.currentCardId){
+          //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
+          content = (
+            <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+              <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                <span style={{ fontSize: "15px" }}>보류</span>
+                <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+              </Button>
+              <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                <span style={{ fontSize: "15px" }}>졸업</span>
+                <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+              </Button>
+            </div>
+          );
+        }
+      }
+    }
+    
 
-    //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
-    const content2 = (
-      <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-        <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-          <span style={{ fontSize: "15px" }}>보류</span>
-          <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
-        </Button>
-        <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-          <span style={{ fontSize: "15px" }}>졸업</span>
-          <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
-        </Button>
-      </div>
-    );
+    
+    
+    
 
     
     if(this.state.backContents.length > 0){
@@ -958,7 +1001,30 @@ class FlipMode extends Component {
     }
 
     if (this.state.contents.length > 0) {
+      // const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
       const contents = this.state.contents[0];
+      // const content_id = contents._id
+      // const card_status = card_details_session.find((item, index) => {
+      //   return item._id === content_id;
+      // });
+      // const status = card_status.detail_status.recent_study_result
+      // console.log(status)
+      // console.log(this.state.cardStatus)
+      var restore_buttons = (
+        <>
+          <Button width="150px" onClick={() => this.onClickInterval("restore", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+            <span style={{ fontSize: "15px" }}>복원</span>
+            <span style={{ fontSize: "10px" }}> 미학습 또는 학습중으로</span>
+          </Button>
+          <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+            <span style={{ fontSize: "15px" }}>통과</span>
+            <span style={{ fontSize: "10px" }}> 이번 세션에서 제외</span>
+          </Button>
+        </>
+      );
+      var thisStatus = this.state.cardStatus
+      
+
       var first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       var second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       if (this.state.level_config) {
@@ -1049,6 +1115,9 @@ class FlipMode extends Component {
                   <br />
                   카드
                 </Button>
+
+                {thisStatus}
+                {this.state.cardStatus === null && <>
                 {short_on_off === "on" && (
                   <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
                     {short_nick}({short_period})
@@ -1064,6 +1133,46 @@ class FlipMode extends Component {
                   ok!이제그만/{time_next}
                   {time_unit}
                 </Button>
+                </>}
+
+                {this.state.cardStatus === "short" && <>
+                {short_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                    {short_nick}({short_period})
+                  </Button>
+                )}
+                {long_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                    {long_nick}({long_period})
+                  </Button>
+                )}
+
+                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                  ok!이제그만/{time_next}
+                  {time_unit}
+                </Button>
+                </>}
+
+                {this.state.cardStatus === "long" && <>
+                {short_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                    {short_nick}({short_period})
+                  </Button>
+                )}
+                {long_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                    {long_nick}({long_period})
+                  </Button>
+                )}
+
+                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                  ok!이제그만/{time_next}
+                  {time_unit}
+                </Button>
+                </>}
+                {this.state.cardStatus === "hold" && <>{restore_buttons}</>}
+                {this.state.cardStatus === "completed" && <>{restore_buttons}</>}
+                
                 <Popover placement="bottomLeft" content={content} trigger="click">
                   <Button size="small" width="35px" style={{ ...buttonDefault, height: "32px" }}>
                     ...
