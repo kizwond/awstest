@@ -549,6 +549,11 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     } else if (status === "restore") {
       card_details_session[selectedIndex].detail_status.recent_selection = status;
+      if(card_details_session[selectedIndex].detail_status.recent_study_time === null){
+        card_details_session[selectedIndex].status = "yet";
+      } else {
+        card_details_session[selectedIndex].status = "ing";
+      }
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].detail_status.recent_study_result;
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.status_in_session = "on";
@@ -591,11 +596,19 @@ class FlipMode extends Component {
         this.getBackContents();
       }
     } else {
-      if (card_details_session.length === Number(current_seq)) {
-        this.finishStudy();
+      if(status === "restore"){
+        console.log("restore")
+        this.setState({
+          cardStatus:"restore"
+        })
       } else {
-        this.getContents();
+        if (card_details_session.length === Number(current_seq)) {
+          this.finishStudy();
+        } else {
+          this.getContents();
+        }
       }
+      
     }
     
   };
@@ -1058,7 +1071,7 @@ class FlipMode extends Component {
               </ul>
             </li>
             <li>
-              <Button style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>
+              <Button style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>{thisStatus}
             </li>
           </ul>
           <div style={clickCount}>{this.state.clickCount}</div>
@@ -1116,7 +1129,7 @@ class FlipMode extends Component {
                   카드
                 </Button>
 
-                {thisStatus}
+                
                 {this.state.cardStatus === null && <>
                 {short_on_off === "on" && (
                   <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
@@ -1154,6 +1167,42 @@ class FlipMode extends Component {
                 </>}
 
                 {this.state.cardStatus === "long" && <>
+                {short_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                    {short_nick}({short_period})
+                  </Button>
+                )}
+                {long_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                    {long_nick}({long_period})
+                  </Button>
+                )}
+
+                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                  ok!이제그만/{time_next}
+                  {time_unit}
+                </Button>
+                </>}
+
+                {this.state.cardStatus === "know" && <>
+                {short_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                    {short_nick}({short_period})
+                  </Button>
+                )}
+                {long_on_off === "on" && (
+                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                    {long_nick}({long_period})
+                  </Button>
+                )}
+
+                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                  ok!이제그만/{time_next}
+                  {time_unit}
+                </Button>
+                </>}
+
+                {this.state.cardStatus === "restore" && <>
                 {short_on_off === "on" && (
                   <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
                     {short_nick}({short_period})
