@@ -10,6 +10,7 @@
 .input-tag input {
   border: none;
   width: 100%;
+  font-size: 12px;
 }
 
 .input-tag__tags {
@@ -58,4 +59,17 @@
   flex-grow: 1;
   padding: 0;
   color: black;
+}
+
+.ant-menu-inline .ant-menu-item,
+.ant-menu-inline .ant-menu-submenu-title {
+  font-size: 12px;
+}
+
+.ant-modal-body {
+  font-size: 12px;
+}
+
+.ant-layout {
+  background: #ffffff;
 }

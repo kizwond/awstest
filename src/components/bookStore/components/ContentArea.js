@@ -16,12 +16,26 @@ class ContentArea extends Component {
         style={{
           display: "flex",
           flexDirection: "column",
-          flex: "1 0 auto",
-          justifyContent: "flex-start",
-          alignItems: "stretch",
+          // paddingLeft: "221px",
+          position: "relative",
+          backgroundColor: "#fff",
+          boxSizing: "border-box",
+          width: "100%",
+          minHeight: "100vh",
+
+          // justifyContent: "center",
+          // alignItems: "stretch",
         }}
       >
-        <Layout
+        <div>
+          <input
+            type="text"
+            placeholder="찾고 있는 책 이름을 입력하세요."
+            onChange={this.searchIndex}
+          ></input>
+          <button onClick={this.searchNow}>검색</button>
+        </div>
+        {/* <Layout
           className="site-layout"
           style={{
             marginLeft: 200,
@@ -29,20 +43,25 @@ class ContentArea extends Component {
             alignItems: "stretch",
             flex: "1 1 auto",
           }}
+        > */}
+        <Content
+          style={{
+            margin: "24px 16px 0",
+            overflow: "initial",
+          }}
         >
-          <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-            <div
-              className="site-layout-background"
-              style={{ padding: 24, textAlign: "left" }}
-            >
-              <AdSlider text="광고" />
-              <SimpleSlider
-                sell_book_list={this.props.sell_book_list}
-                text="Cogbook 추천"
-              />
-            </div>
-          </Content>
-        </Layout>
+          <div
+            className="site-layout-background"
+            style={{ padding: 24, textAlign: "left" }}
+          >
+            <AdSlider text="광고" />
+            <SimpleSlider
+              sell_book_list={this.props.sell_book_list}
+              text="Cogbook 추천"
+            />
+          </div>
+        </Content>
+        {/* </Layout> */}
       </div>
     );
   }

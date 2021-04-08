@@ -26,7 +26,7 @@ function SimpleSlider({ sell_book_list, text }) {
   });
   return (
     <>
-      <h1 style={{ fontSize: "2rem" }}>{text}</h1>
+      <h1 style={{ fontSize: "12px" }}>{text}</h1>
       <div>
         <Carousel breakPoints={breakPoints} pagination={false}>
           {sellbooklist}

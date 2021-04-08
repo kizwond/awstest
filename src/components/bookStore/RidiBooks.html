@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone Ridi</title>
+
+    <style>
+      * {
+        font-family: "Noto Sans KR", sans-serif;
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
+
+      html {
+        color: black;
+        font-family: ridi-roboto, "Apple SD Gothic Neo", 돋움, Dotum,
+          "Helvetica Neue", arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        -webkit-font-smoothing: antialiased;
+        text-size-adjust: 100%;
+        font-size: 14px;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
+      ul,
+      ol {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      li {
+        line-height: initial;
+      }
+
+      a {
+        color: inherit;
+        letter-spacing: inherit;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      a:link,
+      a:visited {
+        text-decoration: none;
+      }
+
+      hr {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      input {
+        -webkit-writing-mode: horizontal-tb !important;
+        text-rendering: auto;
+        color: -internal-light-dark(black, white);
+        letter-spacing: normal;
+        word-spacing: normal;
+        text-transform: none;
+        text-indent: 0px;
+        text-shadow: none;
+        display: inline-block;
+        text-align: start;
+        appearance: auto;
+        background-color: -internal-light-dark(
+          rgb(255, 255, 255),
+          rgb(59, 59, 59)
+        );
+        -webkit-rtl-ordering: logical;
+        cursor: text;
+        margin: 0em;
+        font: 400 13.3333px Arial;
+        padding: 1px 2px;
+        border-width: 2px;
+        border-style: inset;
+        border-color: -internal-light-dark(
+          rgb(118, 118, 118),
+          rgb(133, 133, 133)
+        );
+        border-image: initial;
+      }
+      input {
+        color: inherit;
+        letter-spacing: inherit;
+        font-family: inherit;
+        appearance: none;
+        background: none;
+        box-shadow: none;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+      }
+      input:focus {
+        outline: none;
+      }
+
+      button {
+        cursor: pointer;
+        user-select: none;
+        color: inherit;
+        letter-spacing: inherit;
+        font-family: inherit;
+        appearance: none;
+        background: none;
+        box-shadow: none;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      button,
+      input,
+      p,
+      span {
+        letter-spacing: -0.03em;
+      }
+
+      button * {
+        position: relative;
+        top: 0px;
+        left: 0px;
+      }
+
+      .ButtonWrapper {
+        flex: 1;
+        order: 3;
+        margin-left: auto;
+        display: flex;
+        justify-content: flex-end;
+        -webkit-box-pack: end;
+        -webkit-box-align: center;
+        align-items: center;
+      }
+      .ButtonWrapper li + li {
+        margin-left: 6px;
+      }
+
+      /* 헤더 css 시작 */
+      .GNBWrapper {
+        width: 100%;
+        background-color: #1f8ce6;
+      }
+      .GNBWrapper a:link,
+      .GNBWrapper a:visited {
+        color: white;
+      }
+
+      .StyledButton {
+        box-sizing: border-box;
+        background-color: #1f8ce6;
+        border: 1px solid #99d1ff;
+        border-radius: 3px;
+        padding: 0 16px;
+        font-weight: bold;
+        color: #ffffff;
+        word-break: keep-all;
+        font-size: 13px;
+        height: 30px;
+        transition-property: color, background-color, border, opacity;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
+        line-height: 30px;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        outline: none;
+      }
+
+      .WrapperForm {
+        flex: 1;
+        max-width: 340px;
+        order: 2;
+        z-index: 10;
+      }
+
+      .FocusTrap,
+      .FocusTrap:focus {
+        outline: none;
+      }
+
+      /* 아래 검색 입력창 활성화시 숨겨져서 나오는 화살표는 어디 쓰는지 모르겠음 */
+      .ArrowButton {
+        display: none;
+      }
+      .StyledArrowLeft {
+        fill: white;
+        width: 16px;
+        height: 16px;
+      }
+      /* 위에까지 숨겨진 화살표 css 영역 */
+
+      .SearchBoxShape {
+        background: white;
+        border-radius: 3px;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+      }
+
+      .StyledLens {
+        /* 비율 고정되어야하는 이미지라서 flex:0으로 설정됨 */
+        flex: none;
+        width: 24px;
+        height: 24px;
+        margin: 0 4px 0 6px;
+        /* 투명도는 입력창 활성화시 진하게 되어야함.  */
+        opacity: 0.6;
+      }
+
+      .SearchBox {
+        flex: 1;
+        height: 36px;
+        font-size: 16px;
+        line-height: 16px;
+      }
+
+      .SearchResetButton {
+        outline: none;
+        margin: 4px 6px 4px 4px;
+      }
+
+      .svgStyledClear {
+        display: block;
+        width: 24px;
+        height: 24px;
+        padding: 5px;
+      }
+
+      .Tabs {
+        display: flex;
+        flex-direction: row;
+        padding: 0 20px;
+      }
+
+      .TabItemWrapper-TabItem {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        height: 37px;
+        overflow: visible;
+        transition: opacity 0.2s ease 0s;
+        padding-bottom: 4px;
+      }
+      .TabItemWrapper-TabItem:not(:last-of-type) {
+        margin-right: 50px;
+      }
+
+      .TabItemWrapper {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        height: 37px;
+        overflow: visible;
+        transition: opacity 0.2s;
+        padding-bottom: 4px;
+      }
+      .TabItemWrapper:not(:last-of-type) {
+        margin-right: 50px;
+      }
+
+      .StyledAnchor {
+        height: 100%;
+        display: block;
+      }
+
+      .TabButton {
+        height: 100%;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0 5px 3px 4px;
+        outline: none;
+        position: relative;
+        top: -1px;
+        margin: 0 auto;
+        overflow: visible;
+      }
+
+      .svgStyle {
+        margin-right: 10px;
+        fill: white;
+        width: 20px;
+        height: 20px;
+      }
+
+      .labelStyle {
+        height: 16px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-left: 5px;
+        line-height: 1;
+        top: 1px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .BottomLine {
+        display: block;
+        background: transparent;
+        height: 3px;
+        width: 0;
+      }
+      .BottomLine-currentTab {
+        display: block;
+        background: rgb(153, 209, 255);
+        height: 3px;
+        width: 100%;
+        position: relative;
+        top: 1px;
+      }
+      /* 헤더부분 css 종료 */
+
+      /* 메인부분 css 시작 */
+      .Contents {
+        margin: 0 auto;
+      }
+
+      /* Genre탭부분 css 시작 */
+      .GenreTabWrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+      }
+
+      .GenreList-clearOutline {
+        display: flex;
+        flex-direction: row;
+        height: 48px;
+        -webkit-box-align: center;
+        align-items: center;
+      }
+      .GenreList-clearOutline li {
+        outline: none;
+        height: 100%;
+        text-align: center;
+        color: #40474d;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      .GenreList-clearOutline li:first-of-type {
+        line-height: 56px;
+        margin-right: 0;
+      }
+      .GenreList-clearOutline li a {
+        display: inline-block;
+        padding: 0 22px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 48px;
+        height: 100%;
+        width: 100%;
+      }
+      .GenreList-clearOutline li:first-of-type a {
+        padding: 0 20px;
+      }
+
+      .GNBCategoryIcon {
+        position: relative;
+        top: 2px;
+        width: 24px;
+        height: 24px;
+        fill: #636c73;
+      }
+
+      * .a11y {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0px;
+        overflow: hidden;
+        border: 0px;
+        clip: rect(0px, 0px, 0px, 0px);
+      }
+
+      .ActiveText {
+        color: #0077d9;
+        font-weight: bold;
+      }
+
+      .Ruler {
+        position: absolute;
+        width: 100vw;
+        border: 0 none;
+        left: 0;
+        height: 1px;
+        background-color: #e6e8eb;
+      }
+
+      .GenreTab-GenreTab {
+        margin-bottom: 20px;
+      }
+      /* 메인에서 GenreTab css 여기까지 */
+
+      /* 광고 회전목마 css */
+      .CarouselWrapper {
+        width: 100%;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+      }
+      @media (min-width: 1000px) {
+        .CarouselWrapper {
+          max-width: 2129.8px;
+        }
+      }
+      /* @media (min-width: 375px) {
+        .CarouselWrapper {
+          max-width: 1815px;
+        }
+      } */
+
+      .CarouselView-carouselHeight {
+        width: 100%;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        height: calc(66.67vw - 13.333333333333334px);
+      }
+      /* @media (min-width: 375px) {
+        .CarouselView-carouselHeight {
+          height: 236.66666666666666px;
+        }
+      } */
+      @media (min-width: 1000px) {
+        .CarouselView-carouselHeight {
+          height: 286.6666666666667px;
+        }
+      }
+      .CarouselList {
+        flex: none;
+        display: flex;
+        flex-wrap: nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+      }
+
+      .CarouselItemContainer {
+        flex: none;
+        position: relative;
+        width: calc(100vw - 20px);
+        height: calc(66.6667vw - 13.333333333333334px);
+        overflow: hidden;
+        border-radius: 6px;
+        line-height: 0;
+        transition: width 0.2s, height 0.2s, box-shadow 0.2s, opacity 0.2s;
+        opacity: 1;
+      }
+      /* @media (min-width: 375px) {
+        .CarouselItemContainer {
+          width: 355px;
+          height: 236.66666666666666px;
+        }
+      } */
+      @media (min-width: 1000px) {
+        .CarouselItemContainer {
+          width: 414.95px;
+          height: 276.6333333333333px;
+        }
+      }
+
+      .CarouselItemContainer::after {
+        display: block;
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        transition: background-color 0.2s;
+        background-color: rgba(26, 26, 26, 0.5);
+        pointer-events: none;
+      }
+
+      /* 기존 .CarouselItemContainer와 같으나 투명도만 0으로해서 안보이게 처리 */
+      .CarouselItemContainer-opacityZero {
+        -webkit-flex: none;
+        -ms-flex: none;
+        flex: none;
+        position: relative;
+        width: calc(100vw - 20px);
+        height: calc(66.6667vw - 13.333333333333334px);
+        overflow: hidden;
+        border-radius: 6px;
+        line-height: 0;
+        -webkit-transition: width 0.2s, height 0.2s, box-shadow 0.2s,
+          opacity 0.2s;
+        transition: width 0.2s, height 0.2s, box-shadow 0.2s, opacity 0.2s;
+        opacity: 0;
+      }
+      /* @media (min-width: 375px) {
+        .CarouselItemContainer-opacityZero {
+          width: 355px;
+          height: 236.66666666666666px;
+        }
+      } */
+      @media (min-width: 1000px) {
+        .CarouselItemContainer-opacityZero {
+          width: 414.95px;
+          height: 276.6333333333333px;
+        }
+      }
+
+      .CarouselItemContainer-opacityZero::after {
+        display: block;
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-transition: background-color 0.2s;
+        transition: background-color 0.2s;
+        background-color: rgba(26, 26, 26, 0.5);
+      }
+
+      /* 위에까지 투명도 0 으로 설정한 .CarouselItemContainer */
+      .CarouselItemContainer-Center {
+        flex: none;
+        position: relative;
+        width: calc(100vw - 20px);
+        height: calc(66.6667vw - 13.333333333333334px);
+        overflow: hidden;
+        border-radius: 6px;
+        line-height: 0;
+        transition: width 0.2s, height 0.2s, box-shadow 0.2s, opacity 0.2s;
+        opacity: 1;
+      }
+      /* @media (min-width: 375px) {
+        .CarouselItemContainer-Center {
+          width: 355px;
+          height: 236.66666666666666px;
+        }
+      } */
+      @media (min-width: 1000px) {
+        .CarouselItemContainer-Center {
+          width: 430px;
+          height: 286.6666666666667px;
+        }
+      }
+      .CarouselItemContainer-Center::after {
+        display: block;
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        transition: background-color 0.2s;
+        background-color: rgba(26, 26, 26, 0);
+        pointer-events: none;
+      }
+
+      .CarouselList > li {
+        margin: 0 5px;
+      }
+
+      .BannerImageLink {
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+        outline: none;
+      }
+
+      .BannerImage {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 0 0;
+      }
+
+      .CarouselControllerWrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .CarouselController {
+        position: relative;
+        width: calc(100vw - 20px);
+        height: calc(66.67vw - 13.333333333333334px);
+      }
+      /* @media (min-width: 375px) {
+        .CarouselController {
+          width: 355px;
+          height: 236.66666666666666px;
+        }
+      } */
+      @media (min-width: 1000px) {
+        .CarouselController {
+          width: 430px;
+          height: 286.6666666666667px;
+        }
+      }
+
+      .SlideBadge {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        width: 54px;
+        height: 24px;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        font-size: 12px;
+        line-height: 22px;
+        text-align: center;
+        color: white;
+      }
+
+      .ArrowWrapper {
+        opacity: 0.7;
+        margin: 0px 20px;
+        pointer-events: auto;
+      }
+
+      .Arrow-clearOutline-defaultOpacity-Arrow-arrowStyle {
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 40px;
+        box-shadow: rgb(0 0 0 / 33%) 0px 0.8px 3px;
+        opacity: 0.5;
+        transition: opacity 0.1s ease 0s;
+        cursor: pointer;
+      }
+
+      .leftRotate-mergedStyle {
+        transform-origin: center center;
+        transform: rotateX(180deg) translate(-2%, 0px) rotate(180deg);
+        top: 1.5px;
+        fill: rgb(128, 137, 145);
+      }
+
+      .RightmergedStyle {
+        top: 1.5px;
+        fill: rgb(128, 137, 145);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 페이지 코드 시작! -->
+    <!-- overflow 옆에 스크롤바 안보이게 설정 -->
+    <div class="firstParent" style="overflow: hidden">
+      <!-- GNB 영역 설정 -->
+      <div class="GNBWrapper">
+        <header class="header" style="max-width: 1000px; margin: 0 auto">
+          <nav
+            class="Navigation"
+            style="
+              box-sizing: border-box;
+              padding: 16px 16px 24px 20px;
+              display: flex;
+              flex-direction: column;
+            "
+          >
+            <div
+              class="LogoSearchboxArea"
+              style="display: flex; flex-direction: row"
+            >
+              <ul
+                class="LogoWrapper"
+                style="
+                  flex: none;
+                  order: 1;
+                  min-height: 30px;
+                  margin-right: 16px;
+                  margin-bottom: 0;
+                  display: flex;
+                "
+              >
+                <li
+                  class="LogoItem"
+                  style="
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    line-height: 0;
+                  "
+                >
+                  <h1>
+                    <a class="CogBookLogo" aria-labe="홈으로" href=""
+                      ><img src="" alt="CogBook"
+                    /></a>
+                  </h1>
+                </li>
+              </ul>
+              <ul class="ButtonWrapper">
+                <li>
+                  <a href="" aria-label="회원가입하기">
+                    <button class="StyledButton">회원가입</button>
+                  </a>
+                </li>
+                <li>
+                  <a href="" aria-label="로그인하기">
+                    <button
+                      class="StyledButton"
+                      style="color: #1f8ce6; background-color: #fff"
+                    >
+                      로그인
+                    </button>
+                  </a>
+                </li>
+              </ul>
+              <form class="WrapperForm">
+                <div tabindex="-1" class="FocusTrap">
+                  <div class="SearchBoxWrapper">
+                    <!-- 검색입력창에 타이핑하면 아래 태그 생성됨 -->
+                    <button class="ArrowButton">
+                      <svg viewBox="0 0 48 48" class="StyledArrowLeft">
+                        <path
+                          d="M48 21H11.49L28.26 4.23 24 0 0 24l24 24 4.23-4.23L11.49 27H48v-6z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <label class="SearchBoxShape">
+                      <img
+                        alt="인스턴트 검색"
+                        src="./round_search_black_18dp.png"
+                        class="StyledLens"
+                      />
+                      <input
+                        placeholder="제목, 저자, 출판사 검색"
+                        value
+                        class="SearchBox"
+                      />
+                      <button type="button" class="SearchResetButton">
+                        <svg viewBox="0 0 14 14" class="svgStyledClear">
+                          <path
+                            fill="#9EA7AD"
+                            fill-rule="evenodd"
+                            d="M9.983 9.238l-.745.745L7 7.746 4.761 9.983l-.745-.745L6.254 7 4.016 4.761l.745-.745L7 6.254l2.238-2.238.745.745L7.746 7l2.237 2.238zM7 0a7 7 0 00-7 7 7 7 0 107-7z"
+                          ></path>
+                        </svg>
+                      </button>
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </nav>
+          <ul class="Tabs">
+            <li class="TabItemWrapper-TabItem">
+              <a href="/" aria-label="홈" class="StyledAnchor">
+                <button class="TabButton">
+                  <svg viewBox="0 0 24 24" class="svgStyle">
+                    <path
+                      d="M11.2932.293l-9 9a1 1 0 00-.294.707v10.086a.5.5 0 00.5.5h5.997a.5.5 0 00.5-.5v-6.498c0-.554.448-1.002 1.002-1.002h4.004c.553 0 1.002.448 1.002 1.002v6.498a.5.5 0 00.5.5H21.5a.5.5 0 00.5-.5V12a.998.998 0 00-.293-.707l-9-9a1 1 0 00-1.415 0"
+                    ></path>
+                  </svg>
+                  <span class="labelStyle">홈</span>
+                </button>
+                <span class="BottomLine-currentTab"></span>
+              </a>
+            </li>
+            <li class="TabItemWrapper">
+              <a href="/notification" aria-label="알림" class="StyledAnchor">
+                <button class="TabButton">
+                  <svg viewBox="0 0 24 24" class="svgStyle">
+                    <path
+                      d="M17.451 17.32H4.536c.846-1.413 1.93-3.774 1.93-7.522 0-2.693.963-4.447 2.944-5.36.06-.016.113-.036.16-.056l.27-.105c.067-.034.133-.074.126-.086l.392-.047c1.21-.174 2.01-.266 2.972.01l.198.03c.07.02.135.06.203.093l.211.105H14c.047.02.1.04.162.056 1.98.914 2.943 2.668 2.943 5.36 0 3.798 1.053 6.148 1.896 7.521h-1.549zm-5.762 4.308c-1.418 0-2.668-.922-3.275-2.309h6.551c-.608 1.387-1.858 2.31-3.276 2.31zm9.59-4.51c-.674-.927-2.175-3.048-2.175-7.32 0-4.439-2.303-6.384-4.235-7.235l-.193-.085h-.03a1.9 1.9 0 00-.138-.049 2.226 2.226 0 00-.738-.229c-.758-.2-1.409-.2-1.985-.2-.574 0-1.128.08-1.714.166l-.194.028a2.129 2.129 0 00-.816.236 1.727 1.727 0 00-.135.048l-.224.085c-1.933.85-4.236 2.796-4.236 7.235 0 4.063-1.402 6.16-2.155 7.286l-.038.056a1.292 1.292 0 00.092 1.695c.145.144.484.484 1.09.484h2.852c.737 2.537 2.878 4.31 5.382 4.31 2.504 0 4.646-1.773 5.382-4.31h3.044c.606 0 .945-.34 1.09-.484l.115-.115.072-.145c.36-.718.087-1.218-.114-1.457z"
+                    ></path>
+                  </svg>
+                  <span class="labelStyle">알림</span>
+                </button>
+                <span class="BottomLine"></span>
+              </a>
+            </li>
+            <li class="TabItemWrapper">
+              <a href="/cart" aria-label="카트" class="StyledAnchor">
+                <button class="TabButton">
+                  <svg viewBox="0 0 24 24" class="svgStyle">
+                    <path
+                      d="M21.45 21.028c0 1.101-.9 2-2 2s-2-.899-2-2c0-1.1.9-2 2-2s2 .9 2 2zm-9.7 0c0 1.101-.9 2-2 2s-2-.899-2-2c0-1.1.9-2 2-2s2 .9 2 2zm8.136-7.129H9.314L7.727 6.2h13.745l-1.586 7.7zM7.304 4.2l-.7-3.2H1a1 1 0 100 2h3.995l.517 2.366L7.685 15.9h13.83l2.412-11.7H7.304z"
+                    ></path>
+                  </svg>
+                  <span class="labelStyle">카트</span>
+                </button>
+                <span class="BottomLine"></span>
+              </a>
+            </li>
+            <li class="TabItemWrapper">
+              <a
+                href="/account/myridi"
+                aria-label="마이리디"
+                class="StyledAnchor"
+              >
+                <button class="TabButton">
+                  <svg viewBox="0 0 24 24" class="svgStyle">
+                    <path
+                      d="M15.729 23.033h-.821c-.223 0-.345-.125-.345-.354v-2.546l-.95 1.56a.316.316 0 01-.288.173.33.33 0 01-.295-.171l-.944-1.56v2.544c0 .225-.128.354-.352.354h-.82c-.224 0-.353-.13-.353-.354v-4.912c0-.224.129-.353.354-.353h.795c.168 0 .289.062.37.192l1.245 2.077 1.24-2.075c.069-.126.192-.194.367-.194h.797c.23 0 .36.125.36.353v4.912c0 .225-.131.354-.36.354zm3.717 0h-.864c-.226 0-.355-.13-.355-.354v-1.716l-1.711-3.078a.318.318 0 01-.01-.322.305.305 0 01.27-.15h.903c.243 0 .349.149.415.278l.72 1.443.199.453.196-.448.72-1.447c.07-.131.177-.278.419-.278h.9c.118 0 .218.057.27.149a.319.319 0 01-.01.325L19.8 20.963v1.716c0 .225-.13.354-.354.354zM8.56 21.039l-4.511.002c.875-3.845 3.505-5.794 7.818-5.794.692 0 1.323.068 1.926.167h4.833c-1.67-1.416-3.951-2.167-6.76-2.167-5.352 0-8.74 2.59-9.798 7.489a1.737 1.737 0 00.453 1.72c.39.389.838.577 1.37.577H8.56v-1.994zm3.307-18.04C9.97 3 8.595 4.537 8.595 6.653c0 .692 0 2.797 3.273 2.797 2.815 0 3.176-1.495 3.176-2.797 0-2.15-1.306-3.652-3.176-3.652zm0 8.45c-3.302 0-5.273-1.793-5.273-4.797C6.595 3.429 8.862 1 11.868 1c3 0 5.176 2.377 5.176 5.652 0 3.049-1.886 4.797-5.176 4.797z"
+                    ></path>
+                  </svg>
+                  <span class="labelStyle">마이리디</span>
+                </button>
+                <span class="BottomLine"></span>
+              </a>
+            </li>
+          </ul>
+        </header>
+      </div>
+      <main class="Contents">
+        <!-- 메인페이지 헤더부분 -->
+        <ul class="GenreTabWrapper">
+          <li>
+            <ul class="GenreList-clearOutline">
+              <li class="GenreListItem">
+                <a href="/category/list" aria-label="카테고리 목록">
+                  <svg viewBox="0 0 24 24" class="GNBCategoryIcon">
+                    <path
+                      d="M2 7.001h20V5H2v2.001zm3 6h14v-2H5v2zm3.999 6h6v-2h-6v2z"
+                    ></path>
+                  </svg>
+                  <span class="a11y">카테고리</span>
+                </a>
+              </li>
+              <li class="activeLabelCSS">
+                <a aria-label="일반" href="/">
+                  <span class="ActiveText">일반</span>
+                </a>
+              </li>
+              <li class="genreLabelCSS">
+                <a aria-label="로맨스" href="/romance/">
+                  <span>로맨스</span>
+                </a>
+              </li>
+              <li class="genreLabelCSS">
+                <a aria-label="판타지" href="/fantasy">
+                  <span>판타지</span>
+                </a>
+              </li>
+              <li class="genreLabelCSS">
+                <a aria-label="만화" href="/comics">
+                  <span>만화</span>
+                </a>
+              </li>
+              <li class="genreLabelCSS">
+                <a aria-label="BL" href="/bl-novel">
+                  <span>BL</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li><hr class="Ruler" /></li>
+          <div class="GenreTab-GenreTab"></div>
+        </ul>
+        <!-- 광고 회전목마 -->
+        <div class="CarouselWrapper">
+          <div class="CarouselView-carouselHeight">
+            <ul
+              style="transform: translateX(0%) translateX(0px) translateX(0px)"
+              class="CarouselList"
+            >
+              <li class="CarouselItemContainer">
+                <a href="/" tabindex="-1" class="BannerImageLink">
+                  <img
+                    alt="문학동네_엘릭시르 대여전 (--04-15)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210316114909_1615862949828.jpg"
+                    class="BannerImage"
+                  />
+                </a>
+              </li>
+              <li class="CarouselItemContainer">
+                <a href="/" tabindex="-1" class="BannerImageLink">
+                  <img
+                    alt="궁리_래리 고닉 (--04-13)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210323160009_1616482809901.jpg"
+                    class="BannerImage"
+                  />
+                </a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a
+                  href="https://select.ridibooks.com/article/@hrinsight/135?utm_source=operation&amp;utm_campaign=inhouse&amp;"
+                  tabindex="-1"
+                  class="BannerImageLink"
+                ></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="/" tabindex="-1" class="BannerImageLink"
+                  ><div class="css-ba5tgu-BannerBadge ergyl4f7">
+                    마감 임박
+                  </div></a
+                >
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="북스톤_마케터의 투자법 (--04-09)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210316180140_1615885300340.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="노블엔진_만능감정사 Q의 사건수첩 세트(--04-10)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210402120343_1617332623951.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer-Center ergyl4f6">
+                <a href="" tabindex="0" class="BannerImageLink"
+                  ><img
+                    alt="문학동네_엘릭시르 대여전 (--04-15)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210316114909_1615862949828.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="궁리_래리 고닉 (--04-13)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210323160009_1616482809901.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="[추천 아티클] HR인사이트_직장인의  (04/06)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210405122137_1617592897633.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><div class="css-ba5tgu-BannerBadge ergyl4f7">
+                    마감 임박
+                  </div></a
+                >
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer-opacityZero ergyl4f6">
+                <a href="" tabindex="-1" class="BannerImageLink"></a>
+              </li>
+              <li class="CarouselItemContainer">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="노블엔진_만능감정사 Q의 사건수첩 세트(--04-10)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210402120343_1617332623951.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+              <li class="CarouselItemContainer">
+                <a href="" tabindex="-1" class="BannerImageLink"
+                  ><img
+                    alt="문학동네_엘릭시르 대여전 (--04-15)"
+                    src="//active.ridibooks.com/ridibooks_top_banner/20210316114909_1615862949828.jpg"
+                    class="BannerImage"
+                /></a>
+              </li>
+            </ul>
+          </div>
+          <div class="CarouselControllerWrapper">
+            <div class="CarouselController ergyl4f2">
+              <div class="SlideBadge ergyl4f3"><strong>17</strong> / 20</div>
+            </div>
+          </div>
+          <div class="CarouselControllerWrapper ergyl4f1">
+            <div class="ArrowWrapper">
+              <button
+                type="button"
+                class="Arrow-clearOutline-defaultOpacity-Arrow-arrowStyle"
+              >
+                <svg width="11" height="14" class="leftRotate-mergedStyle">
+                  <path
+                    d="M1.78 13.013L7.68 7 1.78.987 2.75 0l6.875 7-6.875 7z"
+                  ></path>
+                </svg>
+                <span class="a11y" aria-label="이전 배너 보기"
+                  >이전 배너 보기</span
+                >
+              </button>
+            </div>
+            <div class="CarouselController"></div>
+            <div class="ArrowWrapper">
+              <button
+                type="button"
+                class="Arrow-clearOutline-defaultOpacity-Arrow-arrowStyle"
+              >
+                <svg width="11" height="14" class="RightmergedStyle">
+                  <path
+                    d="M1.78 13.013L7.68 7 1.78.987 2.75 0l6.875 7-6.875 7z"
+                  ></path>
+                </svg>
+                <span class="a11y" aria-label="다음 배너 보기">
+                  다음 배너 보기
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

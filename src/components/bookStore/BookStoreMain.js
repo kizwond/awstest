@@ -43,23 +43,9 @@ class BookStoreMain extends Component {
         style={{
           width: "1440px",
           margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
-          flexShrink: 0,
-          flexBasis: "auto",
-          // justifyContent: "stretch",
+          fontSize: "12px",
         }}
       >
-        <div>
-          <input
-            type="text"
-            placeholder="찾고 있는 책 이름을 입력하세요."
-            style={{ marginLeft: "300px" }}
-            onChange={this.searchIndex}
-          ></input>
-          <button onClick={this.searchNow}>검색</button>
-        </div>
         <AddSellBookModal />
         <TocSider />
 

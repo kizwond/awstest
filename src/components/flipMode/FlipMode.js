@@ -511,7 +511,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     } else if (status === "hold") {
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
-      card_details_session[selectedIndex].status = "ing";
+      card_details_session[selectedIndex].status = "hold";
       card_details_session[selectedIndex].detail_status.recent_study_result = status;
       card_details_session[selectedIndex].detail_status.recent_study_time = now;
       card_details_session[selectedIndex].detail_status.recent_selection = status;
@@ -526,7 +526,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     } else if (status === "completed") {
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
-      card_details_session[selectedIndex].status = "ing";
+      card_details_session[selectedIndex].status = "completed";
       card_details_session[selectedIndex].detail_status.recent_study_result = status;
       card_details_session[selectedIndex].detail_status.recent_study_time = now;
       card_details_session[selectedIndex].detail_status.recent_selection = status;

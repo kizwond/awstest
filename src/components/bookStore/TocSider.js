@@ -21,15 +21,16 @@ class TocSider extends Component {
   render() {
     return (
       <Sider
+        width="220px"
+        theme="light"
         style={{
           zIndex: "2",
           position: "fixed",
-          height: "calc(100vh - 60px)",
+          height: "95vh",
           overflow: "auto",
-          // top: "77px",
         }}
       >
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item onClick={() => this.move("elementaryschool")} key="1">
             초등
           </Menu.Item>

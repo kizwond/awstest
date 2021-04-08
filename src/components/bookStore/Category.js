@@ -25,7 +25,7 @@ class Category extends Component {
       <>
         <div
           style={{
-            fontSize: "1rem",
+            fontSize: "12px",
             marginRight: "8px",
             MarginTop: "30px",
             background: "gray",
@@ -44,7 +44,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -62,7 +62,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -80,7 +80,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -98,7 +98,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -117,7 +117,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -135,7 +135,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -153,7 +153,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input
@@ -171,7 +171,7 @@ class Category extends Component {
               flexShrink: "0",
               boxSizing: "border-box",
               lineHeight: "30px",
-              background: "yellow",
+              background: "white",
             }}
           >
             <input

@@ -32,7 +32,6 @@ class LinkCategory extends Component {
     );
     console.log(value);
     console.log(categoryBookList);
-  
 
     const category_columns = [
       {
