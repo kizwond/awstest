@@ -30,7 +30,7 @@ class FlipMode extends Component {
       contents: [],
       backContents: [],
       contentsList: [],
-      getKnowTime:''
+      getKnowTime: "",
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -70,22 +70,30 @@ class FlipMode extends Component {
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
       var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     } else {
-      console.log(now_mili_convert)
-      console.log(current_lev_accu_study_time)
       // let time_avg = ((now_mili_convert - current_lev_accu_study_time) /3600000) / (current_lev_study_times+1);
-      let time_avg = ((current_lev_accu_study_time/ (current_lev_study_times+1) - recent_know_time) /3600000) ;
+      let time_avg = (current_lev_accu_study_time / (current_lev_study_times + 1) - recent_know_time) / 3600000;
       // 경과시간이 30분보다 작으면, 30분으로 맞춰준다.
-      if (time_avg<0.5){time_avg=0.5}
-      console.log('time_avg',time_avg)
+      if (time_avg < 0.5) {
+        time_avg = 0.5;
+      }
 
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
-      // 레벨이 너무 낮거나 높으면 보정해준다.
-      if (level_next<0){level_next=0
-      } else if(level_next>10){level_next=10}    
+      // 1번만에 알겠음을 하는 경우는 레벨 하락은 막아준다.
+      if (current_lev_study_times == 0) {
+        if (level_next < level) {
+          level_next = level;
+        }
       }
-    console.log("-----------------------",level_next)
+      // 레벨이 너무 낮거나 높으면 보정해준다.
+      if (level_next < 0) {
+        level_next = 0;
+      } else if (level_next > 10) {
+        level_next = 10;
+      }
+    }
+
     const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
-    console.log(time_next)
+
     if (time_next > 24) {
       var time = time_next / 24;
       var unit = "days";
@@ -93,9 +101,9 @@ class FlipMode extends Component {
       time = time_next;
       unit = "hours";
     }
-    return (this.setState({
-      getKnowTime :{ time: time, unit: unit }
-    }));
+    return this.setState({
+      getKnowTime: { time: time, unit: unit },
+    });
   };
 
   startTimer = () => {
@@ -200,12 +208,12 @@ class FlipMode extends Component {
     //복습대상 카드를 찾자
     const reviewCards = card_details_session.filter((item) => item.detail_status.need_study_time_tmp !== null && new Date(item.detail_status.need_study_time_tmp) < now);
 
-    console.log(reviewCards)
+    console.log(reviewCards);
     if (reviewCards.length > 0) {
-      console.log("here-----------------------------------------")
+      console.log("here-----------------------------------------");
       //복습대상 카드의 아이디를 배열로
       const reviewCardIds = reviewCards.map((item) => item._id);
-      console.log(reviewCardIds)
+      console.log(reviewCardIds);
       //서버에 해당 아이디들로 컨텐츠를 요청해라.
       await axios
         .post("api/studyexecute/get-studying-cards", {
@@ -219,63 +227,61 @@ class FlipMode extends Component {
           });
         });
 
-        const card_id1 = reviewCardIds[0];
-        console.log(card_id1)
-        const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
-        const selected_status = card_details_session.find((item, index) => {
-          return item._id === card_id1;
-        });
-        const status = selected_status.detail_status.recent_study_result
-        const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
-        console.log(contentForNow);
-        this.setState(
-          {
-            contents: [contentForNow],
-            cardStatus:status
-          },
-          function () {
-            this.getKnowTime();
-            this.stopTimerTotal();
-            this.resetTimer();
-          }
-        );
-
+      const card_id1 = reviewCardIds[0];
+      console.log(card_id1);
+      const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+      const selected_status = card_details_session.find((item, index) => {
+        return item._id === card_id1;
+      });
+      const status = selected_status.detail_status.recent_study_result;
+      const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
+      console.log(contentForNow);
+      this.setState(
+        {
+          contents: [contentForNow],
+          cardStatus: status,
+        },
+        function () {
+          this.getKnowTime();
+          this.stopTimerTotal();
+          this.resetTimer();
+        }
+      );
     } else {
       //복습대상이 없을때는
       //const readyToStudyCardId = card_details_session[current_seq]._id;
-      if( card_details_session[Number(current_seq)]){
+      if (card_details_session[Number(current_seq)]) {
         var card_id1 = card_details_session[Number(current_seq)]._id;
       } else {
-        card_id1 = undefined
+        card_id1 = undefined;
       }
-      
+
       //위에 카드아이디가 없다면, 워쩔것이냐.
-      if( card_details_session[Number(current_seq) + 1]){
+      if (card_details_session[Number(current_seq) + 1]) {
         var card_id2 = card_details_session[Number(current_seq) + 1]._id;
       } else {
-        card_id2 = undefined
+        card_id2 = undefined;
       }
 
-      if( card_details_session[Number(current_seq) + 2]){
+      if (card_details_session[Number(current_seq) + 2]) {
         var card_id3 = card_details_session[Number(current_seq) + 2]._id;
       } else {
-        card_id3 = undefined
+        card_id3 = undefined;
       }
 
-      if(card_id1 !== undefined && card_id2 !== undefined && card_id3 === undefined){
-        var length_of = 2
+      if (card_id1 !== undefined && card_id2 !== undefined && card_id3 === undefined) {
+        var length_of = 2;
         var cardIdsArray = [card_id1, card_id2];
-      } else if(card_id1 !== undefined && card_id2 === undefined && card_id3 === undefined){
-        length_of = 1
+      } else if (card_id1 !== undefined && card_id2 === undefined && card_id3 === undefined) {
+        length_of = 1;
         cardIdsArray = [card_id1];
-      } else if(card_id1 === undefined && card_id2 === undefined && card_id3 === undefined){
-        return alert("학습할 카드가 없습니다.")
+      } else if (card_id1 === undefined && card_id2 === undefined && card_id3 === undefined) {
+        return alert("학습할 카드가 없습니다.");
       } else {
-        length_of = 3
+        length_of = 3;
         cardIdsArray = [card_id1, card_id2, card_id3];
       }
-      
-      
+
       const contentsToCompare = this.state.contentsList;
 
       const existing = contentsToCompare.map((item) => {
@@ -293,14 +299,14 @@ class FlipMode extends Component {
         const selected_status = card_details_session.find((item, index) => {
           return item._id === card_id1;
         });
-        const status = selected_status.detail_status.recent_study_result
+        const status = selected_status.detail_status.recent_study_result;
 
         const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
         console.log(contentForNow);
         this.setState(
           {
             contents: [contentForNow],
-            cardStatus:status
+            cardStatus: status,
           },
           function () {
             this.getKnowTime();
@@ -339,27 +345,26 @@ class FlipMode extends Component {
             });
           });
 
-          const card_id1 = card_details_session[Number(current_seq)]._id;
+        const card_id1 = card_details_session[Number(current_seq)]._id;
 
-          const selected_status = card_details_session.find((item, index) => {
-            return item._id === card_id1;
-          });
-          const status = selected_status.detail_status.recent_study_result
+        const selected_status = card_details_session.find((item, index) => {
+          return item._id === card_id1;
+        });
+        const status = selected_status.detail_status.recent_study_result;
 
-          const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
-          console.log(contentForNow);
-          this.setState(
-            {
-              contents: [contentForNow],
-              cardStatus:status
-            },
-            function () {
-              this.getKnowTime();
-              this.stopTimerTotal();
-              this.resetTimer();
-            }
-          );
-        
+        const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
+        console.log(contentForNow);
+        this.setState(
+          {
+            contents: [contentForNow],
+            cardStatus: status,
+          },
+          function () {
+            this.getKnowTime();
+            this.stopTimerTotal();
+            this.resetTimer();
+          }
+        );
       }
     }
   };
@@ -484,8 +489,8 @@ class FlipMode extends Component {
     });
 
     //이전카드보기를 위한 학습로그 저장.
-    if(status === "back"){
-      console.log("back clicked!!!")
+    if (status === "back") {
+      console.log("back clicked!!!");
     } else {
       const study_log_session = JSON.parse(sessionStorage.getItem("study_log"));
       const study_log = { card_id: card_id };
@@ -499,7 +504,6 @@ class FlipMode extends Component {
         sessionStorage.setItem("study_log", JSON.stringify(study_log_session));
       }
     }
-    
 
     //학습정보 업데이트
     if (status === "short" || status === "long") {
@@ -565,7 +569,7 @@ class FlipMode extends Component {
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
     } else if (status === "restore") {
       card_details_session[selectedIndex].detail_status.recent_selection = status;
-      if(card_details_session[selectedIndex].detail_status.recent_study_time === null){
+      if (card_details_session[selectedIndex].detail_status.recent_study_time === null) {
         card_details_session[selectedIndex].status = "yet";
       } else {
         card_details_session[selectedIndex].status = "ing";
@@ -595,9 +599,9 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-    this.sendStudyData()
+    this.sendStudyData();
     //학습데이터 처리 후 새카드 불러오기
-    if(status === "back"){
+    if (status === "back") {
       if (this.state.pageStatus === "normal") {
         var mode = "back";
       } else {
@@ -606,17 +610,17 @@ class FlipMode extends Component {
       this.setState({
         pageStatus: mode,
       });
-  
+
       if (mode === "back") {
         console.log("back side open, get contents from study_log in sessionstorage");
         this.getBackContents();
       }
     } else {
-      if(status === "restore"){
-        console.log("restore")
+      if (status === "restore") {
+        console.log("restore");
         this.setState({
-          cardStatus:"restore"
-        })
+          cardStatus: "restore",
+        });
       } else {
         if (card_details_session.length === Number(current_seq)) {
           this.finishStudy();
@@ -624,9 +628,7 @@ class FlipMode extends Component {
           this.getContents();
         }
       }
-      
     }
-    
   };
 
   onClickRemembered = () => {
@@ -672,19 +674,35 @@ class FlipMode extends Component {
     const level = card_details_session[selectedIndex].detail_status.level;
     const recent_know_time_tmp = card_details_session[selectedIndex].detail_status.recent_know_time;
     const recent_know_time = Date.parse(recent_know_time_tmp);
-    
+
     if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
       var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
     } else {
       modified_retention = level_config[0].retention["t20"];
     }
-    console.log("modified_retention------", modified_retention);
+
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
       var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     } else {
       // const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
-      let time_avg = ((current_lev_accu_study_time/ (current_lev_study_times+1) - recent_know_time) /3600000) ;
+      let time_avg = (current_lev_accu_study_time / (current_lev_study_times + 1) - recent_know_time) / 3600000;
+      // 경과시간이 30분보다 작으면, 30분으로 맞춰준다.
+      if (time_avg < 0.5) {
+        time_avg = 0.5;
+      }
+
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+      if (current_lev_study_times == 0) {
+        if (level_next < level) {
+          level_next = level;
+        }
+      }
+      // 레벨이 너무 낮거나 높으면 보정해준다.
+      if (level_next < 0) {
+        level_next = 0;
+      } else if (level_next > 10) {
+        level_next = 10;
+      }
     }
 
     console.log(level_next);
@@ -712,7 +730,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.former_status_in_session = card_details_session[selectedIndex].detail_status.status_in_session;
     card_details_session[selectedIndex].detail_status.status_in_session = "off";
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
-      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
@@ -730,7 +748,7 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-    this.sendStudyData()
+    this.sendStudyData();
     //학습데이터 처리 후 새카드 불러오기
     if (card_details_session.length === Number(current_seq)) {
       this.finishStudy();
@@ -741,9 +759,9 @@ class FlipMode extends Component {
 
   sendStudyData = async () => {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
-    
+
     if (cardlist_to_send) {
-      if(cardlist_to_send.length > 3){
+      if (cardlist_to_send.length > 3) {
         console.log("공부중 학습데이터 전송!!!!");
         const sessionId = sessionStorage.getItem("sessionId");
         await axios
@@ -756,13 +774,11 @@ class FlipMode extends Component {
             console.log("학습정보 전송완료!!!", res.data);
             sessionStorage.removeItem("cardlist_to_send");
           });
-          
       } else {
-        console.log("cardlist to send under 3 items")
+        console.log("cardlist to send under 3 items");
       }
-      
     } else {
-      console.log("studying")
+      console.log("studying");
     }
   };
 
@@ -811,51 +827,50 @@ class FlipMode extends Component {
       const selectedIndex = card_details_session.findIndex((item, index) => {
         return item._id === card_id;
       });
-  
+
       card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
       card_details_session[selectedIndex].detail_status.recent_selection = "move";
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
       card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-      
+
       //업데이트된 학습정보 세션스토리지에 다시 저장
       sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
-  
+
       //서버에 보내기 위한 학습정보 리스트 생성
       const updateThis = card_details_session[selectedIndex];
       const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
-  
+
       if (getUpdateThis) {
         var finalUpdate = getUpdateThis.concat(updateThis);
       } else {
         finalUpdate = [updateThis];
       }
-  
+
       sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
       const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
       console.log("cardlist_to_send", cardlist_to_send);
-
     }
   };
 
   getBackContents = async () => {
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
-    console.log(backCardIds)
+    console.log(backCardIds);
     const idList = backCardIds.map((item) => {
       return item.card_id;
     });
-    console.log(idList)
-    const last_id = idList[idList.length -1]
+    console.log(idList);
+    const last_id = idList[idList.length - 1];
 
     console.log(last_id);
-    const get_backContent = this.state.contentsList.find((item)=>item._id === last_id)
-    console.log(get_backContent)
+    const get_backContent = this.state.contentsList.find((item) => item._id === last_id);
+    console.log(get_backContent);
     this.setState(
       {
         backContents: [get_backContent],
-        prevIdIndex: backCardIds.length-2,
+        prevIdIndex: backCardIds.length - 2,
         nextIdIndex: backCardIds.length,
-        currentCardId: last_id
+        currentCardId: last_id,
       },
       function () {
         this.stopTimerTotal();
@@ -866,18 +881,18 @@ class FlipMode extends Component {
   prevCardClick = () => {
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
     const now = new Date();
-    
-    console.log("prev card click")
+
+    console.log("prev card click");
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
-    const prevIdIndex = this.state.prevIdIndex
-    if(backCardIds[prevIdIndex] === undefined){
-      return alert("이전모드 이전 카드가 없습니다.")
+    const prevIdIndex = this.state.prevIdIndex;
+    if (backCardIds[prevIdIndex] === undefined) {
+      return alert("이전모드 이전 카드가 없습니다.");
     } else {
-      var prevId = backCardIds[prevIdIndex].card_id
-      var currentId = backCardIds[prevIdIndex+1].card_id
+      var prevId = backCardIds[prevIdIndex].card_id;
+      var currentId = backCardIds[prevIdIndex + 1].card_id;
     }
-    console.log(prevIdIndex)
-    console.log(prevId)
+    console.log(prevIdIndex);
+    console.log(prevId);
 
     const selectedIndex = card_details_session.findIndex((item, index) => {
       return item._id === currentId;
@@ -888,7 +903,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
     card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    
+
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
 
@@ -906,37 +921,37 @@ class FlipMode extends Component {
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
 
-    const get_backContent = this.state.contentsList.find((item)=>item._id === prevId)
-    console.log(get_backContent)
+    const get_backContent = this.state.contentsList.find((item) => item._id === prevId);
+    console.log(get_backContent);
     this.setState(
       {
         backContents: [get_backContent],
-        prevIdIndex: this.state.prevIdIndex -1,
-        nextIdIndex: this.state.nextIdIndex -1,
-        currentCardId: prevId
+        prevIdIndex: this.state.prevIdIndex - 1,
+        nextIdIndex: this.state.nextIdIndex - 1,
+        currentCardId: prevId,
       },
       function () {
         this.stopTimerTotal();
         this.resetTimer();
       }
     );
-  }
+  };
   nextCardClick = () => {
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
     const now = new Date();
 
-    console.log("next card click")
+    console.log("next card click");
     const backCardIds = JSON.parse(sessionStorage.getItem("study_log"));
-    const nextIdIndex = this.state.nextIdIndex
-    if(backCardIds[nextIdIndex] === undefined){
-      return alert("이전모드 다음 카드가 없습니다.")
+    const nextIdIndex = this.state.nextIdIndex;
+    if (backCardIds[nextIdIndex] === undefined) {
+      return alert("이전모드 다음 카드가 없습니다.");
     } else {
-      var nextId = backCardIds[nextIdIndex].card_id
-      var currentId = backCardIds[nextIdIndex-1].card_id
+      var nextId = backCardIds[nextIdIndex].card_id;
+      var currentId = backCardIds[nextIdIndex - 1].card_id;
     }
-    
-    console.log(nextIdIndex)
-    console.log(nextId)
+
+    console.log(nextIdIndex);
+    console.log(nextId);
 
     const selectedIndex = card_details_session.findIndex((item, index) => {
       return item._id === currentId;
@@ -947,7 +962,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.recent_select_time = now;
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
     card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    
+
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
 
@@ -964,26 +979,26 @@ class FlipMode extends Component {
     sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
     const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
     console.log("cardlist_to_send", cardlist_to_send);
-    
-    const get_backContent = this.state.contentsList.find((item)=>item._id === nextId)
-    console.log(get_backContent)
+
+    const get_backContent = this.state.contentsList.find((item) => item._id === nextId);
+    console.log(get_backContent);
     this.setState(
       {
         backContents: [get_backContent],
-        prevIdIndex: this.state.prevIdIndex +1,
-        nextIdIndex: this.state.nextIdIndex +1,
-        currentCardId: nextId
+        prevIdIndex: this.state.prevIdIndex + 1,
+        nextIdIndex: this.state.nextIdIndex + 1,
+        currentCardId: nextId,
       },
       function () {
         this.stopTimerTotal();
         this.resetTimer();
       }
     );
-  }
+  };
   render() {
     //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
-    if(this.state.pageStatus){
-      if(this.state.pageStatus === "normal"){
+    if (this.state.pageStatus) {
+      if (this.state.pageStatus === "normal") {
         var content = (
           <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
             <Button width="150px" onClick={() => this.onClickInterval("pass", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
@@ -1000,8 +1015,8 @@ class FlipMode extends Component {
             </Button>
           </div>
         );
-      } else if(this.state.pageStatus === "back"){
-        if(this.state.currentCardId){
+      } else if (this.state.pageStatus === "back") {
+        if (this.state.currentCardId) {
           //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
           content = (
             <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
@@ -1018,16 +1033,10 @@ class FlipMode extends Component {
         }
       }
     }
-    
 
-    
-    
-    
-
-    
-    if(this.state.backContents.length > 0){
+    if (this.state.backContents.length > 0) {
       const contents = this.state.backContents[0];
-      var content_id = contents._id
+      var content_id = contents._id;
       var back_first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       var back_second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
     }
@@ -1054,8 +1063,7 @@ class FlipMode extends Component {
           </Button>
         </>
       );
-      var thisStatus = this.state.cardStatus
-      
+      var thisStatus = this.state.cardStatus;
 
       var first_face_data = contents.contents.face1.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
       var second_face_data = contents.contents.face2.map((item) => <FroalaEditorView key={this.getKey()} model={item} />);
@@ -1067,14 +1075,11 @@ class FlipMode extends Component {
         var long_nick = level_config.restudy_option.long.nick;
         var short_on_off = level_config.restudy_option.short.on_off;
         var long_on_off = level_config.restudy_option.long.on_off;
-        if(this.state.getKnowTime){
-          var knowTimeValue = this.state.getKnowTime
+        if (this.state.getKnowTime) {
+          var knowTimeValue = this.state.getKnowTime;
           var time_next = knowTimeValue.time.toFixed(2);
           var time_unit = knowTimeValue.unit;
         }
-        
-
-        
       }
     }
 
@@ -1094,7 +1099,8 @@ class FlipMode extends Component {
               </ul>
             </li>
             <li>
-              <Button style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>{thisStatus}
+              <Button style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>
+              {thisStatus}
             </li>
           </ul>
           <div style={clickCount}>{this.state.clickCount}</div>
@@ -1152,99 +1158,108 @@ class FlipMode extends Component {
                   카드
                 </Button>
 
-                
-                {this.state.cardStatus === null && <>
-                {short_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                    {short_nick}({short_period})
-                  </Button>
-                )}
-                {long_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                    {long_nick}({long_period})
-                  </Button>
+                {this.state.cardStatus === null && (
+                  <>
+                    {short_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                        {short_nick}({short_period})
+                      </Button>
+                    )}
+                    {long_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                        {long_nick}({long_period})
+                      </Button>
+                    )}
+
+                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                      ok!이제그만/{time_next}
+                      {time_unit}
+                    </Button>
+                  </>
                 )}
 
-                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만/{time_next}
-                  {time_unit}
-                </Button>
-                </>}
+                {this.state.cardStatus === "short" && (
+                  <>
+                    {short_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                        {short_nick}({short_period})
+                      </Button>
+                    )}
+                    {long_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                        {long_nick}({long_period})
+                      </Button>
+                    )}
 
-                {this.state.cardStatus === "short" && <>
-                {short_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                    {short_nick}({short_period})
-                  </Button>
-                )}
-                {long_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                    {long_nick}({long_period})
-                  </Button>
-                )}
-
-                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만/{time_next}
-                  {time_unit}
-                </Button>
-                </>}
-
-                {this.state.cardStatus === "long" && <>
-                {short_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                    {short_nick}({short_period})
-                  </Button>
-                )}
-                {long_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                    {long_nick}({long_period})
-                  </Button>
+                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                      ok!이제그만/{time_next}
+                      {time_unit}
+                    </Button>
+                  </>
                 )}
 
-                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만/{time_next}
-                  {time_unit}
-                </Button>
-                </>}
+                {this.state.cardStatus === "long" && (
+                  <>
+                    {short_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                        {short_nick}({short_period})
+                      </Button>
+                    )}
+                    {long_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                        {long_nick}({long_period})
+                      </Button>
+                    )}
 
-                {this.state.cardStatus === "know" && <>
-                {short_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                    {short_nick}({short_period})
-                  </Button>
-                )}
-                {long_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                    {long_nick}({long_period})
-                  </Button>
-                )}
-
-                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만/{time_next}
-                  {time_unit}
-                </Button>
-                </>}
-
-                {this.state.cardStatus === "restore" && <>
-                {short_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                    {short_nick}({short_period})
-                  </Button>
-                )}
-                {long_on_off === "on" && (
-                  <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                    {long_nick}({long_period})
-                  </Button>
+                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                      ok!이제그만/{time_next}
+                      {time_unit}
+                    </Button>
+                  </>
                 )}
 
-                <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                  ok!이제그만/{time_next}
-                  {time_unit}
-                </Button>
-                </>}
+                {this.state.cardStatus === "know" && (
+                  <>
+                    {short_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                        {short_nick}({short_period})
+                      </Button>
+                    )}
+                    {long_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                        {long_nick}({long_period})
+                      </Button>
+                    )}
+
+                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                      ok!이제그만/{time_next}
+                      {time_unit}
+                    </Button>
+                  </>
+                )}
+
+                {this.state.cardStatus === "restore" && (
+                  <>
+                    {short_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
+                        {short_nick}({short_period})
+                      </Button>
+                    )}
+                    {long_on_off === "on" && (
+                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
+                        {long_nick}({long_period})
+                      </Button>
+                    )}
+
+                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
+                      ok!이제그만/{time_next}
+                      {time_unit}
+                    </Button>
+                  </>
+                )}
                 {this.state.cardStatus === "hold" && <>{restore_buttons}</>}
                 {this.state.cardStatus === "completed" && <>{restore_buttons}</>}
-                
+
                 <Popover placement="bottomLeft" content={content} trigger="click">
                   <Button size="small" width="35px" style={{ ...buttonDefault, height: "32px" }}>
                     ...
@@ -1272,7 +1287,7 @@ class FlipMode extends Component {
                   <br />
                   카드
                 </Button>
-                <Button onClick={()=>this.onClickBack(content_id)} width="200px" style={{ ...buttonDefault }}>
+                <Button onClick={() => this.onClickBack(content_id)} width="200px" style={{ ...buttonDefault }}>
                   원 위치에서 학습 이어하기
                 </Button>
                 <Popover placement="bottomLeft" content={content} title="..." trigger="click">
