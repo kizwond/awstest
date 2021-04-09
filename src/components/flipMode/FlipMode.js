@@ -30,6 +30,7 @@ class FlipMode extends Component {
       contents: [],
       backContents: [],
       contentsList: [],
+      getKnowTime:''
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -52,13 +53,13 @@ class FlipMode extends Component {
 
     const level_config = JSON.parse(sessionStorage.getItem("level_config"));
 
-    // const retention_count_curve_type = level_config[0].retention_count_curve.type;
-    // const retention_count_curve_a = level_config[0].retention_count_curve.a;
-    // const retention_count_curve_b = level_config[0].retention_count_curve.b;
     const sensitivity = level_config[0].sensitivity / 100;
     const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
-    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    // const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
     const level = card_details_session[selectedIndex].detail_status.level;
+    const recent_know_time_tmp = card_details_session[selectedIndex].detail_status.recent_know_time;
+    const recent_know_time = Date.parse(recent_know_time_tmp);
 
     if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
       var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
@@ -69,12 +70,23 @@ class FlipMode extends Component {
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
       var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     } else {
-      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      console.log(now_mili_convert)
+      console.log(current_lev_accu_study_time)
+      // let time_avg = ((now_mili_convert - current_lev_accu_study_time) /3600000) / (current_lev_study_times+1);
+      let time_avg = ((current_lev_accu_study_time/ (current_lev_study_times+1) - recent_know_time) /3600000) ;
+      console.log('time_avg',time_avg)
+
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
+      // if (level_next<0){
+      //   level_next=0
+      // } else if(level_next>10){
+      //   level_next=10
+      // }
+      console.log('level_next',level_next)
     }
-
+    console.log("-----------------------",level_next)
     const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
-
+    console.log(time_next)
     if (time_next > 24) {
       var time = time_next / 24;
       var unit = "days";
@@ -82,7 +94,9 @@ class FlipMode extends Component {
       time = time_next;
       unit = "hours";
     }
-    return { time: time, unit: unit };
+    return (this.setState({
+      getKnowTime :{ time: time, unit: unit }
+    }));
   };
 
   startTimer = () => {
@@ -221,6 +235,7 @@ class FlipMode extends Component {
             cardStatus:status
           },
           function () {
+            this.getKnowTime();
             this.stopTimerTotal();
             this.resetTimer();
           }
@@ -289,6 +304,7 @@ class FlipMode extends Component {
             cardStatus:status
           },
           function () {
+            this.getKnowTime();
             this.stopTimerTotal();
             this.resetTimer();
           }
@@ -339,6 +355,7 @@ class FlipMode extends Component {
               cardStatus:status
             },
             function () {
+              this.getKnowTime();
               this.stopTimerTotal();
               this.resetTimer();
             }
@@ -652,9 +669,11 @@ class FlipMode extends Component {
 
     const sensitivity = level_config[0].sensitivity / 100;
     const current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times;
-    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time;
+    const current_lev_accu_study_time = card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
     const level = card_details_session[selectedIndex].detail_status.level;
-
+    const recent_know_time_tmp = card_details_session[selectedIndex].detail_status.recent_know_time;
+    const recent_know_time = Date.parse(recent_know_time_tmp);
+    
     if (card_details_session[selectedIndex].detail_status.current_lev_study_times <= 20) {
       var modified_retention = level_config[0].retention["t" + (card_details_session[selectedIndex].detail_status.current_lev_study_times + 1)];
     } else {
@@ -664,7 +683,8 @@ class FlipMode extends Component {
     if (card_details_session[selectedIndex].detail_status.recent_know_time === null) {
       var level_next = level + sensitivity * (Math.log((24 * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     } else {
-      const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      // const time_avg = (now_mili_convert - current_lev_accu_study_time) / current_lev_study_times;
+      let time_avg = ((current_lev_accu_study_time/ (current_lev_study_times+1) - recent_know_time) /3600000) ;
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
     }
 
@@ -692,8 +712,8 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
     card_details_session[selectedIndex].detail_status.former_status_in_session = card_details_session[selectedIndex].detail_status.status_in_session;
     card_details_session[selectedIndex].detail_status.status_in_session = "off";
-    card_details_session[selectedIndex].detail_status.recent_stay_hour = 10;
-    card_details_session[selectedIndex].detail_status.total_stay_hour = 10;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+      card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
 
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
@@ -1048,10 +1068,14 @@ class FlipMode extends Component {
         var long_nick = level_config.restudy_option.long.nick;
         var short_on_off = level_config.restudy_option.short.on_off;
         var long_on_off = level_config.restudy_option.long.on_off;
-        var knowTimeValue = this.getKnowTime();
+        if(this.state.getKnowTime){
+          var knowTimeValue = this.state.getKnowTime
+          var time_next = knowTimeValue.time.toFixed(2);
+          var time_unit = knowTimeValue.unit;
+        }
+        
 
-        var time_next = knowTimeValue.time.toFixed(2);
-        var time_unit = knowTimeValue.unit;
+        
       }
     }
 
