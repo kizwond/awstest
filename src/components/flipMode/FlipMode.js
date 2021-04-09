@@ -459,6 +459,117 @@ class FlipMode extends Component {
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
+
+  backRestore = (id, selectedIndex) => {
+    this.setState((prevState) => ({
+      clickCount: prevState.clickCount + 1,
+    }));
+
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    const now = new Date();
+
+    card_details_session[selectedIndex].detail_status.recent_selection = "restore";
+    if (card_details_session[selectedIndex].detail_status.recent_study_time === null) {
+      card_details_session[selectedIndex].status = "yet";
+    } else {
+      card_details_session[selectedIndex].status = "ing";
+    }
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].detail_status.recent_study_result;
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
+    card_details_session[selectedIndex].detail_status.recent_study_result = "restore";
+    card_details_session[selectedIndex].detail_status.status_in_session = "on";
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    
+    //업데이트된 학습정보 세션스토리지에 다시 저장
+    sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
+
+    const get_backContent = this.state.contentsList.find((item) => item._id === id);
+    console.log(get_backContent);
+    this.setState(
+      {
+        backContents: [get_backContent],
+        currentCardId: id,
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
+
+  }
+
+  backHoldOrCompleted = (id, selectedIndex, status) => {
+    this.setState((prevState) => ({
+      clickCount: prevState.clickCount + 1,
+    }));
+
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    const now = new Date();
+    const now_mili_convert = Date.parse(now);
+
+    card_details_session[selectedIndex].former_status = card_details_session[selectedIndex].status;
+    card_details_session[selectedIndex].status = status;
+    card_details_session[selectedIndex].detail_status.recent_study_result = status;
+    card_details_session[selectedIndex].detail_status.recent_study_time = now;
+    card_details_session[selectedIndex].detail_status.recent_selection = status;
+    card_details_session[selectedIndex].detail_status.recent_select_time = now;
+    card_details_session[selectedIndex].detail_status.status_in_session = "off";
+    card_details_session[selectedIndex].detail_status.session_study_times = card_details_session[selectedIndex].detail_status.session_study_times + 1;
+    card_details_session[selectedIndex].detail_status.current_lev_study_times = card_details_session[selectedIndex].detail_status.current_lev_study_times + 1;
+    card_details_session[selectedIndex].detail_status.current_lev_accu_study_time =
+      card_details_session[selectedIndex].detail_status.current_lev_accu_study_time + now_mili_convert;
+    card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
+    card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
+    card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
+    
+    //업데이트된 학습정보 세션스토리지에 다시 저장
+    sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+
+    //서버에 보내기 위한 학습정보 리스트 생성
+    const updateThis = card_details_session[selectedIndex];
+    const getUpdateThis = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+
+    if (getUpdateThis) {
+      var finalUpdate = getUpdateThis.concat(updateThis);
+    } else {
+      finalUpdate = [updateThis];
+    }
+
+    sessionStorage.setItem("cardlist_to_send", JSON.stringify(finalUpdate));
+    const cardlist_to_send = JSON.parse(sessionStorage.getItem("cardlist_to_send"));
+    console.log("cardlist_to_send", cardlist_to_send);
+
+    const get_backContent = this.state.contentsList.find((item) => item._id === id);
+    console.log(get_backContent);
+    this.setState(
+      {
+        backContents: [get_backContent],
+        currentCardId: id,
+      },
+      function () {
+        this.stopTimerTotal();
+        this.resetTimer();
+      }
+    );
+
+  }
+
+
   onClickInterval = (status, interval) => {
     const current_seq = sessionStorage.getItem("current_seq");
     this.setState((prevState) => ({
@@ -1018,18 +1129,41 @@ class FlipMode extends Component {
       } else if (this.state.pageStatus === "back") {
         if (this.state.currentCardId) {
           //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
-          content = (
-            <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-              <Button width="150px" onClick={() => this.onClickInterval("hold", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-                <span style={{ fontSize: "15px" }}>보류</span>
-                <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
-              </Button>
-              <Button width="150px" onClick={() => this.onClickInterval("completed", 0)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
-                <span style={{ fontSize: "15px" }}>졸업</span>
-                <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
-              </Button>
-            </div>
-          );
+          const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+          const selectedInfo= card_details_session.find((item, index) => {
+            return item._id === this.state.currentCardId;
+          });
+          const selectedIndex= card_details_session.findIndex((item, index) => {
+            return item._id === this.state.currentCardId;
+          });
+
+          const thisStatus = selectedInfo.status
+          if(thisStatus === "hold" || thisStatus === "completed"){
+            content = (
+              <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                <Button width="150px" onClick={() => this.backRestore(this.state.currentCardId,selectedIndex)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                  <span style={{ fontSize: "15px" }}>복원</span>
+                  <span style={{ fontSize: "10px" }}> 미학습 또는 학습중으로</span>
+                </Button>
+              </div>
+            );
+          } else {
+            content = (
+              <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                <Button width="150px" onClick={() => this.backHoldOrCompleted(this.state.currentCardId,selectedIndex,"hold")} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                  <span style={{ fontSize: "15px" }}>보류</span>
+                  <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
+                </Button>
+                <Button width="150px" onClick={() => this.backHoldOrCompleted(this.state.currentCardId,selectedIndex,"completed")} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                  <span style={{ fontSize: "15px" }}>졸업</span>
+                  <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
+                </Button>
+              </div>
+            );
+          }
+          
+
+          
         }
       }
     }

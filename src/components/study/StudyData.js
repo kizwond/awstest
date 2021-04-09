@@ -54,9 +54,14 @@ class StudySettingModal extends Component {
         key: 'need_study_time',
       },
       {
-        title: '마지막선택난이도',
-        dataIndex: 'recent_difficulty',
-        key: 'recent_difficulty',
+        title: 'recent_selection',
+        dataIndex: 'recent_selection',
+        key: 'recent_selection',
+      },
+      {
+        title: 'recent_study_result',
+        dataIndex: 'recent_study_result',
+        key: 'recent_study_result',
       },
       {
         title: '총학습횟수',
@@ -70,23 +75,13 @@ class StudySettingModal extends Component {
       },
       {
         title: '총학습시간',
-        dataIndex: 'total_study_hour',
-        key: 'total_study_hour',
+        dataIndex: 'total_stay_hour',
+        key: 'total_stay_hour',
       },
       {
         title: '최근학습시간',
-        dataIndex: 'recent_study_hour',
-        key: 'recent_study_hour',
-      },
-      {
-        title: '획득경험치',
-        dataIndex: 'exp_gained',
-        key: 'exp_gained',
-      },
-      {
-        title: '누적경험치',
-        dataIndex: 'exp_stacked',
-        key: 'exp_stacked',
+        dataIndex: 'recent_stay_hour',
+        key: 'recent_stay_hour',
       },
       {
         title: '현재레벨',
@@ -105,13 +100,12 @@ class StudySettingModal extends Component {
         card_type : item.type,
         recent_study_time: item.detail_status.recent_study_time,
         need_study_time: item.detail_status.need_study_time,
-        recent_difficulty: item.detail_status.recent_difficulty,
+        recent_selection: item.detail_status.recent_selection,
+        recent_study_result: item.detail_status.recent_study_result,
         total_study_times: item.detail_status.total_study_times,
         current_lev_study_times: item.detail_status.current_lev_study_times,
-        total_study_hour: item.detail_status.total_study_hour,
-        recent_study_hour: item.detail_status.recent_study_hour,
-        exp_gained: item.detail_status.exp_gained,
-        exp_stacked: item.detail_status.exp_stacked,
+        total_stay_hour: item.detail_status.total_stay_hour,
+        recent_stay_hour: item.detail_status.recent_stay_hour,
         level: item.detail_status.level,
       }))
       console.log(data)
