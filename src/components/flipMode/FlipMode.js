@@ -74,16 +74,15 @@ class FlipMode extends Component {
       console.log(current_lev_accu_study_time)
       // let time_avg = ((now_mili_convert - current_lev_accu_study_time) /3600000) / (current_lev_study_times+1);
       let time_avg = ((current_lev_accu_study_time/ (current_lev_study_times+1) - recent_know_time) /3600000) ;
+      // 경과시간이 30분보다 작으면, 30분으로 맞춰준다.
+      if (time_avg<0.5){time_avg=0.5}
       console.log('time_avg',time_avg)
 
       level_next = level + sensitivity * (Math.log((time_avg * Math.log(0.8)) / Math.log(modified_retention)) / Math.log(2) + 1 - level);
-      // if (level_next<0){
-      //   level_next=0
-      // } else if(level_next>10){
-      //   level_next=10
-      // }
-      console.log('level_next',level_next)
-    }
+      // 레벨이 너무 낮거나 높으면 보정해준다.
+      if (level_next<0){level_next=0
+      } else if(level_next>10){level_next=10}    
+      }
     console.log("-----------------------",level_next)
     const time_next = (Math.pow(2, level_next - 1) * Math.log(0.8)) / Math.log(0.8);
     console.log(time_next)
