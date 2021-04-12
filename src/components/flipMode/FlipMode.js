@@ -31,6 +31,7 @@ class FlipMode extends Component {
       backContents: [],
       contentsList: [],
       getKnowTime: "",
+      confirmOn:"ask"
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -318,22 +319,27 @@ class FlipMode extends Component {
         sessionStorage.setItem("current_seq", Number(current_seq) + 1);
         const willStudyCards = card_details_session.filter((item) => item.detail_status.status_in_session === "on" && item.detail_status.need_study_time_tmp === null);
         //현재순서부터 10개의 카드를 다시 요청해라.
-        const temp = [];
+        let temp = [];
         const seqArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        console.log(willStudyCards)
         if (willStudyCards.length < 10) {
           const willStudyIds = [];
           for (var i = 0; i < willStudyCards.length; i++) {
             willStudyIds.push(willStudyCards[i]._id);
           }
-          temp.concat(willStudyIds);
+          console.log(willStudyIds)
+          temp = temp.concat(willStudyIds);
+          console.log(temp)
         } else {
           const new_temp = seqArray.map((item) => {
             return willStudyCards[item]._id;
           });
-          temp.concat(new_temp);
+          temp = temp.concat(new_temp);
         }
+        console.log(temp)
 
         const ids = temp;
+        console.log(ids)
         await axios
           .post("api/studyexecute/get-studying-cards", {
             card_ids: ids,
@@ -738,11 +744,103 @@ class FlipMode extends Component {
         });
       } else {
         if (card_details_session.length === Number(current_seq)) {
-          this.finishStudy();
+
+          if(this.state.confirmOn === "ask"){
+           this.showConfirm(this.confirmOn, this.getContinueContents)
+          } else if(this.state.confirmOn === "more"){
+              console.log("more to come")
+              this.getContinueContents()
+          } else {
+            this.finishStudy();
+          }
+
         } else {
           this.getContents();
         }
       }
+    }
+  };
+  confirmOn = () => {
+    this.setState({
+      confirmOn : "more"
+    })
+  }
+  showConfirm = (confirmOn, getContinueContents) => {
+    confirm({
+      title: '학습대상 카드가 모두 소진되었습니다. 복습시점이 도래하지 않은 카드를 계속해서 공부하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      content: '',
+      onOk() {
+        console.log('OK');
+        confirmOn()
+        getContinueContents()
+      },
+      onCancel() {
+        this.finishStudy();
+      },
+    });
+  }
+
+  getContinueContents = async () => {
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    console.log(card_details_session);
+    const now = new Date();
+
+    //복습대상 카드를 찾자
+    const reviewCards = card_details_session.filter((item) => item.detail_status.need_study_time_tmp !== null && new Date(item.detail_status.need_study_time_tmp) > now);
+
+    console.log(reviewCards);
+    if (reviewCards) {
+      reviewCards.sort(function (a, b) {
+        return a.detail_status.need_study_time_tmp > b.detail_status.need_study_time_tmp
+          ? 1
+          : a.detail_status.need_study_time_tmp < b.detail_status.need_study_time_tmp
+          ? -1
+          : 0;
+      });
+      console.log("after sort:", reviewCards);
+    }
+    if (reviewCards.length > 0) {
+      console.log("here-----------------------------------------");
+      //복습대상 카드의 아이디를 배열로
+      const reviewCardIds = reviewCards.map((item) => item._id);
+      console.log(reviewCardIds);
+      //서버에 해당 아이디들로 컨텐츠를 요청해라.
+      await axios
+        .post("api/studyexecute/get-studying-cards", {
+          card_ids: reviewCardIds,
+        })
+        .then((res) => {
+          console.log("첫번째 카드 컨텐츠 res : ", res.data);
+          const contents = this.state.contentsList.concat(res.data.cards);
+          this.setState({
+            contentsList: contents,
+          });
+        });
+
+      const card_id1 = reviewCardIds[0];
+      console.log(card_id1);
+      const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+      const selected_status = card_details_session.find((item, index) => {
+        return item._id === card_id1;
+      });
+      const status = selected_status.detail_status.recent_study_result;
+      const contentForNow = this.state.contentsList.find((item) => item._id === card_id1);
+      console.log(contentForNow);
+      this.setState(
+        {
+          contents: [contentForNow],
+          cardStatus: status,
+        },
+        function () {
+          this.getKnowTime();
+          this.stopTimerTotal();
+          this.resetTimer();
+        }
+      );
+    } else {
+      alert("세션내에 복습예정인 카드들도 없구먼~ 학습결과 화면으로 가는구먼")
+      this.finishStudy();
     }
   };
 
@@ -842,6 +940,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].status = "ing";
     card_details_session[selectedIndex].detail_status.recent_know_time = now;
     card_details_session[selectedIndex].detail_status.need_study_time = need_study_time;
+    card_details_session[selectedIndex].detail_status.need_study_time_tmp = null;
     card_details_session[selectedIndex].detail_status.former_status_in_session = card_details_session[selectedIndex].detail_status.status_in_session;
     card_details_session[selectedIndex].detail_status.status_in_session = "off";
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
@@ -866,7 +965,16 @@ class FlipMode extends Component {
     this.sendStudyData();
     //학습데이터 처리 후 새카드 불러오기
     if (card_details_session.length === Number(current_seq)) {
-      this.finishStudy();
+
+       if(this.state.confirmOn === "ask"){
+           this.showConfirm(this.confirmOn, this.getContinueContents)
+          } else if(this.state.confirmOn === "more"){
+              console.log("more to come")
+              this.getContinueContents()
+          } else {
+            this.finishStudy();
+          }
+
     } else {
       this.getContents();
     }
@@ -1110,6 +1218,23 @@ class FlipMode extends Component {
       }
     );
   };
+  shuffleCards = () => {
+    console.log("카드섞기~")
+    const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
+    for (let i = card_details_session.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)  
+      [card_details_session[i], card_details_session[j]] = [card_details_session[j], card_details_session[i]];
+    }
+    for(var i = 0; i < card_details_session.length; i++) {
+      card_details_session[i].detail_status.need_study_time_tmp = null
+    }
+    
+    sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
+    sessionStorage.setItem("current_seq", -1);
+
+    this.getContentsList();
+
+  }
   render() {
     //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
     if (this.state.pageStatus) {
@@ -1327,7 +1452,7 @@ class FlipMode extends Component {
                 </div>
               </div>
               <div style={buttonDiv}>
-                <Button width="35px" onClick={() => this.onClickInterval("back", 0)} style={{ ...buttonDefault, padding: 0, overflow: "hidden", lineHeight: "13px" }}>
+                <Button width="35px" onClick={() => this.onClickInterval("back", 0)} style={{ ...buttonDefault, padding: 0, lineHeight: "13px" }}>
                   이전
                   <br />
                   카드
@@ -1387,6 +1512,11 @@ class FlipMode extends Component {
                     ...
                   </Button>
                 </Popover>
+                <Button size="small" width="35px" onClick={this.shuffleCards} style={{ ...buttonDefault, height: "32px",lineHeight: "13px" }}>
+                카드
+                  <br />
+                  섞기
+                  </Button>
               </div>
             </div>
           ) : (
