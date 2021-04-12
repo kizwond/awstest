@@ -584,6 +584,10 @@ class FlipMode extends Component {
       var next_review_time = interval;
     } else if (status === "long") {
       next_review_time = interval;
+    } else if (status === "veryshort") {
+      next_review_time = interval;
+    } else if (status === "verylong") {
+      next_review_time = interval;
     }
     const now_mili_convert = Date.parse(now);
 
@@ -617,7 +621,7 @@ class FlipMode extends Component {
     }
 
     //학습정보 업데이트
-    if (status === "short" || status === "long") {
+    if (status === "short" || status === "long" || status === "veryshort" || status === "verylong") {
       card_details_session[selectedIndex].detail_status.recent_study_time = now;
       card_details_session[selectedIndex].detail_status.recent_select_time = now;
       card_details_session[selectedIndex].detail_status.need_study_time = review_date;
@@ -1205,10 +1209,16 @@ class FlipMode extends Component {
         const level_config = this.state.level_config[0];
         var short_period = level_config.restudy_option.short.period;
         var long_period = level_config.restudy_option.long.period;
+        var very_short_period = level_config.restudy_option.veryshort.period;
+        var very_long_period = level_config.restudy_option.verylong.period;
         var short_nick = level_config.restudy_option.short.nick;
         var long_nick = level_config.restudy_option.long.nick;
+        var very_short_nick = level_config.restudy_option.veryshort.nick;
+        var very_long_nick = level_config.restudy_option.verylong.nick;
         var short_on_off = level_config.restudy_option.short.on_off;
         var long_on_off = level_config.restudy_option.long.on_off;
+        var very_short_on_off = level_config.restudy_option.veryshort.on_off;
+        var very_long_on_off = level_config.restudy_option.verylong.on_off;
         if (this.state.getKnowTime) {
           var knowTimeValue = this.state.getKnowTime;
           var time_next = knowTimeValue.time.toFixed(2);
@@ -1216,7 +1226,38 @@ class FlipMode extends Component {
         }
       }
     }
-
+    const selectionButtons = (
+      <>
+        {very_short_on_off === "on" && (
+          <Button onClick={() => this.onClickInterval("veryshort", short_period)} width="140px" style={{ ...buttonDefault }}>
+            {very_short_nick}({very_short_period})
+          </Button>
+        )}
+        {short_on_off === "on" && (
+          <Button onClick={() => this.onClickInterval("short", short_period)} width="140px" style={{ ...buttonDefault }}>
+            {short_nick}({short_period})
+          </Button>
+        )}
+        {long_on_off === "on" && (
+          <Button onClick={() => this.onClickInterval("long", long_period)} width="140px" style={{ ...buttonDefault }}>
+            {long_nick}({long_period})
+          </Button>
+        )}
+        {very_long_on_off === "on" && (
+          <Button onClick={() => this.onClickInterval("verylong", long_period)} width="140px" style={{ ...buttonDefault }}>
+            {very_long_nick}({very_long_period})
+          </Button>
+        )}
+      </>
+    )
+    const rememberedButtons = (
+      <>
+        <Button onClick={this.onClickRemembered} width="140px" style={{ ...buttonDefault }}>
+          ok!이제그만/{time_next}
+          {time_unit}
+        </Button>
+      </>
+    )
     return (
       <div style={style_study_layout_container}>
         <div style={style_study_layout_top}>
@@ -1294,101 +1335,48 @@ class FlipMode extends Component {
 
                 {this.state.cardStatus === null && (
                   <>
-                    {short_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                        {short_nick}({short_period})
-                      </Button>
-                    )}
-                    {long_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                        {long_nick}({long_period})
-                      </Button>
-                    )}
-
-                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                      ok!이제그만/{time_next}
-                      {time_unit}
-                    </Button>
+                    {selectionButtons}
+                    {rememberedButtons}
                   </>
                 )}
 
                 {this.state.cardStatus === "short" && (
                   <>
-                    {short_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                        {short_nick}({short_period})
-                      </Button>
-                    )}
-                    {long_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                        {long_nick}({long_period})
-                      </Button>
-                    )}
-
-                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                      ok!이제그만/{time_next}
-                      {time_unit}
-                    </Button>
+                    {selectionButtons}
+                    {rememberedButtons}
                   </>
                 )}
 
                 {this.state.cardStatus === "long" && (
                   <>
-                    {short_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                        {short_nick}({short_period})
-                      </Button>
-                    )}
-                    {long_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                        {long_nick}({long_period})
-                      </Button>
-                    )}
-
-                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                      ok!이제그만/{time_next}
-                      {time_unit}
-                    </Button>
+                    {selectionButtons}
+                    {rememberedButtons}
+                  </>
+                )}
+                {this.state.cardStatus === "veryshort" && (
+                  <>
+                    {selectionButtons}
+                    {rememberedButtons}
+                  </>
+                )}
+                {this.state.cardStatus === "verylong" && (
+                  <>
+                    {selectionButtons}
+                    {rememberedButtons}
                   </>
                 )}
 
                 {this.state.cardStatus === "know" && (
                   <>
-                    {short_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                        {short_nick}({short_period})
-                      </Button>
-                    )}
-                    {long_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                        {long_nick}({long_period})
-                      </Button>
-                    )}
-
-                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                      ok!이제그만/{time_next}
-                      {time_unit}
-                    </Button>
+                    {selectionButtons}
+                    {rememberedButtons}
                   </>
                 )}
 
                 {this.state.cardStatus === "restore" && (
                   <>
-                    {short_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("short", short_period)} width="200px" style={{ ...buttonDefault }}>
-                        {short_nick}({short_period})
-                      </Button>
-                    )}
-                    {long_on_off === "on" && (
-                      <Button onClick={() => this.onClickInterval("long", long_period)} width="200px" style={{ ...buttonDefault }}>
-                        {long_nick}({long_period})
-                      </Button>
-                    )}
-
-                    <Button onClick={this.onClickRemembered} width="200px" style={{ ...buttonDefault }}>
-                      ok!이제그만/{time_next}
-                      {time_unit}
-                    </Button>
+                    {selectionButtons}
+                    {rememberedButtons}
                   </>
                 )}
                 {this.state.cardStatus === "hold" && <>{restore_buttons}</>}
@@ -1514,6 +1502,6 @@ const buttonDiv = {
   height: "70px",
   alignItems: "center",
   backgroundColor: "#e9e9e9",
-  padding: "10px 90px",
+  padding: "10px 60px",
   borderRadius: "0 0 10px 10px",
 };
