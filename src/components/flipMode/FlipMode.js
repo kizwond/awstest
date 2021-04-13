@@ -1245,11 +1245,11 @@ class FlipMode extends Component {
       return alert("선택하신 영역의 모든카드에 대해 학습중입니다. 추가 가능한 카드는 없습니다.");
     } else {
       const card_remained = total_selected - total_inserted;
-      this.showConfirm(total_selected, total_inserted, card_remained);
+      this.addCardShowConfirm(total_selected, total_inserted, card_remained);
     }
   };
 
-  showConfirm = (total_selected, total_inserted, card_remained) => {
+  addCardShowConfirm = (total_selected, total_inserted, card_remained) => {
     confirm({
       title: "학습할 카드를 추가하시겠습니까?",
       icon: <ExclamationCircleOutlined />,
