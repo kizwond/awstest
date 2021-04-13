@@ -275,7 +275,7 @@ class AddSellBookModalForRidi extends Component {
           <button onClick={this.uploadImgHandler}>업로드이미지</button>
           {this.state.book_cover_url_small && (
             <>
-              <img src={`${this.state.book_cover_url_small}`} alt="img" width="150px" style={{ marginTop: "10px" }} />
+              <img src={this.state.book_cover_url_small} alt="img" width="150px" style={{ marginTop: "10px" }} />
             </>
           )}
           <label style={{ display: "block", marginTop: "15px" }}>
