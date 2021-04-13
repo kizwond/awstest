@@ -31,7 +31,7 @@ class FlipMode extends Component {
       backContents: [],
       contentsList: [],
       getKnowTime: "",
-      confirmOn:"ask"
+      confirmOn: "ask",
     };
     this.keyCount = 0;
     this.getKey = this.getKey.bind(this);
@@ -322,25 +322,25 @@ class FlipMode extends Component {
         //현재순서부터 10개의 카드를 다시 요청해라.
         let temp = [];
         const seqArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        console.log(willStudyCards)
+        console.log(willStudyCards);
         if (willStudyCards.length < 10) {
           const willStudyIds = [];
           for (var i = 0; i < willStudyCards.length; i++) {
             willStudyIds.push(willStudyCards[i]._id);
           }
-          console.log(willStudyIds)
+          console.log(willStudyIds);
           temp = temp.concat(willStudyIds);
-          console.log(temp)
+          console.log(temp);
         } else {
           const new_temp = seqArray.map((item) => {
             return willStudyCards[item]._id;
           });
           temp = temp.concat(new_temp);
         }
-        console.log(temp)
+        console.log(temp);
 
         const ids = temp;
-        console.log(ids)
+        console.log(ids);
         await axios
           .post("api/studyexecute/get-studying-cards", {
             card_ids: ids,
@@ -466,7 +466,6 @@ class FlipMode extends Component {
 
   milliseconds = (h, m, s) => (h * 60 * 60 + m * 60 + s) * 1000;
 
-
   backRestore = (id, selectedIndex) => {
     this.setState((prevState) => ({
       clickCount: prevState.clickCount + 1,
@@ -487,7 +486,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.status_in_session = "on";
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
     card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    
+
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
 
@@ -517,8 +516,7 @@ class FlipMode extends Component {
         this.resetTimer();
       }
     );
-
-  }
+  };
 
   backHoldOrCompleted = (id, selectedIndex, status) => {
     this.setState((prevState) => ({
@@ -543,7 +541,7 @@ class FlipMode extends Component {
     card_details_session[selectedIndex].detail_status.total_study_times = card_details_session[selectedIndex].detail_status.total_study_times + 1;
     card_details_session[selectedIndex].detail_status.recent_stay_hour = this.state.time;
     card_details_session[selectedIndex].detail_status.total_stay_hour = card_details_session[selectedIndex].detail_status.total_stay_hour + this.state.time;
-    
+
     //업데이트된 학습정보 세션스토리지에 다시 저장
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
 
@@ -573,9 +571,7 @@ class FlipMode extends Component {
         this.resetTimer();
       }
     );
-
-  }
-
+  };
 
   onClickInterval = (status, interval) => {
     const current_seq = sessionStorage.getItem("current_seq");
@@ -745,16 +741,14 @@ class FlipMode extends Component {
         });
       } else {
         if (card_details_session.length === Number(current_seq)) {
-
-          if(this.state.confirmOn === "ask"){
-           this.showConfirm(this.confirmOn, this.getContinueContents)
-          } else if(this.state.confirmOn === "more"){
-              console.log("more to come")
-              this.getContinueContents()
+          if (this.state.confirmOn === "ask") {
+            this.showConfirm(this.confirmOn, this.getContinueContents);
+          } else if (this.state.confirmOn === "more") {
+            console.log("more to come");
+            this.getContinueContents();
           } else {
             this.finishStudy();
           }
-
         } else {
           this.getContents();
         }
@@ -763,24 +757,24 @@ class FlipMode extends Component {
   };
   confirmOn = () => {
     this.setState({
-      confirmOn : "more"
-    })
-  }
+      confirmOn: "more",
+    });
+  };
   showConfirm = (confirmOn, getContinueContents) => {
     confirm({
-      title: '학습대상 카드가 모두 소진되었습니다. 복습시점이 도래하지 않은 카드를 계속해서 공부하시겠습니까?',
+      title: "학습대상 카드가 모두 소진되었습니다. 복습시점이 도래하지 않은 카드를 계속해서 공부하시겠습니까?",
       icon: <ExclamationCircleOutlined />,
-      content: '',
+      content: "",
       onOk() {
-        console.log('OK');
-        confirmOn()
-        getContinueContents()
+        console.log("OK");
+        confirmOn();
+        getContinueContents();
       },
       onCancel() {
         this.finishStudy();
       },
     });
-  }
+  };
 
   getContinueContents = async () => {
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
@@ -793,11 +787,7 @@ class FlipMode extends Component {
     console.log(reviewCards);
     if (reviewCards) {
       reviewCards.sort(function (a, b) {
-        return a.detail_status.need_study_time_tmp > b.detail_status.need_study_time_tmp
-          ? 1
-          : a.detail_status.need_study_time_tmp < b.detail_status.need_study_time_tmp
-          ? -1
-          : 0;
+        return a.detail_status.need_study_time_tmp > b.detail_status.need_study_time_tmp ? 1 : a.detail_status.need_study_time_tmp < b.detail_status.need_study_time_tmp ? -1 : 0;
       });
       console.log("after sort:", reviewCards);
     }
@@ -840,7 +830,7 @@ class FlipMode extends Component {
         }
       );
     } else {
-      alert("세션내에 복습예정인 카드들도 없구먼~ 학습결과 화면으로 가는구먼")
+      alert("세션내에 복습예정인 카드들도 없구먼~ 학습결과 화면으로 가는구먼");
       this.finishStudy();
     }
   };
@@ -966,16 +956,14 @@ class FlipMode extends Component {
     this.sendStudyData();
     //학습데이터 처리 후 새카드 불러오기
     if (card_details_session.length === Number(current_seq)) {
-
-       if(this.state.confirmOn === "ask"){
-           this.showConfirm(this.confirmOn, this.getContinueContents)
-          } else if(this.state.confirmOn === "more"){
-              console.log("more to come")
-              this.getContinueContents()
-          } else {
-            this.finishStudy();
-          }
-
+      if (this.state.confirmOn === "ask") {
+        this.showConfirm(this.confirmOn, this.getContinueContents);
+      } else if (this.state.confirmOn === "more") {
+        console.log("more to come");
+        this.getContinueContents();
+      } else {
+        this.finishStudy();
+      }
     } else {
       this.getContents();
     }
@@ -1220,63 +1208,67 @@ class FlipMode extends Component {
     );
   };
   shuffleCards = () => {
-    console.log("카드섞기~")
+    console.log("카드섞기~");
     const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
     for (let i = card_details_session.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)  
+      let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)
       [card_details_session[i], card_details_session[j]] = [card_details_session[j], card_details_session[i]];
     }
-    for(var i = 0; i < card_details_session.length; i++) {
-      card_details_session[i].detail_status.need_study_time_tmp = null
+    for (var i = 0; i < card_details_session.length; i++) {
+      card_details_session[i].detail_status.need_study_time_tmp = null;
     }
-    
+
     sessionStorage.setItem("cardlist_studying", JSON.stringify(card_details_session));
     sessionStorage.setItem("current_seq", -1);
 
     this.getContentsList();
-
-  }
+  };
   addCardsToStudy = () => {
-    console.log("addcardstostudy")
-    const num_cards = JSON.parse(sessionStorage.getItem("num_cards"))
-    const total_num_completed = num_cards.completed.total
-    const total_num_hold = num_cards.hold.total
-    const total_num_ing = num_cards.ing.total
-    const total_num_yet = num_cards.yet.total
+    console.log("addcardstostudy");
+    const num_cards = JSON.parse(sessionStorage.getItem("num_cards"));
+    console.log(num_cards)
+    const total_num_completed = num_cards.completed.selected;
+    const total_num_hold = num_cards.hold.selected;
+    const total_num_ing = num_cards.ing.selected;
+    const total_num_yet = num_cards.yet.selected;
 
-    const inserted_num_completed = num_cards.completed.selected
-    const inserted_num_hold = num_cards.hold.selected
-    const inserted_num_ing = num_cards.ing.selected
-    const inserted_num_yet = num_cards.yet.selected
+    const inserted_num_completed = num_cards.completed.inserted;
+    const inserted_num_hold = num_cards.hold.inserted;
+    const inserted_num_ing = num_cards.ing.inserted;
+    const inserted_num_yet = num_cards.yet.inserted;
 
-    const total_selected = total_num_completed +total_num_hold+total_num_ing+total_num_yet
-    const total_inserted = inserted_num_completed +inserted_num_hold+inserted_num_ing+inserted_num_yet
-    console.log(total_selected)
-    console.log(total_inserted)
-    if(total_selected === total_inserted) {
-      return alert("선택하신 영역의 모든카드에 대해 학습중입니다. 추가 가능한 카드는 없습니다.")
+    const total_selected = total_num_completed + total_num_hold + total_num_ing + total_num_yet;
+    const total_inserted = inserted_num_completed + inserted_num_hold + inserted_num_ing + inserted_num_yet;
+    console.log(total_selected);
+    console.log(total_inserted);
+    if (total_selected === total_inserted) {
+      return alert("선택하신 영역의 모든카드에 대해 학습중입니다. 추가 가능한 카드는 없습니다.");
     } else {
-      const card_remained = total_selected - total_inserted
-      this.showConfirm(total_selected, total_inserted,card_remained)
+      const card_remained = total_selected - total_inserted;
+      this.showConfirm(total_selected, total_inserted, card_remained);
     }
-    
-  }
+  };
 
-  showConfirm = (total_selected, total_inserted,card_remained) => {
+  showConfirm = (total_selected, total_inserted, card_remained) => {
     confirm({
-      title: '학습할 카드를 추가하시겠습니까?',
+      title: "학습할 카드를 추가하시겠습니까?",
       icon: <ExclamationCircleOutlined />,
-      okText: '예',
-      cancelText: '아니오',
-      content: [<span>현재 선택된 영역의 카드갯수는, <span style={{color:"blue"}}>{total_selected}</span>개, 투입된 카드는 <span style={{color:"blue"}}>{total_inserted}</span>개, 추가 가능한 카드는 <span style={{color:"blue"}}>{card_remained}</span>개 입니다.</span>],
+      okText: "예",
+      cancelText: "아니오",
+      content: [
+        <span>
+          현재 선택된 영역의 카드갯수는, <span style={{ color: "blue" }}>{total_selected}</span>개, 투입된 카드는 <span style={{ color: "blue" }}>{total_inserted}</span>개, 추가
+          가능한 카드는 <span style={{ color: "blue" }}>{card_remained}</span>개 입니다.
+        </span>,
+      ],
       onOk() {
-        console.log('OK');
+        console.log("OK");
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
     });
-  }
+  };
 
   render() {
     //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
@@ -1302,18 +1294,24 @@ class FlipMode extends Component {
         if (this.state.currentCardId) {
           //이전모드에서 드랍다운메뉴 => 이전모드에서는 카드의 상태에 따라 메뉴를 달리함. 카드가  학습중일때는 보류, 졸업. 카드가 보류, 완료 일때는 복원.
           const card_details_session = JSON.parse(sessionStorage.getItem("cardlist_studying"));
-          const selectedInfo= card_details_session.find((item, index) => {
+          const selectedInfo = card_details_session.find((item, index) => {
             return item._id === this.state.currentCardId;
           });
-          const selectedIndex= card_details_session.findIndex((item, index) => {
+          const selectedIndex = card_details_session.findIndex((item, index) => {
             return item._id === this.state.currentCardId;
           });
 
-          const thisStatus = selectedInfo.status
-          if(thisStatus === "hold" || thisStatus === "completed"){
+          const thisStatus = selectedInfo.status;
+          if (thisStatus === "hold" || thisStatus === "completed") {
             content = (
-              <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                <Button width="150px" onClick={() => this.backRestore(this.state.currentCardId,selectedIndex)} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+              <div
+                style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}
+              >
+                <Button
+                  width="150px"
+                  onClick={() => this.backRestore(this.state.currentCardId, selectedIndex)}
+                  style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}
+                >
                   <span style={{ fontSize: "15px" }}>복원</span>
                   <span style={{ fontSize: "10px" }}> 미학습 또는 학습중으로</span>
                 </Button>
@@ -1321,21 +1319,28 @@ class FlipMode extends Component {
             );
           } else {
             content = (
-              <div style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                <Button width="150px" onClick={() => this.backHoldOrCompleted(this.state.currentCardId,selectedIndex,"hold")} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+              <div
+                style={{ fontSize: "11px", height: "120px", fontFamily: `"Noto Sans KR", sans-serif`, display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}
+              >
+                <Button
+                  width="150px"
+                  onClick={() => this.backHoldOrCompleted(this.state.currentCardId, selectedIndex, "hold")}
+                  style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}
+                >
                   <span style={{ fontSize: "15px" }}>보류</span>
                   <span style={{ fontSize: "10px" }}> 복구시까지향후학습제외</span>
                 </Button>
-                <Button width="150px" onClick={() => this.backHoldOrCompleted(this.state.currentCardId,selectedIndex,"completed")} style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}>
+                <Button
+                  width="150px"
+                  onClick={() => this.backHoldOrCompleted(this.state.currentCardId, selectedIndex, "completed")}
+                  style={{ ...buttonDefault, padding: 0, textAlign: "left", paddingLeft: "10px" }}
+                >
                   <span style={{ fontSize: "15px" }}>졸업</span>
                   <span style={{ fontSize: "10px" }}> 만랩찍고향후학습제외</span>
                 </Button>
               </div>
             );
           }
-          
-
-          
         }
       }
     }
@@ -1417,7 +1422,7 @@ class FlipMode extends Component {
           </Button>
         )}
       </>
-    )
+    );
     const rememberedButtons = (
       <>
         <Button onClick={this.onClickRemembered} width="140px" style={{ ...buttonDefault }}>
@@ -1425,7 +1430,7 @@ class FlipMode extends Component {
           {time_unit}
         </Button>
       </>
-    )
+    );
     return (
       <div style={style_study_layout_container}>
         <div style={style_study_layout_top}>
@@ -1442,7 +1447,9 @@ class FlipMode extends Component {
               </ul>
             </li>
             <li>
-              <Button onClick={this.addCardsToStudy} style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>
+              <Button onClick={this.addCardsToStudy} style={{ height: "45px", borderRadius: "10px" }}>
+                학습카드추가
+              </Button>
               {thisStatus}
             </li>
           </ul>
@@ -1555,11 +1562,11 @@ class FlipMode extends Component {
                     ...
                   </Button>
                 </Popover>
-                <Button size="small" width="35px" onClick={this.shuffleCards} style={{ ...buttonDefault, height: "32px",lineHeight: "13px" }}>
-                카드
+                <Button size="small" width="35px" onClick={this.shuffleCards} style={{ ...buttonDefault, height: "32px", lineHeight: "13px" }}>
+                  카드
                   <br />
                   섞기
-                  </Button>
+                </Button>
               </div>
             </div>
           ) : (
