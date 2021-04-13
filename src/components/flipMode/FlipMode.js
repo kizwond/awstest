@@ -191,6 +191,7 @@ class FlipMode extends Component {
         console.log("뒤집기모드 최초 res : ", res.data);
         sessionStorage.setItem("cardlist_studying", JSON.stringify(res.data.cardlist_studying));
         sessionStorage.setItem("level_config", JSON.stringify(res.data.level_config));
+        sessionStorage.setItem("num_cards", JSON.stringify(res.data.num_cards));
         this.setState({
           cardlist_studying: res.data.cardlist_studying,
           level_config: res.data.level_config,
@@ -1235,6 +1236,48 @@ class FlipMode extends Component {
     this.getContentsList();
 
   }
+  addCardsToStudy = () => {
+    console.log("addcardstostudy")
+    const num_cards = JSON.parse(sessionStorage.getItem("num_cards"))
+    const total_num_completed = num_cards.completed.total
+    const total_num_hold = num_cards.hold.total
+    const total_num_ing = num_cards.ing.total
+    const total_num_yet = num_cards.yet.total
+
+    const inserted_num_completed = num_cards.completed.selected
+    const inserted_num_hold = num_cards.hold.selected
+    const inserted_num_ing = num_cards.ing.selected
+    const inserted_num_yet = num_cards.yet.selected
+
+    const total_selected = total_num_completed +total_num_hold+total_num_ing+total_num_yet
+    const total_inserted = inserted_num_completed +inserted_num_hold+inserted_num_ing+inserted_num_yet
+    console.log(total_selected)
+    console.log(total_inserted)
+    if(total_selected === total_inserted) {
+      return alert("선택하신 영역의 모든카드에 대해 학습중입니다. 추가 가능한 카드는 없습니다.")
+    } else {
+      const card_remained = total_selected - total_inserted
+      this.showConfirm(total_selected, total_inserted,card_remained)
+    }
+    
+  }
+
+  showConfirm = (total_selected, total_inserted,card_remained) => {
+    confirm({
+      title: '학습할 카드를 추가하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '예',
+      cancelText: '아니오',
+      content: [<span>현재 선택된 영역의 카드갯수는, <span style={{color:"blue"}}>{total_selected}</span>개, 투입된 카드는 <span style={{color:"blue"}}>{total_inserted}</span>개, 추가 가능한 카드는 <span style={{color:"blue"}}>{card_remained}</span>개 입니다.</span>],
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
   render() {
     //일반모드에서 드랍다운메뉴 => 일반모드에서는 카드의 상태에 따라 드랍다운이 비활성화 되고, 난이도선택버튼의 메뉴를 달리함.
     if (this.state.pageStatus) {
@@ -1399,7 +1442,7 @@ class FlipMode extends Component {
               </ul>
             </li>
             <li>
-              <Button style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>
+              <Button onClick={this.addCardsToStudy} style={{ height: "45px", borderRadius: "10px" }}>학습카드추가</Button>
               {thisStatus}
             </li>
           </ul>

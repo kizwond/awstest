@@ -11,25 +11,33 @@ const breakPoints = [
 ];
 
 function SimpleSlider({ sell_book_list, text }) {
-  const sellbooklist = sell_book_list.map((item) => {
-    return (
-      <MyCard
-        key={item._id}
-        title={item.book_info.title}
-        book_id={item._id}
-        description={item.book_info.author}
-        price={item.book_info.price}
-        pic={MyBookImage}
-        sell_book_list={sell_book_list}
-      />
-    );
-  });
+  // const sellbooklist = sell_book_list.map((item) => (
+  //   <MyCard
+  //     key={item._id}
+  //     title={item.book_info.title}
+  //     book_id={item._id}
+  //     description={item.book_info.author}
+  //     price={item.book_info.price}
+  //     pic={MyBookImage}
+  //     sell_book_list={sell_book_list}
+  //   />
+  // ));
   return (
     <>
       <h1 style={{ fontSize: "12px" }}>{text}</h1>
       <div>
         <Carousel breakPoints={breakPoints} pagination={false}>
-          {sellbooklist}
+          {sell_book_list.map((item) => (
+            <MyCard
+              key={item._id}
+              title={item.book_info.title}
+              book_id={item._id}
+              description={item.book_info.author}
+              price={item.book_info.price}
+              pic={MyBookImage}
+              sell_book_list={sell_book_list}
+            />
+          ))}
         </Carousel>
       </div>
     </>

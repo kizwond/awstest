@@ -9,7 +9,7 @@ import Register from "./components/account/Register";
 import StudyMain from "./components/study/StudyMain";
 import MyInfoMain from "./components/account/myInfo/MyInfoMain";
 import WritingMain from "./components/Write/Write";
-import BookStoreMain from "./components/bookStore/BookStoreMain";
+import BookStoreMain from "./components/bookStore/components/ReactRidi";
 import MentoringMain from "./components/mentoring/MentoringMain";
 import ChooseIndex from "./components/chooseIndex/ChooseIndex";
 import StudyFlip from "./components/flipMode/StudyFlip";

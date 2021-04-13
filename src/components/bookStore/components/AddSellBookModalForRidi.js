@@ -1,9 +1,11 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import React, { Component } from "react";
-import { Modal, Button } from "antd";
+import { Modal } from "antd";
 import axios from "axios";
 import Category from "../Category";
 
-class AddSellBookModal extends Component {
+class AddSellBookModalForRidi extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -197,19 +199,20 @@ class AddSellBookModal extends Component {
 
   render() {
     return (
-      <div style={{ fontSize: "12px" }}>
-        <Button style={{ marginLeft: "220px" }} type="primary" onClick={this.showModal}>
-          새 책 추가
-        </Button>
-        <Modal
-          title="새 책 추가"
-          visible={this.state.isModalVisible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          okText="새 책 만들기"
-          cancelText="취소"
-          afterClose={this.resetCheckbox}
+      <>
+        <button
+          css={css`
+            height: 30px;
+            color: white;
+            background: #1f8ce6;
+            padding: 0 16px;
+            border: 1px solid #99d1ff;
+          `}
+          onClick={this.showModal}
         >
+          새 책 추가
+        </button>
+        <Modal title="새 책 추가" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel} okText="새 책 만들기" cancelText="취소" afterClose={this.resetCheckbox}>
           <label style={{ display: "block", marginTop: "15px" }}>
             제목
             <input
@@ -407,9 +410,9 @@ class AddSellBookModal extends Component {
             </span>
           </label>
         </Modal>
-      </div>
+      </>
     );
   }
 }
 
-export default AddSellBookModal;
+export default AddSellBookModalForRidi;
