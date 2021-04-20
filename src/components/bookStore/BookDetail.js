@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import Category from "./Category";
-import MyPicture from "./image/한국사기출500제.png";
 import InputTag from "./InputTag";
 import axios from "axios";
 
-class BookSummary extends Component {
+class BookDetail extends Component {
   constructor(props) {
     super(props);
 
@@ -40,7 +39,7 @@ class BookSummary extends Component {
         hashtag: somebook.book_info.hashtag,
         author: somebook.book_info.author,
         publisher: somebook.book_info.publisher,
-        thumbnail: somebook.book_info.thumbnail,
+        bookcover_medium: somebook.book_info.bookcover.url_large,
         intro_book: somebook.book_info.intro_book,
         intro_author: somebook.book_info.intro_author,
         indexes: somebook.book_info.indexes,
@@ -85,6 +84,7 @@ class BookSummary extends Component {
     const inModification = this.state.inModification;
 
     let contents = null;
+
     if (inModification) {
       contents = (
         <div
@@ -112,7 +112,7 @@ class BookSummary extends Component {
               <img
                 width="400"
                 height="600"
-                src={this.state.thumbnail}
+                src={this.state.bookcover_medium}
                 alt="Thumbnail"
                 style={{
                   borderRadius: "8px",
@@ -141,7 +141,12 @@ class BookSummary extends Component {
               <div>저자 : {this.state.author} </div>
               <div>출판사 : {this.state.publisher}</div>
               <div>금액 : {this.state.price}</div>
-              <div>카테고리 : {this.state.category}</div>
+              <div>
+                카테고리 :{" "}
+                {this.state.category.map((item) => (
+                  <span>{item} </span>
+                ))}
+              </div>
               <div>해쉬태그 : {this.state.hashtag}</div>
             </div>
           </div>
@@ -183,6 +188,42 @@ class BookSummary extends Component {
           >
             리뷰
           </div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
+          <div>dk</div>
           <div>dk</div>
           <div>dk</div>
         </div>
@@ -316,4 +357,4 @@ class BookSummary extends Component {
   }
 }
 
-export default BookSummary;
+export default BookDetail;

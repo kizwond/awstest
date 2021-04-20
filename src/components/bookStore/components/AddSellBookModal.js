@@ -201,15 +201,7 @@ class AddSellBookModal extends Component {
         <Button style={{ marginLeft: "220px" }} type="primary" onClick={this.showModal}>
           새 책 추가
         </Button>
-        <Modal
-          title="새 책 추가"
-          visible={this.state.isModalVisible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          okText="새 책 만들기"
-          cancelText="취소"
-          afterClose={this.resetCheckbox}
-        >
+        <Modal title="새 책 추가" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel} okText="새 책 만들기" cancelText="취소" afterClose={this.resetCheckbox}>
           <label style={{ display: "block", marginTop: "15px" }}>
             제목
             <input
@@ -277,16 +269,20 @@ class AddSellBookModal extends Component {
           )}
           <label style={{ display: "block", marginTop: "15px" }}>
             책 소개
-            <input
-              type="text"
+            <textarea
+              // type="textarea"
               name="intro_book"
+              rows="5"
+              cols="33"
               value={this.state.intro_book}
               onChange={this.handleInputChange}
-              style={{
-                position: "absolute",
-                left: "120px",
-                border: "1px solid gray",
-              }}
+              style={
+                {
+                  // position: "absolute",
+                  // left: "120px",
+                  // border: "1px solid gray",
+                }
+              }
             />
           </label>
           <label style={{ display: "block", marginTop: "15px" }}>

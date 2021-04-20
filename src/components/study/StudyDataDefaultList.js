@@ -76,16 +76,16 @@ class StudyDataDefaultList extends Component {
           this.setState({
             study_data_visible_array:{book_id:value, studyDataVisible:true}
           })
-          this.studyDataShowModal()
+          // this.studyDataShowModal()
         })
           
       }
     
-      studyDataShowModal = () => {
-        this.setState(prevState=>({
-          study_data_visible_array:{...prevState.study_data_visible_array, studyDataVisible:true}
-        }));
-      };
+      // studyDataShowModal = () => {
+      //   this.setState(prevState=>({
+      //     study_data_visible_array:{...prevState.study_data_visible_array, studyDataVisible:true}
+      //   }));
+      // };
     
       studyDataHandleOk = () => {
         this.setState(prevState=>({
