@@ -82,9 +82,9 @@ class StudyDataDefaultList extends Component {
       }
     
       // studyDataShowModal = () => {
-      //   this.setState(prevState=>({
-      //     study_data_visible_array:{...prevState.study_data_visible_array, studyDataVisible:true}
-      //   }));
+        // this.setState(prevState=>({
+        //   study_data_visible_array:{...prevState.study_data_visible_array, studyDataVisible:true}
+        // }));
       // };
     
       studyDataHandleOk = () => {

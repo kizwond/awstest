@@ -1,0 +1,30 @@
+.study_page_booklist_container{
+  width:1340px;
+  margin:auto;
+
+  font-family: 'Nanum Gothic', sans-serif;
+  font-weight:400;
+  font-size:12px;
+}
+
+.study_list_columns ul {
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  background-color: grey;
+}
+.study_page_list_title{
+  margin-bottom:5px;
+  font-weight:700;
+}
+.study_page_bottom_title{
+  margin-top:20px;
+}
+.study_page_content_padding{
+  padding:10px;
+}
+.study_table_list table{
+  font-family: 'Nanum Gothic', sans-serif;
+  font-weight:400;
+  font-size:11px;
+}

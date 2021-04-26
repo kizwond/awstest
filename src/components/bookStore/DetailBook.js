@@ -35,32 +35,40 @@ class DetailBook extends Component {
       original_book_id: "",
 
       book_id: "",
+
+      book_comment: [],
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
     axios.post("api/bookstore/get-book-info", { sellbook_id: sessionStorage.getItem("book_id") }).then((res) => {
-      console.log(res.data);
-      this.setState({
-        title: res.data.sellbook.book_info.title,
-        category: res.data.sellbook.book_info.category,
-        hashtag: res.data.sellbook.book_info.hashtag,
-        author: res.data.sellbook.book_info.author,
-        publisher: res.data.sellbook.book_info.publisher,
-        bookcover_medium: res.data.sellbook.book_info.bookcover.url_large,
-        intro_book: res.data.sellbook.book_info.intro_book,
-        intro_author: res.data.sellbook.book_info.intro_author,
-        indexes: res.data.sellbook.book_info.indexes,
-        price: res.data.sellbook.book_info.price,
-        // promotion_name: "",
-        // promotion_gap: "",
-        // promotion_price: 0,
-        // promotion_period_from: 0,
-        // promotion_period_to: 0,
-        original_book_id: res.data.sellbook._id,
-        book_id: res.data.sellbook._id,
-      });
+      console.log(res.data.book_comment, "디테일북에서 서버에서 받은 코멘트 정보");
+      this.setState(
+        {
+          title: res.data.sellbook.book_info.title,
+          category: res.data.sellbook.book_info.category,
+          hashtag: res.data.sellbook.book_info.hashtag,
+          author: res.data.sellbook.book_info.author,
+          publisher: res.data.sellbook.book_info.publisher,
+          bookcover_medium: res.data.sellbook.book_info.bookcover.url_large,
+          intro_book: res.data.sellbook.book_info.intro_book,
+          intro_author: res.data.sellbook.book_info.intro_author,
+          indexes: res.data.sellbook.book_info.indexes,
+          price: res.data.sellbook.book_info.price,
+          // promotion_name: "",
+          // promotion_gap: "",
+          // promotion_price: 0,
+          // promotion_period_from: 0,
+          // promotion_period_to: 0,
+          original_book_id: res.data.sellbook._id,
+          book_id: res.data.sellbook._id,
+          book_comment: res.data.book_comment,
+        },
+        function () {
+          console.log(this.state.book_comment);
+        }
+      );
     });
   }
 
@@ -92,6 +100,7 @@ class DetailBook extends Component {
 
   render() {
     console.log("DetailBook render() 메서드 실행됨");
+    console.log(this.state.book_comment, "디테일북 render - 서버에서 받은 코멘트 정보를 this.state에 업데이트 홗인용");
     // debugger;
     return (
       <React.Fragment>
@@ -110,7 +119,7 @@ class DetailBook extends Component {
               >
                 <div className="MainInfoWrapper" css={mainInfoWrapper}>
                   <div className="BookcoverWrapper" css={bookcoverWrapper}>
-                    <div classNmae="BookcoverBox" css={bookcoverBox}>
+                    <div className="BookcoverBox" css={bookcoverBox}>
                       <div className="BookcoverDiv" css={bookcoverDiv}>
                         <img className="BookcoverImage" width="200" height="320" src={this.state.bookcover_medium} alt="Thumbnail"></img>
                         <button className="PreviewButton" css={previewButton}>
@@ -129,14 +138,18 @@ class DetailBook extends Component {
                   >
                     <ul>
                       카테고리 :
-                      {this.state.category.map((item) => (
-                        <CategoryItems className="CategoryItem">{item} </CategoryItems>
+                      {this.state.category.map((item, i) => (
+                        <CategoryItems key={i} className="CategoryItem">
+                          {item}
+                        </CategoryItems>
                       ))}
                     </ul>
                     <ul>
                       해쉬태그 :
-                      {this.state.hashtag.map((item) => (
-                        <CategoryItems className="CategoryItem">{item} </CategoryItems>
+                      {this.state.hashtag.map((item, i) => (
+                        <CategoryItems key={i} className="CategoryItem">
+                          {item}
+                        </CategoryItems>
                       ))}
                     </ul>
                     <div
@@ -212,7 +225,7 @@ class DetailBook extends Component {
                         <tbody>
                           <tr>
                             <th
-                              rowspan="2"
+                              rowSpan="2"
                               css={css`
                                 font-weight: bold;
                                 text-align: center;
@@ -951,7 +964,7 @@ class DetailBook extends Component {
                 </button>
               </div>
 
-              <StarRating book_id={this.state.book_id} />
+              <StarRating book_comment={this.state.book_comment} updateStateBookComment={(value) => this.setState({ book_comment: value })} />
             </div>
           </div>
           {/* 광고 AsideRight */}

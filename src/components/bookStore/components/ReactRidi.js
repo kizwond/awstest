@@ -27,7 +27,13 @@ class ListGoodForHomeStudy extends Component {
             >
               <div className="StyledThumbnailWrapper" css={styledThumbnailWrapper}>
                 <div className="ThumbnailWrapper" css={thumbnailWrapper}>
-                  <img className="StyledThumbnailImage" src={item.book_info.bookcover.url_small} sizes="(max-wideth: 999px) 100px, 140px" alt={item.book_info.title} css={styledThumbnailImage} />
+                  <img
+                    className="StyledThumbnailImage"
+                    src={item.book_info.bookcover.url_small}
+                    sizes="(max-wideth: 999px) 100px, 140px"
+                    alt={item.book_info.title}
+                    css={styledThumbnailImage}
+                  />
                   <div className="DiscountWrapper" css={discountWrapper}>
                     <div className="DiscountSticker" css={discountSticker}>
                       <span className="DiscountNumber" css={discountNumber}>
@@ -90,7 +96,13 @@ class ListGoodForStudy extends Component {
             >
               <div className="StyledThumbnailWrapper" css={styledThumbnailWrapper}>
                 <div className="ThumbnailWrapper" css={thumbnailWrapper}>
-                  <img className="StyledThumbnailImage" src={item.book_info.bookcover.url_small} sizes="(max-wideth: 999px) 100px, 140px" alt={item.book_info.title} css={styledThumbnailImage} />
+                  <img
+                    className="StyledThumbnailImage"
+                    src={item.book_info.bookcover.url_small}
+                    sizes="(max-wideth: 999px) 100px, 140px"
+                    alt={item.book_info.title}
+                    css={styledThumbnailImage}
+                  />
                   <div className="DiscountWrapper" css={discountWrapper}>
                     <div className="DiscountSticker" css={discountSticker}>
                       <span className="DiscountNumber" css={discountNumber}>
@@ -288,7 +300,13 @@ class ListCogBookRecommendBook extends Component {
             >
               <div className="StyledThumbnailWrapper" css={styledThumbnailWrapper}>
                 <div className="ThumbnailWrapper" css={thumbnailWrapper}>
-                  <img className="StyledThumbnailImage" src={item.book_info.bookcover.url_small} sizes="(max-wideth: 999px) 100px, 140px" alt={item.book_info.title} css={styledThumbnailImage} />
+                  <img
+                    className="StyledThumbnailImage"
+                    src={item.book_info.bookcover.url_small}
+                    sizes="(max-wideth: 999px) 100px, 140px"
+                    alt={item.book_info.title}
+                    css={styledThumbnailImage}
+                  />
                   <div className="DiscountWrapper" css={discountWrapper}>
                     <div className="DiscountSticker" css={discountSticker}>
                       <span className="DiscountNumber" css={discountNumber}>
@@ -507,7 +525,13 @@ class ListRecommendedBook extends Component {
     return (
       <React.Fragment>
         {this.props.serverlist.map((item) => (
-          <ListRecommendedBookContent key={item._id} book_id={item._id} title={item.book_info.title} author={item.book_info.author} url_small={item.book_info.bookcover.url_small} />
+          <ListRecommendedBookContent
+            key={item._id}
+            book_id={item._id}
+            title={item.book_info.title}
+            author={item.book_info.author}
+            url_small={item.book_info.bookcover.url_small}
+          />
         ))}
       </React.Fragment>
     );
@@ -541,8 +565,7 @@ class ReactRidi extends Component {
   componentDidMount() {
     console.log("ReactRidi componentDidMount 매서드 실행됨");
     axios.get("/api/bookstore/get-sellbooklist").then((res) => {
-      console.log(res.data);
-      this.setState({ sell_book_list: res.data.sellbooklist });
+      this.setState({ sell_book_list: res.data.sellbooklist }, () => console.log(this.state.sell_book_list));
     });
   }
 
@@ -1935,7 +1958,8 @@ const thumbnailWrapper = css`
   position: relative;
   line-height: 0;
   max-height: inherit;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.15) 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.15) 100%);
 `;
 
 const discountWrapper = css`
